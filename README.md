@@ -20,11 +20,23 @@ Read `docs/RESEARCH_NOTES.md` first: it records what the literature and the
 reference code actually contain, what is unverified, and why each design
 decision was made.
 
+## v3 campaign (current work)
+
+This repository continues
+[abraheemrashid99-sys/Citradel-Rx](https://github.com/abraheemrashid99-sys/Citradel-Rx) from commit
+`5913be9` (the first commit here imports its tree unchanged). The third revision campaign, its phases,
+protocol rules and review gates are in [`docs/ROADMAP_9of10.md`](docs/ROADMAP_9of10.md). The
+instructions for each phase are in `docs/v3/PHASE<N>.md`, and the review of each phase in
+`docs/v3/PHASE<N>_REPORT.md`. The v3 code lives in `scripts/v3/`, and the environment is built by
+`scripts/v3/setup_env.py` (PyTorch with CUDA 12.8 and Sionna 2.2). The scripts of the earlier
+campaigns (`scripts/revision_fast.py`, `run_laptop.sh`, `run_windows.py`) are kept as they ran and
+still point to the source repository.
+
 ## Install
 
 ```bash
-git clone --single-branch --branch main https://github.com/abraheemrashid99-sys/Citradel-Rx   # main only; see docs/SNAPSHOTS.md
-cd Citradel-Rx
+git clone https://github.com/Abraheem13/Citadel-Rx
+cd Citadel-Rx
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt          # CPU is enough for the synthetic / COST2100 experiments
 pip install -e .

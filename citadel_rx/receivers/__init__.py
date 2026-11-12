@@ -35,6 +35,9 @@ def make_receiver(cfg, device):
         rx = OnlineDeepSIC(c, device)
         rx.name = t
         return rx
+    if t == "model":   # v3: model-based detectors, LS or perfect CSI, optional pilot-domain guard
+        from .modelbased import ModelReceiver
+        return ModelReceiver(cfg, device)
     if t == "ml":
         from .lmmse import MLReceiver
         return MLReceiver(cfg, device)

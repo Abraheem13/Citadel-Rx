@@ -87,7 +87,11 @@ class Attacker:
         self.theta_bad: Optional[ParamDict] = None
         self._surrogate_cfg = None
         self.start, self.end = self.ac.start_block, self.ac.end_block
-        if self.ac.start_mode == "random" and self.ac.type != "none":
+        self.schedule = [dict(s) for s in (getattr(self.ac, "schedule", None) or [])]
+        if self.schedule:   # v3 piecewise schedule: the window spans all segments, no random start
+            self.start = int(min(s["start"] for s in self.schedule))
+            self.end = int(max(s["end"] for s in self.schedule))
+        elif self.ac.start_mode == "random" and self.ac.type != "none":
             wrng = np.random.default_rng(cfg.channel.seed + 9090)
             self.start = int(wrng.integers(self.ac.random_lo, self.ac.random_hi + 1))
             self.end = self.start + (self.ac.end_block - self.ac.start_block)
@@ -111,6 +115,8 @@ class Attacker:
         if self.ac.type == "none":
             return False
         if not (self.start <= b < self.end):
+            return False
+        if self.schedule and self._segment(b) is None:
             return False
         if self.ac.rho_blk < 1.0:
             return bool(self.rng.random() < self.ac.rho_blk)
@@ -333,9 +339,37 @@ class Attacker:
                 "pass_ref": pass_ref, "H": H, "r_ref": model_residual(y_d[rows], idx_mm[rows], H, self.mod)}
 
     # ---- main entry ---------------------------------------------------------------------
+    def _segment(self, b: int) -> Optional[Dict[str, Any]]:
+        for s in self.schedule:
+            if int(s["start"]) <= b < int(s["end"]):
+                return s
+        return None
+
     def craft(self, b: int, y_p: np.ndarray, idx_p: np.ndarray, y_d: np.ndarray, receiver,
               noise_var: float, idx_d: Optional[np.ndarray] = None, H_true: Optional[np.ndarray] = None,
               framer=None) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]:
+        """One block of the attack. With a schedule, the segment covering block b replaces the attack.*
+        settings it names for this block only (the attacker's state, e.g. its surrogate, is shared)."""
+        seg = self._segment(b) if self.schedule else None
+        if seg is None:
+            return self._craft(b, y_p, idx_p, y_d, receiver, noise_var, idx_d, H_true, framer)
+        import dataclasses
+        base = self.ac
+        ov = {k: v for k, v in seg.items() if k not in ("start", "end")}
+        unknown = set(ov) - {f.name for f in dataclasses.fields(base)}
+        if unknown:
+            raise KeyError(f"unknown attack setting(s) in the schedule: {sorted(unknown)}")
+        self.ac = dataclasses.replace(base, **ov)
+        try:
+            y_p2, y_d2, stats = self._craft(b, y_p, idx_p, y_d, receiver, noise_var, idx_d, H_true, framer)
+        finally:
+            self.ac = base
+        stats["segment"] = self.schedule.index(seg)
+        return y_p2, y_d2, stats
+
+    def _craft(self, b: int, y_p: np.ndarray, idx_p: np.ndarray, y_d: np.ndarray, receiver,
+               noise_var: float, idx_d: Optional[np.ndarray] = None, H_true: Optional[np.ndarray] = None,
+               framer=None) -> Tuple[np.ndarray, np.ndarray, Dict[str, Any]]:
         stats: Dict[str, Any] = {"attacked": False}
         if not self.active(b):
             return y_p, y_d, stats

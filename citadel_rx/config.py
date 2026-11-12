@@ -91,6 +91,15 @@ class ReceiverConfig:
     robust_ls: str = "none"           # LMMSE channel estimate: none | huber | trim (C7)
     crc_select: bool = False          # per (sub-block, user) CRC selection between this receiver and LMMSE
                                       # (the comparator for Citadel-Rx's H6 selection gain)
+    # v3: model-based receivers (receiver.type=model; receivers/modelbased.py)
+    detector: str = "lmmse"           # lmmse | ml | kbest | mmse_sic
+    csi: str = "ls"                   # ls (regularised LS from the pilots) | perfect (true channel and noise power)
+    kbest_k: int = 16                 # survivors per layer of the K-best tree search
+    guard: bool = False               # pilot-domain test (noise inflation and channel innovation) with fallback
+                                      # to the last accepted channel estimate and CRC selection between the two
+    guard_quantile: float = 0.9999    # chi-square quantile of the noise-inflation test
+    guard_innov_tau: float = 4.0      # innovation energy relative to its running level on accepted blocks
+    guard_refresh: int = 10           # consecutive rejections after which the estimate is re-based (legit change)
 
 
 @dataclass
@@ -200,6 +209,10 @@ class AttackConfig:
     oracle_scales: Optional[List[float]] = None
     oracle_mode: str = "max_ser"      # max_ser: highest SER on the block | accepted: highest SER among the
                                       # candidates the gates accept (poisoning), else highest SER
+    # v3: piecewise attack schedule. Each segment {"start": b0, "end": b1, ...} attacks blocks b0 <= b < b1
+    # with the attack.* settings it names replaced (e.g. sir_db, soft_gate, oracle_scales); empty = the
+    # single window start_block..end_block (or the random window). Used by the ratchet attack (Phase 1c).
+    schedule: List[Dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass

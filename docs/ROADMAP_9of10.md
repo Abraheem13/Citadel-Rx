@@ -181,8 +181,8 @@ that of every adapting baseline.
 
 | Phase | Code | Runs | Report | Gate |
 |---|---|---|---|---|
-| 0 | in progress | – | – | – |
-| 1 | – | – | – | – |
+| 0 | done (pushed) | on ws5080 | – | – |
+| 1 | done (pushed) | – | – | – |
 | 2 | – | – | – | – |
 | 3 | – | – | – | – |
 | 4 | – | – | – | – |
