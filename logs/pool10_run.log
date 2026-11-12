@@ -1,0 +1,17 @@
+== pool10: 12 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+== pool10: 12 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~11 left | 0.6 h, ~6.4 h to go at this pace] t1 H3v h3v_a4_a0.75__sir0 s18 OK 35 min  == h3v_a4_a0.75__sir0 seed 18: ser_mean=0.0277 ser_median=0.0156 ser_pre=0.0233 ser_attack=0.0461 ser_post=0.0105
+[2 done, ~10 left | 0.6 h, ~2.9 h to go at this pace] t1 H3v h3v_a4_a0.25__sir0 s18 OK 35 min  == h3v_a4_a0.25__sir0 seed 18: ser_mean=0.0280 ser_median=0.0152 ser_pre=0.0233 ser_attack=0.0465 ser_post=0.0109
+[3 done, ~9 left | 0.6 h, ~1.8 h to go at this pace] t1 H3v h3v_a4_a0.25__sir0 s16 OK 35 min  == h3v_a4_a0.25__sir0 seed 16: ser_mean=0.0282 ser_median=0.0159 ser_pre=0.0210 ser_attack=0.0446 ser_post=0.0119
+[4 done, ~8 left | 0.6 h, ~1.2 h to go at this pace] t1 H3v h3v_a4_a0.75__sir0 s16 OK 35 min  == h3v_a4_a0.75__sir0 seed 16: ser_mean=0.0258 ser_median=0.0141 ser_pre=0.0210 ser_attack=0.0386 ser_post=0.0115
+[5 done, ~7 left | 0.7 h, ~1.0 h to go at this pace] t1 H3v clean_2cb3064d71 s16 OK 8 min  == clean_2cb3064d71 seed 16: ser_mean=0.0148 ser_median=0.0114
+[6 done, ~6 left | 0.7 h, ~0.7 h to go at this pace] t1 H3v h3v_a1__sir0 s16 OK 9 min  == h3v_a1__sir0 seed 16: ser_mean=0.0206 ser_median=0.0148 ser_pre=0.0210 ser_attack=0.0256 ser_post=0.0117
+pushed results to GitHub (23:11)
+[7 done, ~5 left | 0.8 h, ~0.6 h to go at this pace] t1 H3v h3v_redraw__none s16 OK 13 min  == h3v_redraw__none seed 16: ser_mean=0.2241 ser_median=0.1346
+[8 done, ~4 left | 0.8 h, ~0.4 h to go at this pace] t1 H3v h3v_snrdrop__none s16 OK 13 min  == h3v_snrdrop__none seed 16: ser_mean=0.2341 ser_median=0.2024
+[9 done, ~3 left | 0.9 h, ~0.3 h to go at this pace] t1 H3v clean_2cb3064d71 s18 OK 9 min  == clean_2cb3064d71 seed 18: ser_mean=0.0148 ser_median=0.0113
+[10 done, ~2 left | 0.9 h, ~0.2 h to go at this pace] t1 H3v h3v_a1__sir0 s18 OK 9 min  == h3v_a1__sir0 seed 18: ser_mean=0.0204 ser_median=0.0142 ser_pre=0.0233 ser_attack=0.0280 ser_post=0.0105
+[11 done, ~1 left | 1.0 h, ~0.1 h to go at this pace] t1 H3v h3v_snrdrop__none s18 OK 13 min  == h3v_snrdrop__none seed 18: ser_mean=0.2380 ser_median=0.2065
+[12 done, ~0 left | 1.0 h, ~0.0 h to go at this pace] t1 H3v h3v_redraw__none s18 OK 14 min  == h3v_redraw__none seed 18: ser_mean=0.0090 ser_median=0.0020
+== pool10 finished: 12 runs, 0 failed, 1.0 h
+pushed results to GitHub (23:28)

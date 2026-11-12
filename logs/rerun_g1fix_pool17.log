@@ -1,0 +1,22 @@
+probe     probe                                seed 10  ~  10 min
+attacked  b2_a4_a0.25_pgd20__sir0              seed 10  ~ 103 min  -> results/rev2_a4_pgd20_g1fix  pairs_as pool4
+attacked  b2_a4_a0.25_pgd20__sir0              seed 14  ~  94 min  -> results/rev2_a4_pgd20_g1fix  pairs_as pool2
+attacked  h3v_a4_a0.25__sir0                   seed 13  ~  37 min  -> results/rev2_abstain_v3_g1fix  pairs_as pool1
+attacked  h3v_a4_a0.75__sir0                   seed 13  ~  35 min  -> results/rev2_abstain_v3_g1fix  pairs_as pool1
+attacked  p3_a4_a0.25__sir0                    seed 14  ~  34 min  -> results/rev_p3_refdeg_g1fix  pairs_as pool2
+attacked  h3v_a4_a0.75__sir0                   seed 19  ~  33 min  -> results/rev2_abstain_v3_g1fix  pairs_as pool9
+attacked  p3_a4_a0.25_abstain__sir0            seed 11  ~  31 min  -> results/rev_p3_refdeg_g1fix  pairs_as cloud
+attacked  p3_a4_a0.75_abstain__sir0            seed 11  ~  30 min  -> results/rev_p3_refdeg_g1fix  pairs_as cloud
+attacked  h3v_a4_a0.75__sir0                   seed 15  ~  29 min  -> results/rev2_abstain_v3_g1fix  pairs_as pool9
+10 jobs, ~436 CPU-min (times of the replaced records)
+11:40:35 probe: MISMATCH to the stored cloud run (0 cloud record(s))
+12:09:31 attacked h3v_a4_a0.25__sir0 s13: done in 2560 s
+12:18:18 attacked h3v_a4_a0.75__sir0 s13: done in 2261 s
+12:44:24 attacked p3_a4_a0.25__sir0 s14: done in 2090 s
+13:00:37 attacked h3v_a4_a0.75__sir0 s19: done in 2536 s
+13:20:31 attacked b2_a4_a0.25_pgd20__sir0 s14: done in 6820 s
+13:23:26 attacked b2_a4_a0.25_pgd20__sir0 s10: done in 6994 s
+13:26:42 attacked p3_a4_a0.25_abstain__sir0 s11: done in 2535 s
+13:36:21 attacked p3_a4_a0.75_abstain__sir0 s11: done in 2141 s
+14:01:46 attacked h3v_a4_a0.75__sir0 s15: done in 2472 s
+14:02:12 probe: IDENTICAL (pool13 re-run: True; 2/2 stored cloud record(s) equal)

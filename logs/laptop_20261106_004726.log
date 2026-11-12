@@ -1,0 +1,9 @@
+== Citadel-Rx revision, laptop part   Fri Nov  6 00:47:26 PKT 2026
+   machine: Darwin arm64, 10 cores
+From https://github.com/abraheemrashid99-sys/Citradel-Rx
+ * branch            claude/fervent-cray-ah5drn -> FETCH_HEAD
+Already up to date.
+   code version: 8b9ae23
+   free disk: 1459 MB
+!! about 1.5 GB of free disk is needed for the Python environment. Free space with:
+     conda clean -a -y ; pip cache purge ; rm -rf ~/Library/Caches/pip   (and empty the Bin)

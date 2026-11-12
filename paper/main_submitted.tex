@@ -1,0 +1,973 @@
+% Citadel-Rx manuscript. Compile: pdflatex main (IEEEtran, TikZ). Figures: ../docs/figures.
+% Every number is regenerated from the JSON records in results/ by the scripts named in the
+% captions (docs/RESULTS.md, docs/STATS.md, docs/TABLES.md).
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,multirow,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{url}
+\graphicspath{{../docs/figures/}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\tabcolsep}{3pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}\setlength{\floatsep}{6pt plus 2pt minus 2pt}\setlength{\intextsep}{6pt plus 2pt minus 2pt}\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\tikzset{
+  blk/.style={draw=black!70,rounded corners=1pt,align=center,font=\scriptsize,inner sep=3pt,minimum height=6mm,fill=white},
+  mem/.style={blk,fill=black!8},
+  gat/.style={blk,fill=black!18},
+  grp/.style={draw=black!50,dashed,rounded corners=2pt,inner sep=2.5mm},
+  arr/.style={-{Latex[length=1.5mm]},thin,draw=black!80},
+  darr/.style={-{Latex[length=1.5mm]},thin,dashed,draw=black!80},
+  lbl/.style={font=\tiny,fill=white,inner sep=1pt}}
+
+\begin{document}
+
+\title{Memory Is the Defence: Physics-Gated Continuum-Memory Receivers for Poisoning-Resilient Test-Time Learning}
+
+\author{Abraheem~Rashid%
+\thanks{A. Rashid is with the Department of Computer Science, Brunel University London, London, U.K. (e-mail: 2546393@brunel.ac.uk).}%
+\thanks{Code, configuration files, all 1\,926 run records, the statistics and the scripts that regenerate every table, figure and number of this paper are available at \url{https://github.com/abraheemrashid99-sys/Citradel-Rx}; the COST2100 traces are those released with \cite{raviv2023}.}}
+
+\markboth{IEEE Transactions on Wireless Communications}{Rashid: Memory Is the Defence}
+\maketitle
+
+\begin{abstract}
+Neural receivers that learn at test time adapt to the channel from the pilots of every
+coherence block, so the pilot stream is a training set that an adversary can write to: a
+perturbation shaped through the receiver's own adaptation step destroys online and
+meta-learned DeepSIC receivers, and meta-learning retains the poison. This paper proposes
+Citadel-Rx, a DeepSIC receiver whose adaptable parameters are kept at three nested
+time-scales: a fast level fitted on every block and two slow levels updated every 8 and
+32 blocks through a gated average of the faster states. Three label-free
+physics-consistency gates, each a ratio against a model-based reference on the same
+block (linear-model residual, CRC pass rate, channel innovation), decide what may be
+consolidated; a rejected block is reverted and its data are detected with the slow
+memory. For the algorithm as implemented, the displacement that a bounded attack causes
+in the slowest level over $W$ blocks is proved to be bounded by the fast level's
+displacement times $1-(1-\eta^{(K)})^{\lceil W/C_K\rceil}$, and the bound is verified with
+measured constants. In 1\,926 recorded runs over four channel families, $4\times4$ and
+$8\times8$ systems, three Doppler rates and five attackers, Citadel-Rx keeps its clean
+symbol error rate at every budget from $-10$ to $+10$\,dB signal-to-interference ratio
+(attack-window SER $0.026$--$0.034$ against $0.28$--$0.97$ for online DeepSIC and
+$0.24$--$0.86$ for Meta-DeepSIC, all paired differences significant after Holm
+correction), rejects $86$--$99\%$ of poisoned blocks with at most $1.7\%$ false rejections,
+and without attack halves the symbol error rate of online DeepSIC at 10\,dB. The limits
+of the defence are established as well: a floor near $10^{-3}$ where the clean error rate
+is $10^{-4}$, and no clean gain over LMMSE on a nearly diagonal channel.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Deep receivers, test-time learning, adversarial pilot poisoning, meta-learning, continual
+learning, physics-informed gating, MIMO detection, 6G security.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\IEEEPARstart{D}{eep} receivers replace or augment the model-based blocks of a MIMO
+detector with neural networks trained on data \cite{oshea2017,honkala2021,samuel2019,
+shlezinger2023}. Since a network trained in simulation meets a different channel in the
+field, the strongest of them adapt at test time: online DeepSIC \cite{shlezinger2021}
+re-trains its per-user networks on the pilots of every coherence block, and Meta-DeepSIC
+\cite{raviv2023} meta-learns an initialisation from the pilots of past blocks so that the
+per-block fit converges faster. Their adaptation data are the only labelled symbols the
+receiver sees: a few hundred pilot bits per user per block.
+
+The security problem addressed here is the following. An adversary within range of the
+base station adds a perturbation to the received pilot part of a block, with an energy
+budget expressed as a signal-to-interference ratio (SIR) over the pilots. Wu
+\emph{et al.} \cite{wu2024} showed that a perturbation shaped through an unrolled copy
+of the receiver's adaptation step raises the post-adaptation symbol error rate (SER) of
+online DeepSIC by an order of magnitude, that a perturbation crafted on a surrogate
+receiver still transfers, and that Meta-DeepSIC, which keeps the poisoned pilots in its
+support set, does not recover after the attack stops. They call for receivers that are
+secure by construction; none has been reported. Four properties of the problem shape the
+design and the evaluation. The receiver cannot verify its adaptation
+data, because the pilots are the labels; what it can verify is physical consistency:
+whether its decisions fit a linear channel model, whether the CRC of the decoded data
+passes, and whether the estimated channel moved as a channel does. The harm of poisoning
+lies not in the attacked block alone but in what the receiver keeps, so a defence must
+protect the memory and not only the decision. An attacker who knows the defence will try
+to pass its tests, so the tests must be tied to the attacker's own objective. And the
+value of a defence can only be established against the attacks of the literature, under
+the same channel realisations as the baselines, over many seeds, with the clean cost of
+the defence reported alongside its benefit.
+
+\begin{table}[t]
+\centering\caption{Positioning by method class. The attack surface is what the adversary
+can write to; --: not addressed.}\label{tab:pos}
+\scriptsize
+\begin{tabular}{@{}L{22mm}L{12mm}L{15mm}L{30mm}@{}}
+\toprule
+Class & Adapts & Memory & Attack surface / defence\\
+\midrule
+LMMSE & no & -- & pilot estimate / --\\
+Online DeepSIC \cite{shlezinger2021} & every block & last block & pilots / --\\
+Meta-DeepSIC \cite{raviv2023} & every block & pilot buffer & pilots, persistent / --\\
+Drift-detection receiver & on drift & last block & pilots / adapt less\\
+Robust TTA, vision \cite{medbn,wu2023tta} & every batch & batch statistics & batch / robust statistics\\
+Byzantine aggregation \cite{blanchard2017} & -- & -- & gradients / needs many vectors\\
+Nested, continuum memory \cite{behrouz2025nested,behrouz2025titans} & every token & multi-rate & input / --\\
+Citadel-Rx (this paper) & every block & three rates, gated & pilots / physics gates, certified retention\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Prior work addresses these properties separately (Table~\ref{tab:pos}). Test-time
+adaptation in vision has its own poisoning problem \cite{wu2023tta}, and its defences
+replace batch statistics or gradients by robust estimates \cite{medbn}; they assume
+i.i.d. batches and, as shown below, do not transfer to a receiver that sees one correlated
+block at a time. Byzantine-robust aggregation \cite{blanchard2017} needs many gradient
+vectors per step, which a receiver with one pilot block does not have. Certified defences
+against data poisoning \cite{steinhardt2017} bound the loss of a convex learner under a
+fraction of corrupted points; here the setting is sequential, the learner is a network,
+and the corruption is a bounded perturbation of every point in a block.
+Corruption-robust online learning \cite{lykouris2018} supplies the additive accounting
+of Section~\ref{sec:theory}. Nested learning \cite{behrouz2025nested} and Titans
+\cite{behrouz2025titans} keep memory at several update frequencies but do not decide
+what enters the slow memory, and a single test-time memory is, as the ablation shows, as
+vulnerable as online DeepSIC. No published receiver keeps memory at several rates, gates
+what enters the slow rates on physics the attacker cannot forge without giving up its
+objective, and carries a retention guarantee checked against measurements.
+
+The contributions of this paper are as follows.
+\begin{enumerate}
+\item \textbf{A three-timescale receiver} (Section~\ref{sec:citadel}): a fast level with
+a delta-rule learner and a surprise-generated step size, slow levels at periods aligned
+with the coherence structure of the channel, gated consolidation, a proximal anchor that
+pulls the fast level toward the slow projection, and a gated fallback that detects a
+rejected block with the uncorrupted memory.
+\item \textbf{Relative physics gates} (Section~\ref{sec:gates}): three label-free tests
+whose statistics are ratios against a model-based reference computed on the same block,
+so that a channel that merely degrades does not look like a poisoned adaptation. The CRC
+gate's threshold is derived, not tuned, from a target excess SER
+(Proposition~\ref{prop:crc}), and a relative slack keeps it meaningful at $10^{-3}$
+operating points.
+\item \textbf{A retention certificate for the implemented algorithm}
+(Section~\ref{sec:theory}): the exposure of the slowest level to a bounded attack is
+divided by its period and multiplied by the miss rate of the gate
+(Theorem~\ref{thm:cert}), with a regret decomposition in which the adversary's term is
+additive (Theorem~\ref{thm:regret}). Every constant is measured and the bound is drawn
+against paired adversarial/clean memory trajectories.
+\item \textbf{A reproducible, paired evaluation} (Sections~\ref{sec:setup}--\ref{sec:results}):
+seven receivers, five attackers, four channel families, two system sizes, three Doppler
+rates and three to five seeds; bootstrap intervals and Holm-corrected Wilcoxon tests on
+per-block differences paired on the channel realisation; every number regenerated from
+1\,926 recorded runs by one script each.
+\end{enumerate}
+The evaluation also establishes where the defence does \emph{not} help: at clean SER near
+$10^{-4}$ the attacked window sits near $10^{-3}$, because the few poisoned blocks that
+pass the gate dominate; on a nearly diagonal channel the clean gain over LMMSE vanishes;
+and the first calibration of the relative CRC slack raised false rejections to
+$15$--$20\%$ before it was corrected.
+
+Section~\ref{sec:model} presents the system and threat model, Section~\ref{sec:citadel}
+the receiver, Section~\ref{sec:theory} the guarantees, Section~\ref{sec:setup} the
+experimental setup, Sections~\ref{sec:results} and \ref{sec:discussion} the results and
+their scope, and Section~\ref{sec:conclusion} concludes.
+
+\section{System Model and Threat Model}\label{sec:model}
+This section fixes the uplink, the receiver under attack, the attacker and the metrics by
+which every method is judged.
+
+\subsection{Uplink and Adaptive Receiver}
+$U$ single-antenna users transmit QPSK symbols to a base station with $N$ antennas. Time
+is divided into coherence blocks $b=1,2,\dots$; within block $b$ the channel $\bm
+H_b\in\mathbb{C}^{N\times U}$ is constant and the received vector at symbol slot $n$ is
+\begin{equation}\label{eq:channel}
+\bm y_n = f\!\left(\bm H_b \bm s_n\right)+\bm w_n,\qquad \bm w_n\sim\mathcal{CN}(\bm 0,\sigma^2\bm I),
+\end{equation}
+with $f$ the identity (linear channel) or the memoryless power-amplifier nonlinearity
+$f(x)=\tanh(0.5x)$ applied per antenna, as in \cite{raviv2023}. Each block carries $N_p$
+pilot symbols per user, known to the receiver, followed by $N_d$ data symbols framed in
+CRC-protected sub-blocks of $L$ symbols (Table~\ref{tab:setup}). Four channel families
+are used (Section~\ref{sec:setup}).
+
+\begin{table}[t]
+\centering\caption{Simulation setup, read from the configuration files and the code.}
+\label{tab:setup}
+\scriptsize
+\begin{tabular}{@{}L{14mm}L{71mm}@{}}
+\toprule
+Item & Value\\
+\midrule
+System & $U\times N=4\times4$ ($8\times8$ in Section~\ref{sec:gen}), QPSK, SNR $10$\,dB (swept $4$--$16$\,dB)\\
+Block & $N_p=100$ pilot symbols (200 bits) and $N_d=25\,000$ data symbols per user\\
+CRC & CRC-8 with the 3GPP polynomial \cite{ts38212}; $L=32$ symbols per sub-block; $n=781$ sub-blocks per block\\
+Channel & SED $[\bm H]_{ij}=e^{-|i-j|}$ with per-user cosine fading (periods 51, 39, 33, 21 blocks; depth 0.8) \cite{shlezinger2021}; Jakes block correlation $\rho=J_0(2\pi f_DT_b)$ with $f_DT_b\in\{0.01,0.05,0.1\}$ \cite{jakes1974}; $\tanh$ PA nonlinearity; COST2100 traces released with \cite{raviv2023} \cite{liu2012cost}\\
+Run & 100 blocks (400 for A3); attack on blocks 30--69; seeds 0--2 (0--4 on the headline cells)\\
+DeepSIC & $Q=3$ iterations; per-user MLP with $64\cdot$order hidden units and ReLU \cite{shlezinger2021}\\
+Adaptation & Adam, learning rate $5\cdot10^{-3}$, 300 epochs per block on the pilots; joint pre-training at 2--16\,dB\\
+Attacker & PGD with 20 steps of size $0.25\,\epsilon$ through 2 unrolled adaptation steps \cite{wu2024,madry2018}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The receiver is DeepSIC \cite{shlezinger2021}: $Q$ soft-interference-cancellation
+iterations, each a per-user multilayer perceptron that maps the received vector and the
+other users' current soft decisions to a posterior over the user's symbol. Its
+parameters $\theta$ are adapted on the pilots of every block,
+\begin{equation}\label{eq:adapt}
+\theta_b=\Phi(\theta_{b-1};\bm Y_b),
+\end{equation}
+by $T$ steps of a first-order optimiser on the pilot cross-entropy, and then detect the
+data of the block. Online DeepSIC starts every block from $\theta_{b-1}$; Meta-DeepSIC
+starts from an initialisation meta-learned by MAML \cite{finn2017} on a buffer of past
+pilot blocks, refreshed every five blocks \cite{raviv2023}.
+
+\subsection{Threat Model}
+The adversary adds $\bm E_b$ to the received pilot matrix $\bm Y_b\in\mathbb{C}^{N\times
+N_p}$ of block $b$, with $\norm{\bm E_b}_F\le\epsilon_b$ set by the SIR over the pilot
+block,
+\begin{equation}\label{eq:budget}
+\epsilon_b=\norm{\bm Y_b}_F\,10^{-\mathrm{SIR}/20},
+\end{equation}
+so that SIR $0$\,dB spends as much energy as all $U$ users together; the data part is not
+touched. The attacker knows the pilots, which are standardised, and observes the channel
+through its own receiver. Following and extending \cite{wu2024}, four attackers are
+considered.
+\begin{itemize}
+\item \emph{A1, availability.} Projected gradient ascent \cite{madry2018} on the
+post-adaptation data loss, differentiated through an unrolled copy of the victim's
+adaptation map \eqref{eq:adapt} (white-box), or crafted on a surrogate online DeepSIC
+and injected (transfer). A receiver without an adaptation map (LMMSE) is attacked through
+the surrogate.
+\item \emph{A2, targeted drift.} A1 with an objective that raises one user's loss while
+keeping the others' low, on a Jakes channel, so that the poison resembles a plausible
+channel change.
+\item \emph{A3, boiling frog.} Many blocks of small perturbations ($5\%$ of the pilot
+energy) that push the receiver toward a spoofed channel basin while keeping the SER
+inside any tolerance a detector might use.
+\item \emph{Gate-aware.} A1 with a penalty on the defence's gate statistics in the
+attacker's objective: an attacker who knows the defence and tries to pass it.
+\end{itemize}
+A \emph{data-jamming control} spends the same energy on the data part of the block
+instead of the pilots; it separates persistent poisoning from plain interference.
+
+\subsection{Metrics}
+The SER is the fraction of symbol slots in which at least one user is wrong, the metric
+of \cite{shlezinger2021,raviv2023,wu2024}, reported as a mean over the attack window
+(blocks 30--69), before it (pre) and after it (post). The recovery time is the number of
+blocks after the attack until the 3-block moving average of the SER returns within $10\%$
+of the pre-attack mean (30: not within the run). The gate is characterised by its
+rejection rate of poisoned blocks and its false-rejection rate of clean blocks. The
+degradation $\Delta_{\rm dB}$ is the extra SNR needed under attack to reach the clean SER
+\cite{wu2024}. The paired displacement $D_k(W)=\norm{\theta^{(k)}_{\rm adv}-\theta^{(k)}_{\rm
+clean}}$ of memory level $k$ is measured between an attacked and a clean run on the same
+channel. Every number of the paper is regenerated from the recorded runs by one script
+each; finished records are skipped on re-run, so every stage of the study is resumable.
+
+
+\section{Citadel-Rx}\label{sec:citadel}
+The receiver splits adaptation by time-scale: a fast level fits every block; slow levels
+are updated at the periods of the coherence structure of the channel, and only with what
+the gates accept. Fig.~\ref{fig:arch} shows the architecture.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[x=1mm,y=1mm]
+% nested memory
+\node[blk,text width=24mm] (pil) at (0,20) {pilots $\bm Y_b$\\ ($+\bm E_b$ if attacked)};
+\node[blk,text width=24mm] (sur) at (0,6) {surprise $S_b$\\ step $\eta_b$ from \eqref{eq:eta}};
+\node[mem,text width=34mm] (l1) at (40,20) {Level 1: fast state $\theta^{(1)}$\\ $T$ steps of \eqref{eq:delta}--\eqref{eq:adam}};
+\node[mem,text width=34mm] (l2) at (40,4) {Level 2: $\theta^{(2)}$, period $C_2=8$\\ gated mean of level-1 states \eqref{eq:consol}};
+\node[mem,text width=34mm] (l3) at (40,-12) {Level 3: $\theta^{(3)}$, period $C_3=32$\\ gated mean of level-2 states \eqref{eq:consol}};
+\node[mem,text width=34mm] (anc) at (40,-27) {anchor $a_b=\tfrac12\theta^{(2)}+\tfrac12\theta^{(3)}$\\ (slow projection)};
+% detection and gates
+\node[blk,text width=30mm] (det) at (92,20) {DeepSIC detector\\ on the data of block $b$};
+\node[gat,text width=30mm] (gate) at (92,4) {gates G1, G2, G3\\ $\gamma_b=\min(\gamma_1,\gamma_2,\gamma_3)$};
+\node[gat,text width=30mm] (ref) at (92,-12) {reference on the same block:\\ LS estimate $\hat{\bm H}_b$, LMMSE,\\ anchor detector};
+\node[blk,text width=26mm] (out) at (134,20) {decisions $\hat{\bm s}_b$};
+\node[blk,text width=26mm] (fb) at (134,4) {fallback: anchor decisions\\ if $\gamma_b<\tfrac12$};
+% forward path
+\draw[arr] (pil)--(l1) node[midway,lbl,above]{adapt};
+\draw[arr] (pil)--(sur);
+\draw[arr] (sur.east)--(l1.west|-sur.east) node[midway,lbl,above]{$\eta_b$};
+\draw[arr] (l1)--(det) node[midway,lbl,above]{$\theta^{(1)}_b$};
+\draw[arr] (det)--(out);
+\draw[arr] (det)--(gate) node[midway,lbl,right]{decisions, CRC checks};
+\draw[arr] (ref)--(gate) node[midway,lbl,right]{residual, pass rate, innovation};
+\draw[arr] (fb)--(out);
+% consolidation
+\draw[arr] (l1)--(l2) node[midway,lbl,left]{every $C_2$ blocks, weights $\gamma$};
+\draw[arr] (l2)--(l3) node[midway,lbl,left]{every $C_3$ blocks};
+\draw[darr] (l3)--(anc);
+\draw[darr] (l2.west)--(20,4)--(20,-27)--(anc.west);
+% proximal pull: anchor -> level 1, routed left of the memory column
+\draw[darr] (anc.south)--(40,-33)--(16,-33)--(16,17)--(23,17);
+\node[lbl,rotate=90] at (14.3,-8) {proximal pull \eqref{eq:prox}};
+% anchor parameters -> reference detector, routed below
+\draw[darr] (anc.east)--(92,-27)--(ref.south) node[pos=0.5,lbl,below]{anchor parameters};
+% gate feedback
+\draw[darr] ([yshift=-1.5mm]gate.west)--([yshift=-1.5mm]l2.east) node[midway,lbl,below]{$\gamma_b$ into the buffer};
+\draw[darr] ([yshift=1.5mm]gate.west)--(68,5.5)--(68,13)--(52,13)--(52,16);
+\node[lbl] at (60,11) {reject: revert $\theta^{(1)}$};
+\draw[darr] (gate)--(fb) node[midway,lbl,above]{$\gamma_b$};
+\begin{scope}[on background layer]
+\node[grp,fit=(pil)(sur)(l1)(l2)(l3)(anc),label={[font=\scriptsize]above:nested memory with gated consolidation}] {};
+\node[grp,fit=(det)(gate)(ref)(out)(fb),label={[font=\scriptsize]above:detection and physics gates}] {};
+\end{scope}
+\end{tikzpicture}
+\caption{Citadel-Rx. Solid arrows carry parameters and decisions; dashed arrows carry the
+gate verdict and the slow projection fed back. Level $k{+}1$ receives the gated mean of
+level-$k$ states every $C_{k+1}$ blocks \eqref{eq:consol}; the anchor pulls the fast level
+on every step \eqref{eq:prox}; a rejected block is reverted and its data are detected with
+the anchor.}
+\label{fig:arch}
+\end{figure*}
+
+\subsection{Levels, Periods and the Fast Learner}
+The adaptable parameters $\theta\in\mathbb{R}^d$ (all DeepSIC weights, $d=15\,628$ for
+$4\times4$) are kept at $K=3$ levels $\theta^{(1)},\theta^{(2)},\theta^{(3)}$ with periods
+$C=(1,8,32)$ blocks, each a full copy. The fast level is adapted on every block by $T=300$
+steps of
+\begin{align}
+\theta&\leftarrow\theta-\eta_b\delta\,\theta\,\bm\phi\bm\phi^{\!\top}\quad\text{(delta-rule decay, per weight matrix)},\label{eq:delta}\\
+\theta&\leftarrow\theta-\eta_b\lambda(\theta-a_b)\quad\text{(proximal pull to the anchor)},\label{eq:prox}\\
+\theta&\leftarrow\mathrm{Adam}\big(\theta,\nabla_\theta\ell_b(\theta)\big),\label{eq:adam}
+\end{align}
+where $\ell_b$ is the pilot cross-entropy of the DeepSIC stage being adapted (stages are
+adapted sequentially as in \cite{shlezinger2021}), $\bm\phi$ is the normalised mean input
+of the stage (the direction along which the delta rule forgets), $\delta=0.1$,
+$\lambda=0.5$, and $a_b=\sum_{k\ge2}w_k\theta^{(k)}_{b-1}$ with $w=(\tfrac12,\tfrac12)$ is
+the \emph{anchor}, the slow projection. The step size is generated by the receiver's own
+surprise: with $S_b=\norm{\nabla_\theta\ell_b(\theta_{b-1})}^2$ and $\bar S_b$ its
+exponential moving average over past blocks, seeded by the median of the first five,
+\begin{equation}\label{eq:eta}
+\eta_b=\eta_{\max}\frac{2r_b}{1+r_b},\qquad r_b=\mathrm{clip}\!\left(S_b/\bar S_b,\tfrac18,8\right),
+\end{equation}
+so that an unsurprising block receives a small step and a surprising one at most
+$2\eta_{\max}$. The rate is bounded, which the analysis requires.
+
+\subsection{Gated Consolidation}
+Every $C_{k+1}$ blocks, level $k{+}1$ receives the gated mean of the level-$k$ states
+buffered since its last update, each weighted by the gate verdict $\gamma_j\in[0,1]$ of
+its block (level 1) or by the mean verdict of its period (level 2):
+\begin{equation}\label{eq:consol}
+\begin{aligned}
+\theta^{(k+1)}&\leftarrow\theta^{(k+1)}+s\Big(\frac{\sum_j\gamma_j\theta^{(k)}_j}{\max(1,\sum_j\gamma_j)}-\theta^{(k+1)}\Big),\\
+s&=\eta^{(k+1)}\min\big(1,\textstyle\sum_j\gamma_j\big),
+\end{aligned}
+\end{equation}
+with $\eta^{(2)}=1$ (level 2 is a running mean of the fast level) and $\eta^{(3)}=0.5$.
+Eq.~\eqref{eq:consol} is a convex combination (Lemma~\ref{lem:convex}): a level never
+leaves the convex hull of what it has been shown. The fast level is anchored continuously
+by \eqref{eq:prox} rather than re-set at consolidation instants as in
+\cite{behrouz2025nested}; Section~\ref{sec:ablate} shows that this choice is the source
+of the clean gain.
+
+\subsection{Rejection, Reversion and Fallback}
+If $\gamma_b<\tfrac12$ the block is rejected: the fast update is reverted,
+$\theta^{(1)}_b=\theta^{(1)}_{b-1}$; the reverted state enters the buffer with weight
+$\gamma_b$; and the data of the block are detected with the anchor, the memory the
+attacker has not reached. Reversion protects the memory; the fallback protects the
+attacked block itself (Section~\ref{sec:ablate}: without it the attack-window SER is
+$0.245$, with it $0.028$). The remaining settings, all read from the configuration file,
+are $\eta_{\max}=5\cdot10^{-3}$, a surprise EMA weight of $0.9$ with a five-block warm-up,
+gate thresholds $\tau_1=1.25$ and $\tau_3=4$ (the latter floored by the $\chi^2_{0.999}$
+quantile per degree of freedom), a soft step of width $0.1\tau$ around every threshold,
+and thresholds tightened by up to $30\%$ under surprise.
+
+
+\subsection{Relative Physics Gates}\label{sec:gates}
+Every statistic is a ratio against a reference computed on the same block from the
+received data and no labels: the LMMSE detector built on the least-squares pilot channel
+estimate $\hat{\bm H}_b$, and the detector obtained with the anchor parameters; the
+reference is the better of the two. Ratios are normalised by their exponential moving
+average over accepted blocks and compared with a soft threshold, tightened by up to
+$30\%$ when the surprise ratio $r_b$ exceeds one. Fig.~\ref{fig:gateflow} gives the
+decision inside one block.
+
+\textit{G1, model residual.} With $r(\hat{\bm s})=\tfrac1{N_d}\sum_n\norm{\bm y_n-\hat{\bm
+H}_b\hat{\bm s}_n}^2$, the statistic is $r(\hat{\bm s}_{\rm nn})/r(\hat{\bm s}_{\rm ref})$. A
+poisoned adaptation produces decisions inconsistent with the linear model. Both terms
+contain the same noise and model-mismatch energy, so a PA nonlinearity compresses the
+ratio toward one and cannot raise a false alarm (Section~\ref{sec:theory}).
+
+\textit{G2, CRC pass rate.} The fraction $F_{\rm nn}$ of CRC sub-blocks that pass with the
+fast level, over the fraction $F_{\rm ref}$ with the reference, against the threshold
+$\tau_2$ of Proposition~\ref{prop:crc}. This gate is tied to the availability attacker's
+own objective: an attack that raises the SER lowers the pass rate.
+
+\textit{G3, channel prior.} The innovation energy of the LS channel estimate against its
+AR(1) prediction, relative to its running level on accepted blocks and floored by the
+$\chi^2$ quantile of the degrees of freedom. It targets physically implausible jumps and
+is the only gate not fooled by an attacker who keeps the SER low.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=1mm,y=1mm]
+\node[blk,text width=56mm] (a) at (0,0) {fast update on the pilots $\to\theta^{(1)}_b$; detect the data $\to\hat{\bm s}_{\rm nn}$};
+\node[gat,text width=56mm] (b) at (0,-10) {reference on the same block: $\hat{\bm H}_b$ (LS); $\hat{\bm s}_{\rm ref}$ = better of LMMSE and anchor detector};
+\node[gat,text width=56mm] (c) at (0,-20) {G1: $r(\hat{\bm s}_{\rm nn})/r(\hat{\bm s}_{\rm ref})$ \quad G2: $F_{\rm nn}/F_{\rm ref}$ \quad G3: innovation ratio};
+\node[gat,text width=56mm] (d) at (0,-30) {$\gamma_b=\min(\gamma_1,\gamma_2,\gamma_3)$; thresholds tightened if $r_b>1$};
+\node[blk,text width=25mm] (e) at (-16,-42) {$\gamma_b\ge\tfrac12$: keep $\theta^{(1)}_b$,\\ output $\hat{\bm s}_{\rm nn}$};
+\node[blk,text width=25mm] (f) at (16,-42) {$\gamma_b<\tfrac12$: revert $\theta^{(1)}_b\!\leftarrow\!\theta^{(1)}_{b-1}$,\\ output anchor decisions};
+\node[mem,text width=56mm] (g) at (0,-54) {buffer $(\gamma_b,\theta^{(1)}_b)$; consolidate if $(b{+}1)\bmod C_k=0$ \eqref{eq:consol}; update the clean EMAs if accepted};
+\draw[arr] (a)--(b); \draw[arr] (b)--(c); \draw[arr] (c)--(d);
+\draw[arr] (d.south)--(e.north) node[pos=0.4,lbl,left]{yes}; \draw[arr] (d.south)--(f.north) node[pos=0.4,lbl,right]{no};
+\draw[arr] (e.south)--(g.north-|e.south); \draw[arr] (f.south)--(g.north-|f.south);
+\end{tikzpicture}
+\caption{Decision inside one block. Light grey: memory operations; dark grey: gate
+computations.}
+\label{fig:gateflow}
+\end{figure}
+
+\section{Guarantees}\label{sec:theory}
+The guarantees are stated for the algorithm as implemented; the full proofs are given in
+the theory document of the repository. Let $\Phi(\theta;\bm Y,a)$ denote the block
+adaptation map (the fast state after one block, given the pilots and the anchor), and
+consider paired runs on the same clean sequence with and without an attack, with
+displacements $d_b=\norm{\theta^{(1),\rm adv}_b-\theta^{(1),\rm clean}_b}$ and $D_k(b)$ for
+level $k$.
+
+\begin{lemma}[consolidation is a convex combination]\label{lem:convex}
+Eq.~\eqref{eq:consol} writes the new level-$(k{+}1)$ state as a convex combination of its
+old state and the buffered level-$k$ states, with total weight $s\le\eta^{(k+1)}$ on the
+latter. Consequently, if the paired runs have equal verdicts, $D_{k+1}\le\max\{D_{k+1}^{\rm
+old},\max_j D_k(j)\}$, and by induction $D_k(b)\le\max_{j\le b}d_j$ for every $k\ge2$.
+\end{lemma}
+\begin{theorem}[retention certificate]\label{thm:cert}
+Let an attack occupy a window of $W$ blocks with equal gate verdicts in the paired runs,
+let $n(W)\le\lceil W/C_K\rceil$ be the number of level-$K$ consolidations inside it, and
+let $\Delta_f(W)=\max_{\rm window}d_b$ be the largest paired fast-level displacement. Then
+\begin{equation}\label{eq:cert}
+D_K(W)\le\Delta_f(W)\big(1-(1-\eta^{(K)})^{n(W)}\big)\le\eta^{(K)}\Delta_f(W)n(W).
+\end{equation}
+If moreover $\norm{\Phi(\theta;\bm Y+\bm E,a)-\Phi(\theta;\bm Y,a)}\le G_\Phi\norm{\bm E}$ and
+$\Phi$ is $L_\theta$- and $L_a$-Lipschitz in $\theta$ and $a$ with $L=L_\theta+L_a<1$, then
+$\Delta_f(W)\le G_\Phi\epsilon\min\{1,(1-L_\theta)n_W\}/(1-L)$, where $n_W=\rho_{\rm
+blk}(1-p^{\rm rej})W$ counts the attacked blocks the gate accepts; if only $L\le1$ holds
+(non-expansive map), $\Delta_f(W)\le G_\Phi\epsilon\,n_W$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Level $K$ consolidates $n(W)$ times in the window; each time, by Lemma~\ref{lem:convex},
+$D_K\leftarrow(1-s)D_K+s\Delta_f$ with $s\le\eta^{(K)}$, which iterated from $D_K=0$ gives
+\eqref{eq:cert}. For the second part, the triangle inequality on $\Phi$ gives $d_b\le
+L_\theta d_{b-1}+L_a\max_{k\ge2}D_k(b-1)+G_\Phi\epsilon\chi_b$ with $\chi_b=1$ on attacked
+accepted blocks; the lemma and the geometric sum give the bound, and with $L\le1$ the
+recursion is non-expansive and adds at most $G_\Phi\epsilon$ per accepted attacked block.
+\end{proof}
+The first part needs no regularity of the fast learner: the exposure of the slow level
+is divided by its period whatever the fast level does. The second part identifies where
+the gate enters, through $n_W$, and why rejected blocks inject nothing: they are reverted.
+The form $\eta^{(K)}\rho\,\epsilon\,G(1-p^{\rm rej})W/C_K$ holds with $G=G_\Phi/(1-L)$.
+
+\begin{theorem}[corruption-robust dynamic regret]\label{thm:regret}
+Let $\ell_b$ be $G_\ell$-Lipschitz in $\theta$ and $R_T(u)=\sum_b\ell_b(\theta_b)-\ell_b(u_b)$
+the dynamic regret against a comparator sequence. Under the hypotheses of
+Theorem~\ref{thm:cert}, $R^{\rm adv}_T(u)\le R^{\rm clean}_T(u)+G_\ell\,T\,\Delta_f(T)$; without
+the anchor ($L_a=0$), $R^{\rm adv}_T(u)\le R^{\rm clean}_T(u)+G_\ell G_\Phi\epsilon\,n_T/(1-L_\theta)$;
+and a detector that uses level $k$ pays at most
+$G_\ell\Delta_f(T)\min\{T,\eta^{(k)}T^2/(2C_k)\}$.
+\end{theorem}
+The adversary's contribution is additive to the clean regret, linear in the number of
+accepted corrupted blocks and divided by the level period. No rate is claimed for the
+clean term of the full-MLP receiver, which is reported empirically; for a
+last-layer-adaptable (convex) variant the $O(\sqrt{T(1+P_T)})$ bound of
+\cite{zinkevich2003,mokhtari2016} applies with the bounded step \eqref{eq:eta}.
+
+\begin{proposition}[CRC gate]\label{prop:crc}
+With i.i.d. symbol errors of probability $p$ in a sub-block of $L$ symbols and an $r$-bit
+CRC whose syndrome is uniform on error, $P(\mathrm{pass}\mid p)=(1-p)^L+2^{-r}(1-(1-p)^L)$.
+Inverting at $F_{\rm ref}$ gives $p_{\rm ref}$, and the rule ``reject if $F_{\rm nn}/F_{\rm
+ref}<\tau_2$'' with
+\begin{equation}\label{eq:tau2}
+\tau_2=\Big(\frac{1-p_{\rm ref}-\delta}{1-p_{\rm ref}}\Big)^{L},\qquad\delta=\max\{\delta_{\min},\rho\,p_{\rm ref}\},
+\end{equation}
+rejects exactly when the fast level's error probability exceeds the reference's by more
+than $\delta$, up to the Hoeffding fluctuation $2e^{-2nt^2}$ of the pass fraction over $n$
+sub-blocks \cite{hoeffding1963}.
+\end{proposition}
+With $n=781$ the gate is deterministic for practical purposes against any attacker that
+raises the SER by more than $\delta$, and an attacker that does not has caused less than
+$\delta$ of harm. The absolute rule ($\delta\equiv0.01$) is $30\times$ the clean SER at a
+$3\cdot10^{-4}$ operating point; the relative rule with $\rho=1$ and
+$\delta_{\min}=2\cdot10^{-3}$ (five standard deviations of the pass fraction) follows it.
+
+The residual gate is insensitive to model mismatch for the same reason: writing $\bm
+y_n=\hat{\bm H}\bm s_n+\bm\nu_n+\bm m_n$ with $\bm m_n$ the mismatch term, the residual of a
+decision with error pattern $\bm e_n$ is $\mathrm{mean}\norm{\hat{\bm
+H}\bm e_n}^2+\mathrm{mean}\norm{\bm\nu_n+\bm m_n}^2+O(N_d^{-1/2})$, so the ratio of the two
+residuals is monotone in the excess decision-error energy of the fast level and the
+mismatch only compresses it toward one.
+
+\begin{table}[t]
+\centering\caption{Constants of Theorem~\ref{thm:cert} measured by finite differences on
+clean blocks of the A3 configuration: maximum over 10 blocks and 3 random probes, mean in
+parentheses. Script: \texttt{certificate\_check.py}.}\label{tab:constants}
+\scriptsize
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+$\lambda$ & $G_\Phi$ & $L_\theta$ & $L_a$ & $L_\theta+L_a$ & $\epsilon$ (A3)\\
+\midrule
+0.5 (default) & 5.21 (3.13) & 0.86 (0.76) & 0.35 (0.32) & 1.20 & 1.05\\
+1 & 1.54 (1.43) & 0.54 (0.52) & 0.54 (0.53) & 1.08 & 1.11\\
+2 & 2.22 (1.97) & 0.40 (0.35) & 0.82 (0.80) & 1.22 & 1.11\\
+4 & 2.21 (2.06) & 0.38 (0.29) & 1.01 (0.99) & 1.39 & 1.11\\
+\bottomrule
+\end{tabular}
+\end{table}
+Table~\ref{tab:constants} gives the measured constants. $L_\theta+L_a$ stays near one at
+every proximal weight: what the fast map forgets about its own past ($1-L_\theta$) it
+inherits from the anchor ($L_a$), because the proximal step drives $\theta$ toward the
+anchor. The joint system is non-expansive rather than contractive, so the part of
+Theorem~\ref{thm:cert} claimed for the default receiver is the structural bound
+\eqref{eq:cert} with the measured $\Delta_f$, checked in Section~\ref{sec:cert}; the
+contraction branch is stated for completeness and is not certified by these probes. The
+same table shows that $\lambda=1$ cuts the input sensitivity $G_\Phi$ of the fast level
+from $5.2$ to $1.5$: a stronger prior makes the per-block fit less steerable by the pilots.
+
+\section{Experimental Setup}\label{sec:setup}
+A fair test needs strong attackers, the receivers of the literature, several channel
+families and many seeds, with every receiver seeing the same realisation. The
+experiments are: clean SER against SNR ($4$--$16$\,dB) on the four channel families (E2);
+A1 white-box and transfer at SIR $-10$ to $10$\,dB with the jamming control on the SED
+channel (E3), across SNR (E3snr), on the $\tanh$ PA channel and on COST2100 (E3nl, E3cost);
+A2 on Jakes fading with and without G3 (E4); A3 over 300 blocks with $C_K\in\{8,32,128\}$
+and a paired clean run (E5); the gate-aware attacker with penalty weights 5, 50 and 500
+against gate subsets (E7); the $8\times8$ system (E8); Jakes fading at $f_DT_b=0.01$, $0.05$
+and $0.10$ (E9); and sixteen ablation variants. All use 3 seeds; E3 and the 10\,dB clean
+cells use 5.
+
+
+\textit{Baselines.} LMMSE on the least-squares pilot estimate (no adaptation; the
+model-based reference); online DeepSIC \cite{shlezinger2021}; Meta-DeepSIC
+\cite{raviv2023}; a drift-detection receiver that adapts only when a $z$-test on the
+pilot loss fires (the ``adapt less'' strategy); a MedBN-style receiver that replaces the
+adaptation gradient by a median of means over four pilot groups \cite{medbn}; and a
+single-memory Titans receiver, the same delta-rule fast learner and surprise rate with
+$K=1$ and no gates \cite{behrouz2025titans}, which isolates the memory hierarchy from the
+fast rule. All DeepSIC-type receivers share the architecture, the pre-training and the
+300 adaptation steps per block of Table~\ref{tab:setup}.
+
+\textit{Protocol.} Every receiver is run on the same channel realisation, noise and
+attack draw for a given seed (paired design); the attacker re-crafts its perturbation
+for each victim. Means over seeds are reported, with 95\% bootstrap confidence intervals
+over the (seed, block) pairs (10\,000 resamples \cite{efron1993}) and two-sided Wilcoxon
+signed-rank tests \cite{wilcoxon1945} on the paired per-block differences,
+Holm-corrected within each table \cite{holm1979}, for the main cells. The attack window, recovery criterion and budget were fixed before the sweeps; the one
+change made after seeing results, the relative CRC slack, is reported with its first,
+failed calibration (Section~\ref{sec:cost2100}).
+
+\section{Results}\label{sec:results}
+The receivers are compared under the availability attack, then from the gate's side,
+across SNR, with significance tests, under the stress attackers, against the certificate,
+in ablation, and on other channels, a larger system and faster fading.
+
+\subsection{Main Comparison}
+\begin{table*}[t]
+\centering\caption{SER in the attack window (blocks 30--69) under A1 at SIR
+$-10/-5/0/5/10$\,dB on the $4\times4$ SED channel at 10\,dB; mean over seeds (5 for
+online DeepSIC, Meta-DeepSIC and Citadel-Rx, 3 otherwise). Pre: blocks 0--29. Post and
+recovery (Rec., blocks; 30: not within the run) at SIR 0\,dB. LMMSE has no adaptation
+map; its attacked row is the transfer one. Scripts: \texttt{sweep.py e3},
+\texttt{analyze.py}.}\label{tab:main}
+\scriptsize
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+Receiver & Pre & White-box A1 & Post & Rec. & Transfer A1 & Rec. & Jamming $0$\,dB\\
+\midrule
+LMMSE & 0.056 & -- & -- & -- & 0.873 / 0.740 / 0.447 / 0.149 / 0.064 & 0 & 0.892\\
+Online DeepSIC & 0.071 & 0.973 / 0.938 / 0.772 / 0.475 / 0.277 & 0.088 & 11 & 0.352 / 0.357 / 0.347 / 0.295 / 0.210 & 10 & 0.855\\
+Meta-DeepSIC & 0.062 & 0.861 / 0.805 / 0.593 / 0.400 / 0.241 & 0.186 & 30 & 0.195 / 0.201 / 0.213 / 0.211 / 0.175 & 14 & 0.851\\
+Drift-detection & 0.077 & 0.975 / 0.942 / 0.776 / 0.459 / 0.265 & 0.097 & 10 & 0.345 / 0.359 / 0.337 / 0.277 / 0.199 & 7 & 0.858\\
+MedBN-style & 0.065 & 0.933 / 0.853 / 0.738 / 0.549 / 0.397 & 0.204 & 30 & 0.724 / 0.641 / 0.544 / 0.423 / 0.296 & 30 & 0.858\\
+Single-memory Titans & 0.068 & 0.975 / 0.939 / 0.788 / 0.486 / 0.276 & 0.075 & 6 & 0.363 / 0.368 / 0.354 / 0.290 / 0.200 & 6 & 0.861\\
+\midrule
+Citadel-Rx (proposed) & \textbf{0.040} & \textbf{0.026 / 0.025 / 0.028 / 0.030 / 0.034} & \textbf{0.029} & \textbf{0} & \textbf{0.025 / 0.025 / 0.027 / 0.030 / 0.037} & \textbf{0} & 0.848\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{fig_run}
+\caption{One run (seed 0, white-box A1 at SIR 0\,dB; shaded: attack window). (a) SER per
+block; dashed: the same receiver without attack. (b) Citadel-Rx gate verdicts: the CRC
+gate drops to zero on every poisoned block and the combined verdict rejects it. (c)
+Displacement of the three memory levels from their pre-trained value; level 2 absorbs the
+weights of the reverted fast states and returns, level 3 follows its no-attack
+trajectory. Script: \texttt{fig\_paper.py}.}
+\label{fig:run}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{fig_sir}
+\caption{SER in the attack window against the attacker's budget under (a) white-box and
+(b) transfer A1. Markers: seed means; bars: seed standard deviation. LMMSE appears in (b)
+only, since it has no adaptation map to attack through. Script: \texttt{fig\_paper.py}.}
+\label{fig:sir}
+\end{figure*}
+
+Table~\ref{tab:main} and Figs.~\ref{fig:run}--\ref{fig:sir} contain the main result. Under
+the white-box attack, every baseline is destroyed at SIR $\le0$\,dB (SER $0.59$--$0.98$)
+and still loses $4$--$6\times$ at $10$\,dB; Meta-DeepSIC and the MedBN-style receiver do
+not recover within 30 blocks (post-attack SER $0.19$--$0.20$ against $0.06$--$0.07$
+before), reproducing the observation of \cite{wu2024}. The transfer attack is weaker
+against the baselines ($0.20$--$0.36$) but far from harmless, and it wrecks LMMSE at high
+budgets. The jamming control places the baselines' vulnerability in perspective: against
+every one of them, poisoning 200 pilot bits costs as much as jamming 50\,000 data bits with
+the same energy ($0.77$ against $0.86$ at 0\,dB) and, unlike jamming, leaves persistent
+damage.
+
+Against Citadel-Rx the attack is worthless at every budget and under both knowledge
+models. The attack-window SER ($0.025$--$0.037$) is at or below the receiver's own clean
+level in those blocks (Fig.~\ref{fig:run}a: the window covers the easy part of the fade,
+so the relevant comparison is with the dashed no-attack curve, from which the attacked
+run is indistinguishable), recovery is immediate, and the slow memory follows its
+no-attack trajectory (Fig.~\ref{fig:run}c). The attacker is reduced to jamming, which costs continuous power and leaves no trace.
+Before the attack, Citadel-Rx is $44\%$ below online DeepSIC ($0.040$ against $0.071$).
+
+\subsection{The Gate's Side}
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{fig_roc}
+\caption{Receiver operating characteristic of the gate verdict $\gamma$ as a detector of
+poisoned blocks, pooled over seeds and budgets (axes zoomed to the upper-left corner):
+(a) combined verdict per experiment; (b) individual gates on the A1 grid. At the operating
+point $\gamma<\tfrac12$, $94\%$ of poisoned blocks are rejected at a $0.6\%$
+false-rejection rate on the A1 grid. Script: \texttt{gate\_roc.py}.}
+\label{fig:roc}
+\end{figure*}
+Fig.~\ref{fig:roc} views the same runs from the gate. The rejection rate of poisoned
+blocks is $0.98/0.98/0.97/0.95/0.86$ under the white-box attack and
+$0.99/0.99/0.97/0.94/0.78$ under the transfer attack at SIR $-10/-5/0/5/10$\,dB, with
+false rejections of clean blocks between $0.000$ and $0.017$. Rejection falls with the
+attacker's budget because a weak perturbation does less damage and more often stays
+inside the CRC slack; the blocks it leaks cost little, which is why the SER in
+Table~\ref{tab:main} rises only from $0.026$ to $0.034$. Pooled over seeds and budgets,
+the combined verdict has AUC $0.989$ under A1 (G1 alone $0.986$, G2 alone $0.999$, G3
+alone $0.967$) and $1.000$ under data jamming, where the residual ratio is inverted (G1
+alone $0.117$) and the CRC gate carries the verdict: the gates are not interchangeable,
+and $\gamma=\min$ inherits the best of them.
+
+\subsection{Degradation Across SNR}
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{fig_snr}
+\caption{SER against SNR without attack (dashed) and under white-box A1 at SIR 0\,dB
+(solid), 3 seeds. (a) For every baseline the attacked curve never meets the clean one on
+the grid, so $\Delta_{\rm dB}$ is unbounded. (b) Citadel-Rx with the absolute and the
+relative CRC slack; $\Delta_{\rm dB}$ is the horizontal gap between the two curves. Script:
+\texttt{fig\_paper.py}.}
+\label{fig:snr}
+\end{figure*}
+Fig.~\ref{fig:snr} reports the degradation metric of \cite{wu2024}. For every baseline the
+attacked SER stays at $0.45$--$0.91$ over the whole $4$--$16$\,dB grid, so the extra SNR
+needed to recover the clean SER exceeds the grid everywhere. For Citadel-Rx,
+$\Delta_{\rm dB}\le0$ from $4$ to $10$\,dB and $\approx0$ at $12$\,dB with the relative
+slack ($0.0062$ attacked against $0.0059$ clean); at $14$ and $16$\,dB the attacked window
+sits at $0.0018$ and $0.0009$ against clean $0.0008$ and $0.0001$: the defence holds the
+receiver near $10^{-3}$ under attack but does not preserve a $10^{-4}$ operating point,
+because the $5$--$10\%$ of poisoned blocks that pass the gate set the floor.
+
+\subsection{Significance and Seed Spread}
+\begin{table*}[t]
+\centering\caption{Paired comparison on (seed, block) pairs: Citadel-Rx minus baseline,
+with 95\% bootstrap interval and Holm-corrected Wilcoxon $p$ (every entry $p<0.001$).
+Attack cells use the window; clean cells use all 100 blocks. Full tables:
+\texttt{docs/STATS.md}. Script: \texttt{stats.py}.}\label{tab:paired}
+\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Citadel-Rx vs. & White-box A1, SIR 0\,dB & Transfer A1, SIR 0\,dB & Clean, cosine 10\,dB & Clean, Jakes 10\,dB\\
+\midrule
+Online DeepSIC & $-0.745$ [$-0.757$, $-0.731$] & $-0.320$ [$-0.331$, $-0.308$] & $-0.029$ [$-0.030$, $-0.028$] & $-0.0069$ [$-0.0075$, $-0.0063$]\\
+Meta-DeepSIC & $-0.565$ [$-0.583$, $-0.546$] & $-0.186$ [$-0.198$, $-0.174$] & $-0.023$ [$-0.024$, $-0.021$] & $-0.0056$ [$-0.0061$, $-0.0051$]\\
+Drift-detection & $-0.750$ [$-0.764$, $-0.734$] & $-0.310$ [$-0.325$, $-0.295$] & $-0.035$ [$-0.037$, $-0.033$] & $-0.0152$ [$-0.0166$, $-0.0139$]\\
+MedBN-style & $-0.712$ [$-0.736$, $-0.686$] & $-0.517$ [$-0.539$, $-0.496$] & $-0.034$ [$-0.036$, $-0.032$] & $-0.0089$ [$-0.0097$, $-0.0080$]\\
+Single-memory Titans & $-0.761$ [$-0.776$, $-0.745$] & $-0.328$ [$-0.342$, $-0.312$] & $-0.023$ [$-0.025$, $-0.021$] & $-0.0039$ [$-0.0046$, $-0.0032$]\\
+LMMSE & -- & $-0.420$ [$-0.432$, $-0.409$] & $-0.024$ [$-0.025$, $-0.022$] & $-0.0042$ [$-0.0049$, $-0.0035$]\\
+\bottomrule
+\end{tabular}
+\end{table*}
+Table~\ref{tab:paired} compares like with like: every pair of receivers sees the same
+channel, noise and attack draw, and the per-block differences are tested with Holm
+correction. Every difference in Tables~\ref{tab:main} and \ref{tab:clean} is significant
+at $p<0.001$, and the intervals exclude zero by a wide margin.
+Over five training seeds, the attacked SER of Citadel-Rx is $0.026\pm0.002$,
+$0.028\pm0.002$ and $0.034\pm0.003$ at SIR $-10$, $0$ and $10$\,dB (online DeepSIC
+$0.973\pm0.003$, $0.772\pm0.013$, $0.277\pm0.005$; Meta-DeepSIC $0.861\pm0.009$,
+$0.593\pm0.011$, $0.241\pm0.006$), and the clean SER at 10\,dB is $0.0302\pm0.0004$ against
+$0.0590\pm0.0008$ and $0.0527\pm0.0008$: the seed spread is two orders of magnitude below
+the effect. The Jakes clean cell spreads for every receiver because the realised fade
+differs by seed ($0.0059\pm0.0028$ against $0.0128\pm0.0058$ and $0.0115\pm0.0050$); the
+ranking is the same in all five seeds.
+
+\subsection{Clean Performance}\label{sec:clean}
+\begin{table}[t]
+\centering\caption{SER without attack over 100 blocks, 3 seeds (5 at 10\,dB on the cosine
+and Jakes channels). Scripts: \texttt{sweep.py e2}, \texttt{e2nl}, \texttt{e2cost};
+\texttt{analyze.py}.}\label{tab:clean}
+\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Receiver & Cosine 10\,dB & Jakes 10\,dB & $\tanh$ PA 10\,dB & COST2100 8\,dB\\
+\midrule
+LMMSE & 0.0537 & 0.0095 & 0.0562 & \textbf{0.0041}\\
+Online DeepSIC & 0.0590 & 0.0128 & 0.0652 & 0.0096\\
+Meta-DeepSIC & 0.0527 & 0.0115 & 0.0595 & 0.0093\\
+Drift-detection & 0.0653 & 0.0206 & 0.0691 & 0.0140\\
+MedBN-style & 0.0644 & 0.0142 & 0.0605 & 0.0080\\
+Single-memory Titans & 0.0529 & 0.0092 & 0.0567 & 0.0102\\
+Citadel-Rx (proposed) & \textbf{0.0302} & \textbf{0.0059} & \textbf{0.0331} & 0.0047\\
+\bottomrule
+\end{tabular}
+\end{table}
+Citadel-Rx costs less than nothing on three of the four channel families
+(Table~\ref{tab:clean}): it is the best receiver at every SNR from $4$ to $12$\,dB on the cosine, Jakes and nonlinear
+channels, halving the SER of online DeepSIC at 10\,dB. Pre-training does not explain the gain (pre-trained online
+DeepSIC: $0.074$ against $0.069$ in the pre-attack blocks), nor does the fast rule alone
+(single-memory Titans: $0.053$); Section~\ref{sec:ablate} attributes it to the proximal
+anchor, the slow memory acting as a prior for a fit from 100 pilot symbols. On COST2100, a nearly diagonal $4\times4$ channel on which LMMSE
+is close to optimal, Citadel-Rx matches LMMSE within $2$--$15\%$ at $4$--$8$\,dB while
+every DeepSIC baseline is $1.5$--$2.3\times$ worse than LMMSE. The clean gain is therefore
+channel-dependent, and nil where interference cancellation has nothing to cancel.
+
+\subsection{Targeted, Boiling-Frog and Gate-Aware Attackers}
+\begin{table}[t]
+\centering\caption{Stress attackers: SER in the attack window (3 seeds; the gate-aware
+cells with weights 50 and 500 have 1 seed). Rej.: rejection rate of poisoned blocks.}
+\label{tab:stress}
+\scriptsize
+\begin{tabular}{@{}L{17mm}L{26mm}ccc@{}}
+\toprule
+Attacker & Receiver & Pre & Window & Rej.\\
+\midrule
+A2 targeted, Jakes 0.05, SIR 0\,dB & Online DeepSIC & 0.019 & 0.438 & --\\
+ & Meta-DeepSIC & 0.017 & 0.350$^{\dagger}$ & --\\
+ & Citadel-Rx, G1+G2 & 0.010 & 0.010 & 0.82\\
+ & Citadel-Rx, G1+G2+G3 & 0.010 & 0.010 & 0.83\\
+\midrule
+Gate-aware, SIR 10\,dB & Citadel-Rx, no gates & 0.039 & 0.531 & 0.00\\
+ & G1 only, weight 5 & 0.039 & 0.034 & 0.93\\
+ & G1 only, weight 50 & 0.039 & 0.044 & 0.85\\
+ & G1 only, weight 500 & 0.039 & 0.074 & 0.30\\
+ & G1+G2, weight 5 & 0.039 & 0.024 & 1.00\\
+ & G1+G2+G3, weight 5 & 0.039 & 0.026 & 0.99\\
+ & G1+G2+G3, weight 500 & 0.039 & 0.027 & 0.95\\
+\midrule
+A3 boiling frog, 300 blocks & Citadel-Rx, $C_K=8$ & 0.029 & 0.040$^{\ddagger}$ & 0.00\\
+ & Citadel-Rx, $C_K=32$ & 0.031 & 0.039$^{\ddagger}$ & 0.00\\
+ & Citadel-Rx, $C_K=128$ & 0.032 & 0.039$^{\ddagger}$ & 0.00\\
+\bottomrule
+\multicolumn{5}{@{}l}{$^{\dagger}$post-attack 0.053, recovery 23 blocks. \ $^{\ddagger}$post-attack 0.023.}
+\end{tabular}
+\end{table}
+Table~\ref{tab:stress} stresses the gates. The targeted attacker on a Jakes channel takes
+every user of online DeepSIC and Meta-DeepSIC down (window SER $0.44$ and $0.35$), while
+Citadel-Rx stays at its clean $0.010$ with $82\%$ rejection, with or without the prior
+gate. Against the residual gate alone, the gate-aware attacker with a large penalty weight
+cuts the rejection rate from $0.93$ to $0.30$ at the price of a weaker poison (SER
+$0.034\to0.074$): evading the residual test costs poisoning strength, but G1 alone is
+insufficient. Against G1 and
+G2 together, or all three, the best-effort attacker gains nothing (rejection
+$0.95$--$1.00$, SER $0.024$--$0.027$). The boiling-frog attacker passes the gates by
+construction (rejection $0$) and buys one SER point over 300 blocks; its effect on the
+memory is the subject of the certificate.
+
+\subsection{The Certificate With Measured Constants}\label{sec:cert}
+\begin{figure}[t]
+\centering\includegraphics[width=0.92\columnwidth]{fig_cert}
+\caption{Paired displacement of the slowest level under A3 (solid; 3 seeds) and the
+structural certificate \eqref{eq:cert} with the measured fast-level displacement (dashed)
+for $C_K=8,32,128$ over 300 attacked blocks. Script: \texttt{certificate\_check.py}.}
+\label{fig:cert}
+\end{figure}
+Fig.~\ref{fig:cert} draws \eqref{eq:cert} against the paired adversarial/clean
+trajectories of the slowest level ($\eta^{(K)}=0.5$, $p^{\rm rej}=0$). The bound holds at
+every $W$ for every period: the largest ratio of measured displacement to bound is
+$0.94$, $0.53$ and $0.26$ for $C_K=8$, $32$ and $128$, with end-of-window $\Delta_f$ of
+$33.4$, $17.2$ and $15.9$. It is nearly tight at $C_K=8$, where the slow level is a running
+average of the fast level, and the measured slopes of $D_K$ ($0.084$, $0.029$ and $0.0083$
+per block) scale as $1:0.35:0.10$ against the $1:0.25:0.0625$ of pure $1/C_K$; the
+deviation is $\Delta_f$ itself shrinking with $C_K$, because a slower anchor pulls the fast
+level back harder. The measured fast displacement ($16$--$34$) is of the size the
+geometric sum predicts from $L_\theta$ alone ($\epsilon G_\Phi/(1-L_\theta)\approx39$), so the
+anchor coupling does not compound even though $L_\theta+L_a>1$.
+
+\subsection{Ablations}\label{sec:ablate}
+\begin{table}[t]
+\centering\caption{Ablations under white-box A1 at SIR 0\,dB, 3 seeds (complete receiver
+on the same seeds). Script: \texttt{sweep.py ablate}.}\label{tab:ablate}
+\scriptsize
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Configuration & Pre & Window & Rej. & False rej.\\
+\midrule
+Complete receiver & 0.039 & \textbf{0.028} & 0.97 & 0.003\\
+$K=1$ (gates, no slow level) & 0.068 & 0.788 & 0.98 & 0.222\\
+$K=2$, $C=(1,8)$ & 0.038 & 0.050 & 0.97 & 0.006\\
+$K=4$, $C=(1,4,16,64)$ & 0.038 & 0.029 & 0.97 & 0.011\\
+Periods misaligned, $C=(1,3,7)$ & 0.037 & 0.031 & 0.95 & 0.000\\
+No gates & 0.039 & 0.540 & 0.00 & --\\
+G1 only & 0.039 & 0.031 & 0.97 & 0.000\\
+G2 only & 0.039 & 0.028 & 0.97 & 0.000\\
+G3 only & 0.039 & 0.507 & 0.08 & 0.000\\
+Last layer adaptable & 0.052 & 0.029 & 0.98 & 0.011\\
+Plain GD fast rule & 0.066 & 0.048 & 0.90 & 0.072\\
+Adam without delta decay & 0.040 & 0.030 & 0.97 & 0.006\\
+Fixed step $\eta$ & 0.040 & 0.027 & 0.97 & 0.011\\
+No anchor ($\lambda=0$) & \textbf{0.058} & 0.031 & 0.99 & 0.178\\
+Jump re-anchor \cite{behrouz2025nested}, $\beta=0.25$ & 0.058 & 0.031 & 0.97 & 0.150\\
+No fallback & 0.040 & \textbf{0.245} & 0.97 & 0.011\\
+Keep rejected update (no revert) & 0.040 & 0.025 & 1.00 & 0.017\\
+\bottomrule
+\end{tabular}
+\end{table}
+Each component is removed in turn (Table~\ref{tab:ablate}). Three carry the result. The
+slow memory: with one level the gates fire but nothing uncorrupted is left to fall back
+on, and the receiver collapses like online DeepSIC ($0.788$); two levels halve the damage
+($0.050$), three remove it. The fallback: reverting a rejected update protects the memory
+but leaves the data of the block to a poisoned fast level ($0.245$). The proximal anchor:
+it is the clean gain ($0.039$ against $0.058$ without it), and the jump re-anchoring of
+\cite{behrouz2025nested} is no better than no anchoring; both also raise clean false
+rejections to $15$--$18\%$. The negative results are equally clear: the delta-rule decay
+and the surprise-driven step each buy $2$--$3\%$ of clean SER; period alignment does not
+matter on this channel; G3 is useless against A1, as predicted, its role being A2; and
+whether a rejected update is reverted or kept makes no difference once the fallback is
+active.
+
+\subsection{Generalisation: Channels, System Size and Doppler}\label{sec:gen}
+\begin{table*}[t]
+\centering\caption{Transfer to other channels, a larger system and faster fading: SER in
+the attack window under white-box A1, 3 seeds; pre-attack SER in parentheses; Citadel-Rx
+on COST2100 with the relative slack. Scripts: \texttt{sweep.py e3nl}, \texttt{e3rel},
+\texttt{e8}, \texttt{e9}.}\label{tab:gen}
+\scriptsize
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+ & \multicolumn{2}{c}{$\tanh$ PA, $4\times4$} & \multicolumn{2}{c}{COST2100, $4\times4$} & \multicolumn{2}{c}{SED, $8\times8$} & Jakes, $f_DT_b=0.01/0.05/0.10$\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-8}
+Receiver & SIR $-10$ & SIR $0$ & SIR $-10$ & SIR $0$ & SIR $-10$ & SIR $0$ & SIR $0$\\
+\midrule
+LMMSE (transfer) & 0.841 (0.058) & 0.421 & 0.063 (0.0001) & 0.0010 & 0.983 (0.141) & 0.793 & 0.067 / 0.067 / 0.103 (0.015--0.021)\\
+Online DeepSIC & 0.973 (0.079) & 0.784 & 0.928 (0.0008) & 0.636 & 0.998 (0.250) & 0.971 & 0.719 / 0.719 / 0.717 (0.017--0.026)\\
+Meta-DeepSIC & 0.865 (0.067) & 0.656 & 0.791 (0.0007) & 0.345 & 0.972 (0.220) & 0.934 & 0.496 / 0.501 / 0.531 (0.013--0.026)\\
+Drift-detection & 0.973 (0.083) & 0.794 & 0.941 (0.0005) & 0.630 & 0.997 (0.259) & 0.971 & 0.728 / 0.738 / 0.717 (0.023--0.040)\\
+MedBN-style & 0.908 (0.069) & 0.706 & 0.744 (0.0002) & 0.505 & 0.995 (0.158) & 0.923 & 0.711 / 0.692 / 0.691 (0.015--0.025)\\
+Single-memory Titans & 0.971 (0.075) & 0.799 & 0.917 (0.0011) & 0.627 & 0.998 (0.234) & 0.969 & 0.738 / 0.749 / 0.736 (0.015--0.023)\\
+Citadel-Rx (proposed) & \textbf{0.026} (0.042) & \textbf{0.026} & \textbf{0.0011} (0.0003) & \textbf{0.0013} & \textbf{0.080} (0.127) & \textbf{0.080} & \textbf{0.0066 / 0.0069 / 0.0075} (0.007--0.015)\\
+\quad rejection / false rej. & 0.99 / 0.017 & 0.98 / 0.006 & 0.89 / 0.00 & 0.86 / 0.00 & 1.00 / 0.05 & 1.00 / 0.05 & 0.92 / 0.94 / 0.97; 0.006--0.033\\
+\bottomrule
+\end{tabular}
+\end{table*}
+Table~\ref{tab:gen} repeats the main comparison on the nonlinear channel, the COST2100
+traces, an $8\times8$ system and three Doppler rates. In every case, every baseline is
+destroyed at SIR $\le0$\,dB and Citadel-Rx stays at or below its pre-attack level. With
+eight users the clean gain grows (Citadel-Rx $0.102$ against LMMSE $0.129$ and online
+DeepSIC $0.204$ over 100 clean blocks), Meta-DeepSIC and MedBN again never recover
+(post-attack $0.40$--$0.66$), and false rejections rise to $3$--$5\%$ with the deeper
+eight-user fades. Faster fading raises every receiver's clean SER and the gate's false
+alarms ($0.6\to3.3\%$), not the attacker's success: the attacked SER of Citadel-Rx is
+flat at $0.007$ over a $10\times$ range of Doppler.
+
+\subsection{COST2100 and the Relative Slack}\label{sec:cost2100}
+COST2100 at 10\,dB is the one setting in which the first version of the receiver left
+its clean trajectory. With the absolute CRC slack ($\delta=0.01$), the attack-window SER
+of Citadel-Rx was $0.0022/0.0032/0.0054/0.0122/0.0111$ at SIR $-10$ to $10$\,dB against a
+clean $0.0003$, with rejection falling to $0.64$: a one-point slack is $30\times$ the clean
+SER, so the attacker can pass G2 while doing damage. The relative slack of
+\eqref{eq:tau2} brings the window to $0.0011/0.0012/0.0012/0.0015/0.0028$ (rejection
+$0.89/0.90/0.86/0.74/0.40$, no false rejections) and leaves the linear grid unchanged
+($0.025$--$0.029$, false rejection $\le2\%$). A first calibration with a floor of $10^{-3}$
+had fixed COST2100 but raised linear false rejections to $15$--$20\%$, because the floor
+sat inside the statistical resolution of the pass fraction; $2\cdot10^{-3}$ is five
+standard deviations of it. On this nearly diagonal channel LMMSE attacked through the
+surrogate is itself nearly immune ($0.0010$ at SIR 0\,dB), so Citadel-Rx matches rather
+than beats the model-based receiver under attack ($0.0013$; paired difference $+0.0003$,
+interval $[-0.0005,+0.0010]$).
+
+\subsection{Cost}
+Per block on one CPU worker (eight single-thread workers in parallel, 300 adaptation
+steps): LMMSE $0.07$\,s, online DeepSIC $4.0$\,s, drift-detection $9.2$\,s, Meta-DeepSIC
+$12.4$\,s, Citadel-Rx $12.2$\,s, single-memory Titans $14.4$\,s, MedBN-style $37.2$\,s.
+Citadel-Rx costs the same as Meta-DeepSIC; its overhead is the gate (one LMMSE detection
+and one CRC check per block), while the levels cost memory, not compute. The white-box
+attacker spends $3.2$\,s of PGD per poisoned block.
+
+\section{Discussion}\label{sec:discussion}
+Some conclusions are firmer than others. Against the attacks of \cite{wu2024} and their
+stronger variants, the robustness of the receiver is not in doubt: the attacked SER
+equals the clean one across budgets, knowledge models, channel families, system sizes
+and Doppler rates, with intervals and tests that leave no room for a seed artefact. The ablation identifies which parts matter (the
+slow level, the fallback, and G1 or G2) and which do not (period alignment, the delta
+decay, the surprise rate, reverting versus keeping a rejected update). This is stated
+plainly because it is the finding most likely to be misread: the value of the receiver
+lies in its memory and its fallback, not in a cleverer fast learner.
+
+The clean gain is a second contribution, but a conditional one: large where interference
+cancellation matters and nil on a nearly diagonal channel where LMMSE is already near
+optimal. The ablation attributes it to the proximal anchor, a prior learned across
+blocks, which is why the jump re-anchoring of nested learning does not produce it.
+
+The certificate is the structural bound \eqref{eq:cert} with a measured fast-level
+displacement; it holds at every window length and exhibits the $1/C_K$ mechanism. The
+contraction branch of Theorem~\ref{thm:cert} is not certified for the default receiver,
+since the measured $L_\theta+L_a$ exceeds one at every proximal weight; a guarantee with
+no measured quantity requires a fast learner that is a joint contraction in its state and
+its anchor, which the present design is not.
+
+Two limits are stated as such. At clean SER near $10^{-4}$ the attacked window sits near
+$10^{-3}$: the few poisoned blocks that pass the gate set a floor that a different slack
+does not move. And the CRC gate needs CRC-framed data; with uncoded symbols only G1 and
+G3 remain, and G1 alone defeats the non-adaptive attacker but not the gate-aware one.
+
+The remaining assumptions bound the generality of the results: a pilot-perturbing
+attacker with an energy budget (a directional jammer or a data spoofer lies outside the
+model); the block-fading channel families of the DeepSIC literature, with no link-level
+simulation under a 3GPP model and LDPC coding; QPSK with 100 pilot symbols per user; and
+DeepSIC as the only backbone tested, although the levels and gates are agnostic to the
+per-user network.
+
+\section{Conclusion}\label{sec:conclusion}
+This paper presented a DeepSIC receiver that keeps its adaptable parameters at three
+time-scales, consolidates from fast to slow memory only through blocks that pass three
+label-free physics-consistency tests, pulls the fast level toward the slow projection,
+and detects a rejected block with the slow memory. Against the pilot-poisoning attacks
+that destroy online and meta-learned receivers, the attacked symbol error rate equals
+the clean one at every budget, on four channel families, two system sizes and three
+Doppler rates, with $86$--$99\%$ of poisoned blocks rejected and at most $1.7\%$ of clean
+ones; without attack the receiver halves the error rate of online DeepSIC where
+interference cancellation matters. The exposure of the slow memory to a bounded attack is
+divided by its period and multiplied by the miss rate of the gate, and the bound holds
+with measured constants. Two lessons follow: the defence lies in the memory, not in the
+learner, and a gate tied to the attacker's own objective is what a gate-aware attacker
+cannot evade without giving that objective up. The stated limits point to a re-detection
+pass for accepted blocks, a jointly contractive fast learner, link-level simulation with
+LDPC coding, and other backbones, to which the levels and gates apply unchanged.
+
+\scriptsize\begin{thebibliography}{40}
+\bibitem{oshea2017} T.~O'Shea and J.~Hoydis, ``An introduction to deep learning for the physical layer,'' \emph{IEEE Trans. Cogn. Commun. Netw.}, vol.~3, no.~4, pp. 563--575, Dec. 2017.
+\bibitem{honkala2021} M.~Honkala, D.~Korpi, and J.~M.~J. Huttunen, ``DeepRx: Fully convolutional deep learning receiver,'' \emph{IEEE Trans. Wireless Commun.}, vol.~20, no.~6, pp. 3925--3940, Jun. 2021.
+\bibitem{samuel2019} N.~Samuel, T.~Diskin, and A.~Wiesel, ``Learning to detect,'' \emph{IEEE Trans. Signal Process.}, vol.~67, no.~10, pp. 2554--2564, May 2019.
+\bibitem{shlezinger2023} N.~Shlezinger, J.~Whang, Y.~C. Eldar, and A.~G. Dimakis, ``Model-based deep learning,'' \emph{Proc. IEEE}, vol.~111, no.~5, pp. 465--499, May 2023.
+\bibitem{shlezinger2021} N.~Shlezinger, R.~Fu, and Y.~C. Eldar, ``DeepSIC: Deep soft interference cancellation for multiuser MIMO detection,'' \emph{IEEE Trans. Wireless Commun.}, vol.~20, no.~2, pp. 1349--1362, Feb. 2021.
+\bibitem{raviv2023} T.~Raviv, S.~Park, O.~Simeone, Y.~C. Eldar, and N.~Shlezinger, ``Online meta-learning for hybrid model-based deep receivers,'' \emph{IEEE Trans. Wireless Commun.}, vol.~22, no.~10, pp. 6415--6431, Oct. 2023.
+\bibitem{wu2024} K.~Wu, W.~Jiang, D.~Niyato, Y.~Li, and C.~Luo, ``Transfer-based adversarial poisoning attacks for online (MIMO-)deep receivers,'' arXiv:2409.02430, Sep. 2024.
+\bibitem{wu2023tta} T.~Wu, F.~Jia, X.~Qi, J.~T. Wang, V.~Sehwag, S.~Mahloujifar, and P.~Mittal, ``Uncovering adversarial risks of test-time adaptation,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2023.
+\bibitem{medbn} H.~Park, J.~Hwang, S.~Mun, S.~Park, and J.~Ok, ``MedBN: Robust test-time adaptation against malicious test samples,'' in \emph{Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR)}, 2024.
+\bibitem{blanchard2017} P.~Blanchard, E.~M. El~Mhamdi, R.~Guerraoui, and J.~Stainer, ``Machine learning with adversaries: Byzantine tolerant gradient descent,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2017.
+\bibitem{steinhardt2017} J.~Steinhardt, P.~W. Koh, and P.~Liang, ``Certified defenses for data poisoning attacks,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2017.
+\bibitem{lykouris2018} T.~Lykouris, V.~Mirrokni, and R.~Paes Leme, ``Stochastic bandits robust to adversarial corruptions,'' in \emph{Proc. ACM Symp. Theory Comput. (STOC)}, 2018.
+\bibitem{behrouz2025nested} A.~Behrouz, M.~Razaviyayn, P.~Zhong, and V.~Mirrokni, ``Nested learning: The illusion of deep learning architectures,'' in \emph{Adv. Neural Inf. Process. Syst. (NeurIPS)}, 2025.
+\bibitem{behrouz2025titans} A.~Behrouz, P.~Zhong, and V.~Mirrokni, ``Titans: Learning to memorize at test time,'' arXiv:2501.00663, 2025.
+\bibitem{finn2017} C.~Finn, P.~Abbeel, and S.~Levine, ``Model-agnostic meta-learning for fast adaptation of deep networks,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2017.
+\bibitem{madry2018} A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu, ``Towards deep learning models resistant to adversarial attacks,'' in \emph{Proc. Int. Conf. Learn. Represent. (ICLR)}, 2018.
+\bibitem{zinkevich2003} M.~Zinkevich, ``Online convex programming and generalized infinitesimal gradient ascent,'' in \emph{Proc. Int. Conf. Mach. Learn. (ICML)}, 2003.
+\bibitem{mokhtari2016} A.~Mokhtari, S.~Shahrampour, A.~Jadbabaie, and A.~Ribeiro, ``Online optimization in dynamic environments: Improved regret rates for strongly convex problems,'' in \emph{Proc. IEEE Conf. Decis. Control (CDC)}, 2016, arXiv:1603.04954.
+\bibitem{hoeffding1963} W.~Hoeffding, ``Probability inequalities for sums of bounded random variables,'' \emph{J. Amer. Statist. Assoc.}, vol.~58, no.~301, pp. 13--30, 1963.
+\bibitem{jakes1974} W.~C. Jakes, \emph{Microwave Mobile Communications}. New York, NY, USA: Wiley, 1974.
+\bibitem{liu2012cost} L.~Liu, C.~Oestges, J.~Poutanen, K.~Haneda, P.~Vainikainen, F.~Quitin, F.~Tufvesson, and P.~De~Doncker, ``The COST 2100 MIMO channel model,'' \emph{IEEE Wireless Commun.}, vol.~19, no.~6, pp. 92--99, Dec. 2012.
+\bibitem{ts38212} 3GPP, ``NR; Multiplexing and channel coding,'' TS 38.212, 2024.
+\bibitem{efron1993} B.~Efron and R.~J. Tibshirani, \emph{An Introduction to the Bootstrap}. New York, NY, USA: Chapman \& Hall, 1993.
+\bibitem{wilcoxon1945} F.~Wilcoxon, ``Individual comparisons by ranking methods,'' \emph{Biometrics Bull.}, vol.~1, no.~6, pp. 80--83, 1945.
+\bibitem{holm1979} S.~Holm, ``A simple sequentially rejective multiple test procedure,'' \emph{Scand. J. Statist.}, vol.~6, no.~2, pp. 65--70, 1979.
+\end{thebibliography}
+
+
+\end{document}

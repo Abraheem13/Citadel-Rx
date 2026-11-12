@@ -1,0 +1,8 @@
+# E7 — gate-aware adaptive attacker that keeps the G1 residual small while poisoning.
+# Sweep citadel.gates over [g1], [g1,g2], [g1,g2,g3].
+channel: {model: synthetic, linear: true, fading: cosine, snr_db: 10.0}
+frame: {pilot_bits: 200, data_bits: 50000, n_blocks: 100}
+receiver: {type: citadel, epochs: 300, pretrain: true}
+citadel: {levels: 3, periods: [1, 8, 32], fast_rule: dgd, gates: [g1]}
+attack: {type: adaptive, gate_aware_weight: 5.0, sir_db: 0.0, start_block: 30, end_block: 70, pgd_steps: 20}
+run: {name: e7_citadel_g1only_adaptive, out_dir: results/e7, seeds: [0, 1, 2]}

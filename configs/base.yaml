@@ -1,0 +1,36 @@
+# Reference setting (Raviv et al. TWC 2023 / Wu et al. 2024): 4x4 QPSK, 200 pilot bits,
+# 50 000 data bits per coherence block, cosine fading on the SED channel, SNR 10 dB.
+channel:
+  model: synthetic
+  n_user: 4
+  n_ant: 4
+  linear: true
+  fading: cosine
+  snr_db: 10.0
+frame:
+  modulation: QPSK
+  pilot_bits: 200
+  data_bits: 50000
+  n_blocks: 100
+  crc_bits: 8
+  crc_subblock_symbols: 32
+receiver:
+  type: citadel
+  iterations: 3
+  lr: 0.005
+  epochs: 300
+  pretrain: true
+citadel:
+  levels: 3
+  periods: [1, 8, 32]
+  fast_rule: dgd
+  fast_steps: 300
+  eta_max: 0.005
+  dgd_delta: 0.1
+  gates: [g1, g2, g3]
+attack:
+  type: none
+run:
+  name: base
+  out_dir: results/base
+  seeds: [0, 1, 2]

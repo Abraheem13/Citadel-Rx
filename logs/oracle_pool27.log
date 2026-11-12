@@ -1,0 +1,7 @@
+attacked  b2_a4_a0.25_pgd20_oracle_acc__sir0     seed 10  ~ 186 min  -> results/rev_p3_oracle
+attacked  p3_citadel_oracle_maxser__sir0         seed 10  ~  28 min  -> results/rev_p3_oracle
+attacked  p3_citadel_oracle_acc__sir0            seed 10  ~  28 min  -> results/rev_p3_oracle
+clean     oracle_twin_ad263dea                   seed 10  ~  10 min  -> results/rev_clean_pool27
+19:29:10 clean oracle_twin_ad263dea s10: done in 802 s
+19:59:37 attacked p3_citadel_oracle_acc__sir0 s10: done in 2629 s
+20:00:33 attacked p3_citadel_oracle_maxser__sir0 s10: done in 2685 s

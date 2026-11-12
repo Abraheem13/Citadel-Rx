@@ -1,0 +1,6 @@
+== cloudy: 40 runs queued (before de-duplication), 1 workers, pre-training cache cache/pretrain
+[1 done, ~39 left | 0.7 h, ~25.4 h to go at this pace] t1 H3 h3_a4_a0.25_ratio__sir0 s10 OK 39 min  == h3_a4_a0.25_ratio__sir0 seed 10: ser_mean=0.0298 ser_median=0.0170 ser_pre=0.0238 ser_attack=0.0480 ser_post=0.0124
+pushed results to GitHub (15:23)
+[2 done, ~38 left | 1.3 h, ~24.5 h to go at this pace] t1 H3 h3_a4_a0.25_ratio__sir0 s11 OK 38 min  == h3_a4_a0.25_ratio__sir0 seed 11: ser_mean=0.0309 ser_median=0.0171 ser_pre=0.0226 ser_attack=0.0497 ser_post=0.0130
+pushed results to GitHub (16:08)
+[3 done, ~37 left | 1.9 h, ~23.3 h to go at this pace] t1 H3 h3_a4_a0.25_ratio__sir0 s12 OK 36 min  == h3_a4_a0.25_ratio__sir0 seed 12: ser_mean=0.0343 ser_median=0.0172 ser_pre=0.0174 ser_attack=0.0626 ser_post=0.0109

@@ -1,0 +1,18 @@
+{
+ "G_grad_max": 2.962862124659403,
+ "G_grad_mean": 0.827101972943387,
+ "eps": 1.0457924500523776,
+ "G_adapt_max": 5.211420059204102,
+ "G_adapt_mean": 3.127166673541069,
+ "L_theta_max": 0.8566527366638184,
+ "L_theta_mean": 0.7587461546063423,
+ "L_a_max": 0.3478773534297943,
+ "L_a_mean": 0.32387303933501244,
+ "rows": [
+  "| C_K | eta_K | p_rej | Delta_f measured (max paired fast displacement) | max_W D_K / Thm 1(i) | Delta_f Lipschitz (needs L<1) | Thm 1(ii) slope | measured slope | max_W D_K / Thm 1(ii) |",
+  "|---|---|---|---|---|---|---|---|---|",
+  "| 8 | 0.5 | 0.00 | 33.43 | 0.944 | nan | inf | 0.0842 | nan |",
+  "| 32 | 0.5 | 0.00 | 17.17 | 0.530 | nan | inf | 0.0293 | nan |",
+  "| 128 | 0.5 | 0.00 | 15.86 | 0.256 | nan | inf | 0.0083 | nan |"
+ ]
+}

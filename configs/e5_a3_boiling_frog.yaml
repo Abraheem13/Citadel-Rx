@@ -1,0 +1,8 @@
+# E5 — A3 boiling-frog over long windows; measures slow-level displacement against the
+# retention certificate (Corollary 2.2). Needs run.save_params for the level snapshots.
+channel: {model: synthetic, linear: true, fading: cosine, snr_db: 10.0}
+frame: {pilot_bits: 200, data_bits: 20000, n_blocks: 400}
+receiver: {type: citadel, epochs: 300, pretrain: true}
+citadel: {levels: 3, periods: [1, 8, 32], fast_rule: dgd, gates: [g1, g2, g3]}
+attack: {type: a3, a3_eps_small: 0.05, start_block: 50, end_block: 350, pgd_steps: 10}
+run: {name: e5_citadel_a3, out_dir: results/e5, seeds: [0, 1, 2], save_params: true}

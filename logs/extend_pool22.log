@@ -1,0 +1,15 @@
+attacked  p8_a3star_e0.05__long                seed 13  ~  90 min  -> results/rev_p8_drift_more
+attacked  h5_a3star_e0.05_guard__long          seed 13  ~  90 min  -> results/rev2_drift_guard_more
+attacked  p8_a3star_e0.5__long                 seed 13  ~  89 min  -> results/rev_p8_drift_more
+attacked  p8_a3star_e0.5_guard__long           seed 13  ~  86 min  -> results/rev_p8_drift_more
+attacked  p8_a3star_e0.2__long                 seed 13  ~  77 min  -> results/rev_p8_drift_more
+clean     ext_twin_b400_2a55eccc               seed 13  ~  30 min  -> results/rev_clean_pool22
+clean     ext_twin_b400_5ad2a48c               seed 13  ~  29 min  -> results/rev_clean_pool22
+7 jobs, ~491 CPU-min
+20:26:39 attacked p8_a3star_e0.5_guard__long s13: done in 4601 s
+20:27:30 attacked p8_a3star_e0.5__long s13: done in 4652 s
+20:28:08 attacked h5_a3star_e0.05_guard__long s13: done in 4690 s
+20:28:36 attacked p8_a3star_e0.05__long s13: done in 4718 s
+21:01:16 clean ext_twin_b400_2a55eccc s13: done in 2023 s
+21:01:54 clean ext_twin_b400_5ad2a48c s13: done in 2024 s
+21:34:11 attacked p8_a3star_e0.2__long s13: done in 4050 s

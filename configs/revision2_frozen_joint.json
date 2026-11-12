@@ -1,0 +1,16 @@
+{
+ "rule": "lowest mean clean SER over seeds 0-2 among epochs {30,100} x lr {1e-3,5e-3}",
+ "table": {
+  "ep30_lr0.001": 0.08284824477166025,
+  "ep30_lr0.005": 0.285748906316688,
+  "ep100_lr0.001": 0.08993864703371744,
+  "ep100_lr0.005": 0.26450624199743916
+ },
+ "chosen": "ep30_lr0.001",
+ "cal_clean_ser": 0.08284824477166025,
+ "overrides": [
+  "receiver.epochs=30",
+  "receiver.lr=0.001",
+  "receiver.weight_decay=0.0"
+ ]
+}

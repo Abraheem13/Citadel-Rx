@@ -1,0 +1,21 @@
+{
+ "machine": "pool15",
+ "identical": true,
+ "identical_to_pool13_rerun": true,
+ "identical_to_cloud": [
+  true,
+  true
+ ],
+ "compared_with": [
+  "results/rev_clean_pool13/g1fix_twin_citadel_s10_bb20b760b6bb.json",
+  "results/rev_clean_cloud/clean_0b811be896_s10_ddd0022e34fa.json",
+  "results/rev_clean_cloud/clean_3b3e8e4941_s10_964cda537d56.json"
+ ],
+ "fields": [
+  "ser",
+  "gamma",
+  "attacked"
+ ],
+ "blocks": 100,
+ "at": "2026-11-11T13:44:18Z"
+}

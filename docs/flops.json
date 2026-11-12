@@ -1,0 +1,80 @@
+{
+ "4x4_qpsk": {
+  "online_deepsic": {
+   "params": 67632,
+   "train": 584908800,
+   "detect": 1612800000,
+   "total": 2197708800
+  },
+  "citadel": {
+   "params": 67632,
+   "train": 5810380800,
+   "detect": 3225600000,
+   "total": 9035980800
+  },
+  "citadel_steps30": {
+   "params": 67632,
+   "train": 584908800,
+   "detect": 3225600000,
+   "total": 3810508800
+  },
+  "crc_rollback": {
+   "params": 67632,
+   "train": 584908800,
+   "detect": 1612800000,
+   "total": 2197708800
+  }
+ },
+ "4x16_qpsk": {
+  "online_deepsic": {
+   "params": 141360,
+   "train": 1253376000,
+   "detect": 3456000000,
+   "total": 4709376000
+  },
+  "citadel": {
+   "params": 141360,
+   "train": 12450816000,
+   "detect": 6912000000,
+   "total": 19362816000
+  },
+  "citadel_steps30": {
+   "params": 141360,
+   "train": 1253376000,
+   "detect": 6912000000,
+   "total": 8165376000
+  },
+  "crc_rollback": {
+   "params": 141360,
+   "train": 1253376000,
+   "detect": 3456000000,
+   "total": 4709376000
+  }
+ },
+ "8x32_qpsk": {
+  "online_deepsic": {
+   "params": 553056,
+   "train": 4957798400,
+   "detect": 13670400000,
+   "total": 18628198400
+  },
+  "citadel": {
+   "params": 553056,
+   "train": 49249894400,
+   "detect": 27340800000,
+   "total": 76590694400
+  },
+  "citadel_steps30": {
+   "params": 553056,
+   "train": 4957798400,
+   "detect": 27340800000,
+   "total": 32298598400
+  },
+  "crc_rollback": {
+   "params": 553056,
+   "train": 4957798400,
+   "detect": 13670400000,
+   "total": 18628198400
+  }
+ }
+}

@@ -1,0 +1,17 @@
+attacked  h5_a3star_e0.05_guard__long          seed 11  ~ 165 min  -> results/rev2_drift_guard_g1fix
+attacked  p8_a3star_e0.5__long                 seed 11  ~  81 min  -> results/rev_p8_drift_g1fix
+attacked  p8_a3star_e0.05__long                seed 11  ~  81 min  -> results/rev_p8_drift_g1fix
+clean     g1fix_twin_b400_7db4be97             seed 11  ~  55 min  -> results/rev_clean_pool20
+attacked  p8_a3star_e0.5_guard__long           seed 11  ~  44 min  -> results/rev_p8_drift_g1fix
+attacked  p8_a3star_e0.2__long                 seed 11  ~  27 min  -> results/rev_p8_drift_g1fix
+clean     g1fix_twin_b400_cc7a9062             seed 11  ~  27 min  -> results/rev_clean_pool20
+clean     g1fix_twin_b400_dc13ca78             seed 11  ~  15 min  -> results/rev_clean_pool20
+8 jobs, ~495 CPU-min (times of the replaced records)
+14:11:30 clean g1fix_twin_b400_7db4be97 s11: done in 2339 s
+14:50:12 attacked p8_a3star_e0.5__long s11: done in 4660 s
+14:51:35 attacked h5_a3star_e0.05_guard__long s11: done in 4744 s
+14:52:41 attacked p8_a3star_e0.05__long s11: done in 4809 s
+15:24:25 attacked p8_a3star_e0.5_guard__long s11: done in 4373 s
+15:25:57 clean g1fix_twin_b400_cc7a9062 s11: done in 2060 s
+15:26:29 clean g1fix_twin_b400_dc13ca78 s11: done in 2025 s
+16:00:08 attacked p8_a3star_e0.2__long s11: done in 4194 s

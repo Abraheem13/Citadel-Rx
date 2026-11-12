@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "citadel-rx"
+version = "0.1.0"
+description = "Continuum-memory test-time-learning receivers with certified robustness to pilot poisoning"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.26", "scipy>=1.11", "torch>=2.1", "pyyaml>=6.0", "matplotlib>=3.8", "tqdm>=4.66"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+sionna = ["sionna>=1.0", "tensorflow>=2.15"]
+
+[tool.setuptools.packages.find]
+include = ["citadel_rx*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

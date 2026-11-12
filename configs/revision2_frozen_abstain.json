@@ -1,0 +1,18 @@
+{
+ "rule": "smallest z in {3,4,5,6,8} with clean abstention <= 2% over blocks 5-99 of seeds 0-2",
+ "clean_abstention_rate": {
+  "3": 0.0,
+  "4": 0.0,
+  "5": 0.0,
+  "6": 0.0,
+  "8": 0.0
+ },
+ "n_blocks": 285,
+ "chosen_z": 3,
+ "max_abs_dev": 1.9773701458191184,
+ "overrides": [
+  "citadel.abstain=true",
+  "citadel.abstain_mode=ratio",
+  "citadel.abstain_z=3"
+ ]
+}

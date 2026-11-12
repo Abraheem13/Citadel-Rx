@@ -1,0 +1,7 @@
+# E4 — A2 targeted drift spoofing of one user; gate G3 on/off.
+channel: {model: synthetic, linear: true, fading: jakes, jakes_fd_tb: 0.05, snr_db: 10.0}
+frame: {pilot_bits: 200, data_bits: 50000, n_blocks: 100}
+receiver: {type: citadel, epochs: 300, pretrain: true}
+citadel: {levels: 3, periods: [1, 8, 32], fast_rule: dgd, gates: [g1, g2, g3]}
+attack: {type: a2, target_user: 0, a2_lambda: 1.0, sir_db: 0.0, start_block: 30, end_block: 70}
+run: {name: e4_citadel_a2, out_dir: results/e4, seeds: [0, 1, 2]}

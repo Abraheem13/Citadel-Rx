@@ -1,0 +1,3343 @@
+{
+ "name": "e2cost_drift_deepsic_snr16",
+ "seed": 0,
+ "config": {
+  "channel": {
+   "model": "cost2100",
+   "n_user": 4,
+   "n_ant": 4,
+   "linear": true,
+   "fading": "cosine",
+   "jakes_fd_tb": 0.05,
+   "snr_db": 16.0,
+   "seed": 0
+  },
+  "frame": {
+   "modulation": "QPSK",
+   "pilot_bits": 200,
+   "data_bits": 50000,
+   "n_blocks": 100,
+   "crc_bits": 8,
+   "crc_subblock_symbols": 32
+  },
+  "receiver": {
+   "type": "drift_deepsic",
+   "iterations": 3,
+   "hidden_base": 64,
+   "lr": 0.005,
+   "epochs": 300,
+   "optimizer": "adam",
+   "pretrain": true,
+   "pretrain_blocks": 1,
+   "pretrain_bits": 5000,
+   "pretrain_snrs": [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "pretrain_epochs": 300,
+   "meta_lr": 0.01,
+   "meta_every": 5,
+   "meta_epochs": 300,
+   "drift_threshold": 2.0,
+   "robust_groups": 4
+  },
+  "citadel": {
+   "levels": 3,
+   "periods": [
+    1,
+    8,
+    32
+   ],
+   "adaptable": "all",
+   "fast_rule": "dgd",
+   "fast_steps": 300,
+   "eta_max": 0.005,
+   "surprise_lr": true,
+   "surprise_ema": 0.9,
+   "level_lr": [
+    1.0,
+    0.5,
+    0.25
+   ],
+   "reanchor_mode": "proximal",
+   "reanchor_beta": 0.25,
+   "prox_lambda": 0.5,
+   "level_weights": [
+    0.5,
+    0.5
+   ],
+   "gates": [
+    "g1",
+    "g2",
+    "g3"
+   ],
+   "gate_mode": "min",
+   "g1_tau": 1.25,
+   "g2_tau": null,
+   "g2_ser_slack": 0.01,
+   "g3_tau": 4.0,
+   "g3_quantile": 0.999,
+   "adaptive_thresholds": true,
+   "tighten_floor": 0.7,
+   "surprise_clamp": 8.0,
+   "surprise_warmup": 5,
+   "reject_action": "revert",
+   "fallback_on_reject": true,
+   "dgd_delta": 0.1
+  },
+  "attack": {
+   "type": "none",
+   "knowledge": "whitebox",
+   "sir_db": 0.0,
+   "eps": null,
+   "where": "pilots",
+   "rho_blk": 1.0,
+   "start_block": 20,
+   "end_block": 60,
+   "pgd_steps": 20,
+   "pgd_alpha": 0.25,
+   "unroll_steps": 1,
+   "unroll_lr": 0.005,
+   "target_user": 0,
+   "a2_lambda": 1.0,
+   "a3_eps_small": 0.05,
+   "surrogate_blocks": 10,
+   "attacker_channel": "direct",
+   "gate_aware_weight": 1.0
+  },
+  "run": {
+   "name": "e2cost_drift_deepsic_snr16",
+   "out_dir": "results/e2cost",
+   "device": "auto",
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "log_every": 10,
+   "save_params": false
+  }
+ },
+ "config_hash": "5d44c658b629",
+ "receiver": "drift_deepsic",
+ "summary": {
+  "ser_mean": 0.0,
+  "ser_median": 0.0,
+  "ber_mean": 0.0,
+  "bler_mean": 0.0,
+  "pretrain_time_s": 16.08061647415161,
+  "mean_t_rx_s": 0.04503532648086548,
+  "total_time_s": 40.312498331069946
+ },
+ "blocks": [
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 0,
+   "t_rx": 2.7831826210021973,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.052075683808825,
+   "attacked": false,
+   "drift_mask": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 4,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 1,
+   "t_rx": 0.06550073623657227,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.053071300691666,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 2,
+   "t_rx": 0.012129545211791992,
+   "t_attack": 0.0029947757720947266,
+   "snr_db": 16.0,
+   "h_norm": 2.055167824833884,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 3,
+   "t_rx": 0.01963520050048828,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0575447723931086,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 4,
+   "t_rx": 0.020717144012451172,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0597666230704417,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 5,
+   "t_rx": 0.018874406814575195,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0617140283373985,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 6,
+   "t_rx": 0.01884746551513672,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.063349409251714,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 7,
+   "t_rx": 0.01682281494140625,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.064656063625829,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 8,
+   "t_rx": 0.013072967529296875,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0656235882111122,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 9,
+   "t_rx": 0.016973257064819336,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0662464570474675,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 10,
+   "t_rx": 0.015801668167114258,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.066524235626437,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 11,
+   "t_rx": 0.019825220108032227,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.066462128512776,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 12,
+   "t_rx": 0.01785755157470703,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0660730716228137,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 13,
+   "t_rx": 0.020457744598388672,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0654170536559278,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 14,
+   "t_rx": 0.021065473556518555,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.064492733261741,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    1.0574233932914012e-08,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 15,
+   "t_rx": 0.018029451370239258,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0634777421775237,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.1146221723379313e-09,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 16,
+   "t_rx": 0.018922090530395508,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.062695072856346,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    2.244087582425891e-08,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 5.960465454535324e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 17,
+   "t_rx": 0.01774430274963379,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0622091892019037,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.480097765518053e-09,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 18,
+   "t_rx": 0.02280116081237793,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.06176152605859,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    3.58623246654588e-08,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 8.940698181802986e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 19,
+   "t_rx": 0.014473199844360352,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0615871975158266,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -7.260319012658556e-09,
+    0.0,
+    0.0,
+    1.3760767636483706e-08
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 20,
+   "t_rx": 0.015785694122314453,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.061425933935045,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.887743264627488e-09,
+    0.0,
+    0.0,
+    -1.450512154832495e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 21,
+   "t_rx": 0.02321028709411621,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.061080197821772,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.5342868893480954e-09,
+    0.0,
+    0.0,
+    -1.3760768080572916e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 22,
+   "t_rx": 0.014035224914550781,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.060511293660788,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.198969337845028e-09,
+    0.0,
+    0.0,
+    -1.3054610725760085e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 23,
+   "t_rx": 0.014430046081542969,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.059813233365529,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.880858466866812e-09,
+    0.0,
+    0.0,
+    -1.238469105047102e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 24,
+   "t_rx": 0.015803098678588867,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.059146098655736,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.579071871153474e-09,
+    0.0,
+    0.0,
+    -1.1749147210693422e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 25,
+   "t_rx": 0.01749396324157715,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0555191529310166,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.292772442544447e-09,
+    0.0,
+    0.0,
+    -1.1146220613156288e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 26,
+   "t_rx": 0.015761852264404297,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.051264285581997,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.0211643731756794e-09,
+    0.0,
+    0.0,
+    -1.0574233710869407e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 27,
+   "t_rx": 0.016438722610473633,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0515913207572614,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.763494931836476e-09,
+    0.0,
+    0.0,
+    -1.0031598884907567e-09
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 28,
+   "t_rx": 0.017718791961669922,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.053696925551603,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.519048246720558e-09,
+    0.0,
+    0.0,
+    -9.51680956262635e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 29,
+   "t_rx": 0.015486001968383789,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0559487021543394,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.2871453054260655e-09,
+    0.0,
+    0.0,
+    -9.028437997216088e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 30,
+   "t_rx": 0.019001483917236328,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0580493406880804,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.067143066777135e-09,
+    0.0,
+    0.0,
+    -8.565128051252202e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 31,
+   "t_rx": 0.014218807220458984,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.060057265723572,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.858430908110222e-09,
+    0.0,
+    0.0,
+    -8.125594086472177e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 32,
+   "t_rx": 0.015186786651611328,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.062010213795619,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.6604286268726582e-09,
+    0.0,
+    0.0,
+    -7.708614857548923e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 33,
+   "t_rx": 0.014376401901245117,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0639071044515975,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.472587550845674e-09,
+    0.0,
+    0.0,
+    -7.313034067202295e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 34,
+   "t_rx": 0.01593780517578125,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0657359827408395,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.2943860972523e-09,
+    0.0,
+    0.0,
+    -6.937753704860938e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 35,
+   "t_rx": 0.016953706741333008,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0674849552471,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.1253288845789484e-09,
+    0.0,
+    0.0,
+    -6.581730715993217e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 36,
+   "t_rx": 0.01431584358215332,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0691447204405633,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.964947176664623e-09,
+    0.0,
+    0.0,
+    -6.24397811233024e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 37,
+   "t_rx": 0.011548995971679688,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.07070889076509,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.8127959961210536e-09,
+    0.0,
+    0.0,
+    -5.923557200304685e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 38,
+   "t_rx": 0.0148773193359375,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0721733136997993,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.668452347975858e-09,
+    0.0,
+    0.0,
+    -5.619579801496855e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 39,
+   "t_rx": 0.02970290184020996,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0735350588484756,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.531516107850962e-09,
+    0.0,
+    0.0,
+    -5.331201591296519e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 40,
+   "t_rx": 0.014164924621582031,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0747916990932915,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.401607135382733e-09,
+    0.0,
+    4.1600294764521095e-08,
+    -5.057622098902925e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 41,
+   "t_rx": 0.016047954559326172,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0759410858345477,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.278364608088168e-09,
+    4.385056229239126e-08,
+    -4.385055873967758e-09,
+    -4.798081376655716e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 42,
+   "t_rx": 0.015493631362915039,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.076981453670337,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.161446133186473e-09,
+    -4.622254579089713e-09,
+    -4.160029209998584e-09,
+    -4.551859444923423e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 43,
+   "t_rx": 0.019649267196655273,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0779116031507465,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.0505279696436673e-09,
+    -4.385055873967758e-09,
+    -3.94655019775314e-09,
+    -4.3182729614343884e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 44,
+   "t_rx": 0.014189004898071289,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0787309590296355,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.945301475458905e-09,
+    -4.160029209998584e-09,
+    -3.744025978136278e-09,
+    -4.0966732783864757e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 45,
+   "t_rx": 0.009652137756347656,
+   "t_attack": 0.00203704833984375,
+   "snr_db": 16.0,
+   "h_norm": 2.079439338295424,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.8454751060659191e-09,
+    -3.94655019775314e-09,
+    -3.5518950003421423e-09,
+    -3.8864456097797984e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 46,
+   "t_rx": 0.013606786727905273,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.080036286099336,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.7507711946862514e-09,
+    -3.744025978136278e-09,
+    -3.3696232470958876e-09,
+    -3.6870059783034037e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 47,
+   "t_rx": 0.021341562271118164,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.080520017272756,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.6609273956191828e-09,
+    -3.5518950003421423e-09,
+    -3.1967055669213096e-09,
+    -3.497800937779516e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 48,
+   "t_rx": 0.012972116470336914,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.080886635495293,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.575694019706475e-09,
+    -3.3696234691404925e-09,
+    -3.0326610112041408e-09,
+    -3.3183053527174877e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 49,
+   "t_rx": 0.015850305557250977,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0811313011299037,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.494834589443883e-09,
+    -3.1967055669213096e-09,
+    -2.8770348325934947e-09,
+    -3.148021010535018e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 50,
+   "t_rx": 0.016246557235717773,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.046754849240957,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.418124506713525e-09,
+    -3.0326610112041408e-09,
+    -2.729394932288187e-09,
+    -2.986474956223617e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 51,
+   "t_rx": 0.028153419494628906,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0476155363072737,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.345351052783883e-09,
+    -2.8770346105488898e-09,
+    -2.5893311939029218e-09,
+    -2.833218659681336e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 52,
+   "t_rx": 0.015882492065429688,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.048761469898719,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.2763120560421726e-09,
+    -2.7293947102435823e-09,
+    -2.4564552614236845e-09,
+    -2.687827183045499e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 53,
+   "t_rx": 0.015619516372680664,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0501354321923486,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.2108158919943435e-09,
+    -2.5893311939029218e-09,
+    -2.330397874672485e-09,
+    -2.5498966826909e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 54,
+   "t_rx": 0.017442941665649414,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.051715323398262,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.1486808171312646e-09,
+    -2.4564552614236845e-09,
+    -2.2108097574857766e-09,
+    -2.419044409229798e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 55,
+   "t_rx": 0.014810562133789062,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.053467737771264,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.0897343027949091e-09,
+    -2.330398318761695e-09,
+    -2.097358287045381e-09,
+    -2.2949071809552635e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 56,
+   "t_rx": 0.01748514175415039,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0552981102024175,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.0338127021114474e-09,
+    -2.2108097574857766e-09,
+    -1.989728604101515e-09,
+    -2.1771398572845158e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 57,
+   "t_rx": 0.017774343490600586,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0571249746588656,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -9.807609169243392e-10,
+    -2.097358287045381e-09,
+    -1.887622502749764e-09,
+    -2.0654163102040712e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 58,
+   "t_rx": 0.019763946533203125,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.058893412507725,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -9.304314541047631e-10,
+    -1.98972882614612e-09,
+    -1.790755765895824e-09,
+    -1.959425954822791e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 59,
+   "t_rx": 0.023812294006347656,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0605685461618712,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -8.826847586185238e-10,
+    -1.887622280705159e-09,
+    -1.6988600526346431e-09,
+    -1.8588745820391495e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 60,
+   "t_rx": 0.016947507858276367,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0621290404995016,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -8.373882143253297e-10,
+    -1.7907556548735215e-09,
+    -1.61168012269286e-09,
+    -1.7634832483182095e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 61,
+   "t_rx": 0.017679452896118164,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0635621359081595,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -7.944162550010958e-10,
+    -1.6988600526346431e-09,
+    -1.528974058473409e-09,
+    -1.6729870266907199e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 62,
+   "t_rx": 0.012090921401977539,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0648595571970674,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -7.536494206483724e-10,
+    -1.6116802337151626e-09,
+    -1.4505122658547975e-09,
+    -1.5871348679752373e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 63,
+   "t_rx": 0.018294811248779297,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0660139381443816,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -7.149745795409501e-10,
+    -1.528974058473409e-09,
+    -1.3760765860126867e-09,
+    -1.5056882129993454e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 64,
+   "t_rx": 0.01952075958251953,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.06701629432502,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.78284428623499e-10,
+    -1.450512154832495e-09,
+    -1.305460961553706e-09,
+    -1.428421270155411e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 65,
+   "t_rx": 0.01577305793762207,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0678561240005675,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.434771049335097e-10,
+    -1.3760766970349891e-09,
+    -1.238468883002497e-09,
+    -1.3551193500660474e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 66,
+   "t_rx": 0.015717506408691406,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.068525139518345,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -6.104559635566886e-10,
+    -1.3054608505314036e-09,
+    -1.1749147210693422e-09,
+    -1.285579004361992e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 67,
+   "t_rx": 0.014994621276855469,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0690219891123833,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.791293555823529e-10,
+    -1.2384689940247995e-09,
+    -1.1146220613156288e-09,
+    -1.2196073317927159e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 68,
+   "t_rx": 0.01772451400756836,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.069352823473102,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.494103505476744e-10,
+    -1.1749148320916447e-09,
+    -1.0574233710869407e-09,
+    -1.1570211455591561e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 69,
+   "t_rx": 0.014549732208251953,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.069526809487435,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -5.212164033707722e-10,
+    -1.1146220613156288e-09,
+    -1.0031597774684542e-09,
+    -1.0976465569800808e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 70,
+   "t_rx": 0.016460180282592773,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.069551204254768,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.944692988395616e-10,
+    -1.0574232600646383e-09,
+    -9.51680956262635e-10,
+    -1.0413189754920893e-10
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 71,
+   "t_rx": 0.021578073501586914,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.069429521834301,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.69094763033695e-10,
+    -1.0031598884907567e-09,
+    -9.0284385523276e-10,
+    -9.878819290376484e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 72,
+   "t_rx": 0.013304710388183594,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.069162333347369,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.450223800578357e-10,
+    -9.516810672849374e-10,
+    -8.565128606363714e-10,
+    -9.371871334540316e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 73,
+   "t_rx": 0.018431425094604492,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.068748876080216,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.221852867303255e-10,
+    -9.0284385523276e-10,
+    -8.125594086472177e-10,
+    -8.890936598060506e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 74,
+   "t_rx": 0.019677400588989258,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0681884081102906,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -4.0052014482760967e-10,
+    -8.565128606363714e-10,
+    -7.708615967771948e-10,
+    -8.434683507196894e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 75,
+   "t_rx": 0.016840696334838867,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0796635572847926,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.7996675250617784e-10,
+    -8.125594641583689e-10,
+    2.622062993395957e-07,
+    -8.001842938254455e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 76,
+   "t_rx": 0.015253543853759766,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0803068861190694,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.6046812756929114e-10,
+    -7.708615412660436e-10,
+    -2.8409830932218938e-08,
+    -7.591214462587814e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 77,
+   "t_rx": 0.015387296676635742,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0808959141501018,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -3.419701188889235e-10,
+    -7.313035732536832e-10,
+    -2.6951934017915846e-08,
+    -7.201659407707339e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 78,
+   "t_rx": 0.02040410041809082,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.081834626610027,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    2.155369656975381e-06,
+    -6.937753704860938e-10,
+    -2.5568848371904096e-08,
+    -6.83209391838524e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.0861634641988758e-09
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 79,
+   "t_rx": 0.019574642181396484,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0827680366383565,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.2753791029117565e-07,
+    -6.581731271104729e-10,
+    -2.4256738839767422e-08,
+    -6.4814938138813e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 80,
+   "t_rx": 0.020681142807006836,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0836048891081624,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.1586140519502806e-07,
+    -6.243978667441752e-10,
+    -2.3011962113628215e-08,
+    -6.148884873491411e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 81,
+   "t_rx": 0.011242389678955078,
+   "t_attack": 0.003287076950073242,
+   "snr_db": 16.0,
+   "h_norm": 2.084339041403594,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -2.0478410078794695e-07,
+    -5.923557755416198e-10,
+    -2.183106317943384e-08,
+    -5.833344224326353e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 82,
+   "t_rx": 0.015253543853759766,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0849741338683883,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.9427525899118336e-07,
+    -5.619580356608367e-10,
+    -2.0710764658815606e-08,
+    -5.533996177975453e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 83,
+   "t_rx": 0.016637563705444336,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.085516228373516,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.8430569070915226e-07,
+    -5.331202146408032e-10,
+    1.182627670459624e-06,
+    -5.250009801893718e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 8.940698181802986e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 84,
+   "t_rx": 0.01767444610595703,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0859728471834997,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.7484774161857786e-07,
+    -5.057622654014438e-10,
+    -1.4537066306274937e-07,
+    -4.980596490788969e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 85,
+   "t_rx": 0.018344402313232422,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0863523130199093,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.6587513584909175e-07,
+    -4.798081931767229e-10,
+    -1.3791071751256823e-07,
+    -4.7250085788430596e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 86,
+   "t_rx": 0.01803302764892578,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.086662909008351,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.573629759832329e-07,
+    -4.551860000034935e-10,
+    -1.308335839667052e-07,
+    -4.482536911099011e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 87,
+   "t_rx": 0.015068292617797852,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.086912071488998,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.4928761515875522e-07,
+    -4.3182732389901446e-10,
+    -1.2411963723479857e-07,
+    -4.2525077209587536e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 88,
+   "t_rx": 0.017421483993530273,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.087105788416206,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.4162667127948225e-07,
+    -4.096673833497988e-10,
+    -1.1775023267546203e-07,
+    -4.034282977127823e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 89,
+   "t_rx": 0.017601490020751953,
+   "t_attack": 0.002195596694946289,
+   "snr_db": 16.0,
+   "h_norm": 2.0872482546062217,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.3435885648505064e-07,
+    -3.8864458873355545e-10,
+    -1.1170766356372042e-07,
+    -3.8272565672237135e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 90,
+   "t_rx": 0.015135049819946289,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0873417610747294,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.2746401978347421e-07,
+    -3.687006533414916e-10,
+    -1.059752108290013e-07,
+    -3.6308546447205714e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 91,
+   "t_rx": 0.018401384353637695,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0873867686592598,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.2092297652088746e-07,
+    -3.497801215335272e-10,
+    5.102824047753529e-07,
+    -3.444530771723464e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 92,
+   "t_rx": 0.011200666427612305,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.087382112378358,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.1471760075210113e-07,
+    -3.3183053527174877e-10,
+    -1.5976368672454555e-07,
+    -3.267769041470636e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 93,
+   "t_rx": 0.015948057174682617,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.087325287351737,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    5.698574909729359e-07,
+    -3.148021010535018e-10,
+    -1.515651462113965e-07,
+    -3.100077833328996e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 94,
+   "t_rx": 0.016278743743896484,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.087212774504342,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.7478585334629315e-07,
+    -2.986474956223617e-10,
+    -1.43787318052091e-07,
+    -2.940991894462286e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 95,
+   "t_rx": 0.0159912109375,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0870403740348147,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.6581643080826325e-07,
+    -2.833218937237092e-10,
+    -1.3640863016917137e-07,
+    -2.7900700846905657e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 96,
+   "t_rx": 0.0115203857421875,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0868035264824276,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.573072694327493e-07,
+    -2.687827183045499e-10,
+    6.654803996752889e-07,
+    -2.6468927744049964e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 2.980232727267662e-10
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 97,
+   "t_rx": 0.01921868324279785,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.08649761416752,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.492347792009241e-07,
+    -2.549896960246656e-10,
+    -2.065564217446081e-07,
+    -2.5110630588742744e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 98,
+   "t_rx": 0.013126373291015625,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0861182484114926,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.4157654959490173e-07,
+    -2.419044686785554e-10,
+    -1.959566162668125e-07,
+    -2.3822034622700272e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  },
+  {
+   "ser": 0.0,
+   "ser_sym": 0.0,
+   "ser_user": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ber": 0.0,
+   "bler": 0.0,
+   "block": 99,
+   "t_rx": 0.01357269287109375,
+   "t_attack": 0.0,
+   "snr_db": 16.0,
+   "h_norm": 2.0856615588601577,
+   "attacked": false,
+   "drift_mask": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "drift_z": [
+    -1.3431129275431886e-07,
+    -2.2949071809552635e-10,
+    -1.8590075967495068e-07,
+    -2.259956458083856e-11
+   ],
+   "retrained_users": 0,
+   "pilot_loss_post": 0.0
+  }
+ ],
+ "device": "cuda",
+ "saved_at": "2026-10-29T17:27:57.691545+00:00",
+ "git_commit": "b2f2ba6"
+}

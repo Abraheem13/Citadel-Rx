@@ -1,0 +1,2207 @@
+{
+ "owner": "helper",
+ "until": "2026-11-07T08:00:00+00:00",
+ "note": "runs the helper cloud machine (campaign 4) is doing; other machines skip them until 'until', then run whatever is still missing; 'dropped': runs no machine does (the 300-epoch setting of the second-backbone tuning, removed from the grid before any test run to save ~3 h)",
+ "runs": {
+  "clean_00fb50fde3": [
+   12,
+   13,
+   14
+  ],
+  "clean_085f370f5d": [
+   10
+  ],
+  "clean_08b7db1775": [
+   12,
+   13,
+   14
+  ],
+  "clean_0a98fc2143": [
+   12,
+   13,
+   14
+  ],
+  "clean_18623b379d": [
+   10
+  ],
+  "clean_18e1291675": [
+   12,
+   13,
+   14
+  ],
+  "clean_1bf5bcfbbb": [
+   10
+  ],
+  "clean_2605bf6631": [
+   12,
+   13,
+   14
+  ],
+  "clean_29db531e08": [
+   10
+  ],
+  "clean_2a546499e8": [
+   12,
+   13,
+   14
+  ],
+  "clean_2ce8d97305": [
+   12,
+   13,
+   14
+  ],
+  "clean_30a04e9bbd": [
+   12,
+   13,
+   14
+  ],
+  "clean_32db5c3c02": [
+   12,
+   13,
+   14
+  ],
+  "clean_355ae747d9": [
+   12,
+   13,
+   14
+  ],
+  "clean_35aafbe66a": [
+   10
+  ],
+  "clean_39a6ddee08": [
+   12,
+   13,
+   14
+  ],
+  "clean_39d8c42d79": [
+   12,
+   13,
+   14
+  ],
+  "clean_3d48ea0f86": [
+   10
+  ],
+  "clean_4a4c1e8dfa": [
+   10
+  ],
+  "clean_4e1fda2296": [
+   12,
+   13,
+   14
+  ],
+  "clean_535f76d601": [
+   12,
+   13,
+   14
+  ],
+  "clean_5a80f1c9d3": [
+   12,
+   13,
+   14
+  ],
+  "clean_60ceb6316a": [
+   12,
+   13,
+   14
+  ],
+  "clean_6329981e34": [
+   12,
+   13,
+   14
+  ],
+  "clean_6f26f17f05": [
+   10
+  ],
+  "clean_7407e0ac7f": [
+   10
+  ],
+  "clean_85289fd627": [
+   12,
+   13,
+   14
+  ],
+  "clean_884433ce78": [
+   10
+  ],
+  "clean_8f691c87b8": [
+   10
+  ],
+  "clean_93e652296c": [
+   12,
+   13,
+   14
+  ],
+  "clean_94e01b5f7d": [
+   10
+  ],
+  "clean_95ec1bbb2f": [
+   12,
+   13,
+   14
+  ],
+  "clean_97d262caed": [
+   10
+  ],
+  "clean_9e85ee3f72": [
+   12,
+   13,
+   14
+  ],
+  "clean_9e8db2af8c": [
+   12,
+   13,
+   14
+  ],
+  "clean_a306131d30": [
+   12,
+   13,
+   14
+  ],
+  "clean_a9812efe04": [
+   12,
+   13,
+   14
+  ],
+  "clean_af32e4070d": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_b8ff337c0d": [
+   12,
+   13,
+   14
+  ],
+  "clean_ba622d4ded": [
+   12,
+   13,
+   14
+  ],
+  "clean_bbb1535edf": [
+   12,
+   13,
+   14
+  ],
+  "clean_bf6d7beb8f": [
+   12,
+   13,
+   14
+  ],
+  "clean_bfd0917661": [
+   12,
+   13,
+   14
+  ],
+  "clean_c482e97766": [
+   12,
+   13,
+   14
+  ],
+  "clean_c619e9dcc9": [
+   12,
+   13,
+   14
+  ],
+  "clean_ce65268207": [
+   12,
+   13,
+   14
+  ],
+  "clean_cff6e2a3f3": [
+   12,
+   13,
+   14
+  ],
+  "clean_d0ff4d0066": [
+   10
+  ],
+  "clean_d112e36fb7": [
+   12,
+   13,
+   14
+  ],
+  "clean_d722c60f34": [
+   10
+  ],
+  "clean_d75aaacb25": [
+   10
+  ],
+  "clean_d91463c616": [
+   10
+  ],
+  "clean_e6068aee6f": [
+   12,
+   13,
+   14
+  ],
+  "clean_eef1cb1ee3": [
+   12,
+   13,
+   14
+  ],
+  "clean_f10dadcb3c": [
+   12,
+   13,
+   14
+  ],
+  "clean_f34e0a7a0a": [
+   12,
+   13,
+   14
+  ],
+  "clean_f36aac759c": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_f50ede5b43": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_f6ba623745": [
+   10
+  ],
+  "clean_f9571e8713": [
+   12,
+   13,
+   14
+  ],
+  "clean_fb035082bd": [
+   12,
+   13,
+   14
+  ],
+  "clean_fe1cb19075": [
+   10
+  ],
+  "clean_fe421aec52": [
+   10
+  ],
+  "clean_fee514af6e": [
+   12,
+   13,
+   14
+  ],
+  "d4_citadel_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d4_lmmse_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d4_online_deepsic_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "grid_crc0.5_g10.5__wb_sir0": [
+   10
+  ],
+  "grid_crc0.5_g12__wb_sir0": [
+   10
+  ],
+  "grid_crc2_g10.5__wb_sir0": [
+   10
+  ],
+  "grid_crc2_g12__wb_sir0": [
+   10
+  ],
+  "p2_cotta_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_dd_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_drift_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_eata_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_ema_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_ewc_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_l2sp_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_l2sp_w0.001__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_l2sp_w0.1__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_l2sp_w1__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_lmmse__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_lmmse_robust__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_medbn_deepsic__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_rollback_allgates__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p2_titans_single__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_K1__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_K2__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_g1__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_g2__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_g3__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_no_anchor__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_no_clip__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_no_fallback__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_no_select__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p5_nogate__wb_sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_last_layer__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_nd1000_np100__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_nd1000_np32__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_nd5000_np100__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_nd5000_np32__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_qam16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_steps30__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_lmmse_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_lmmse_qam16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_nd1000_np100__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_nd1000_np32__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_nd5000_np100__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_nd5000_np32__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_qam16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "p7_crc_rel_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_crc_rel_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_delta_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_delta_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_eta3_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_eta3_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_g1_slack_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_g1_slack_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_g3_slack_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_g3_slack_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_prox_lambda_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_prox_lambda_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_soft_width_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_soft_width_x1.5__wb_sir0": [
+   10
+  ],
+  "p7_tighten_x0.75__wb_sir0": [
+   10
+  ],
+  "p7_tighten_x1.5__wb_sir0": [
+   10
+  ]
+ },
+ "dropped": {
+  "tune_joint_ep300_lr0.001": [
+   0,
+   1,
+   2
+  ],
+  "tune_joint_ep300_lr0.005": [
+   0,
+   1,
+   2
+  ],
+  "d4_citadel_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_f50ede5b43": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d4_online_deepsic_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_af32e4070d": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d4_lmmse_8x32__sir0": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_f36aac759c": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "p6_citadel_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "clean_d112e36fb7": [
+   12,
+   13,
+   14
+  ],
+  "p6_online_deepsic_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "clean_ce65268207": [
+   12,
+   13,
+   14
+  ],
+  "p6_lmmse_4x16__sir0": [
+   12,
+   13,
+   14
+  ],
+  "clean_2ce8d97305": [
+   12,
+   13,
+   14
+  ],
+  "d23_citadel_d35__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_7188cad35c": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_online_deepsic_d35__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_fa0f3fbeb2": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_crc_rollback_d35__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_c1b8e62df3": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_lmmse_d35__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "clean_59f668f264": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_citadel_d75__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_online_deepsic_d75__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_crc_rollback_d75__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_lmmse_d75__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_citadel_d150__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_online_deepsic_d150__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_crc_rollback_d150__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ],
+  "d23_lmmse_d150__phys": [
+   10,
+   11,
+   12,
+   13,
+   14
+  ]
+ },
+ "owners": {
+  "pool1": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "p3_citadel_unroll50__sir0": [
+     13
+    ],
+    "p3_citadel_pgd100_r5__sir0": [
+     13
+    ],
+    "p3_citadel_pgd100_r5__sir10": [
+     13
+    ],
+    "p3_citadel_strongest__sir0": [
+     13
+    ],
+    "b2_a4_a0.25_pgd20__sir0": [
+     13
+    ],
+    "p3_citadel_query__sir0": [
+     13
+    ],
+    "p3_a4_a0.25__sir0": [
+     13
+    ],
+    "p3_a4_a0.75__sir0": [
+     13
+    ],
+    "p3_citadel_unroll10__sir0": [
+     13
+    ],
+    "p3_citadel_unroll10__sir10": [
+     13
+    ],
+    "p3_citadel_softgate__sir0": [
+     13
+    ],
+    "p3_citadel_softgate__sir10": [
+     13
+    ],
+    "h3v_a4_a0.25__sir0": [
+     13
+    ],
+    "h3v_a4_a0.75__sir0": [
+     13
+    ],
+    "d8_citadel_joint__wb_sir0": [
+     13
+    ],
+    "clean_c1416e9241": [
+     13
+    ],
+    "d23_citadel_d35__phys": [
+     13
+    ],
+    "d23_citadel_d75__phys": [
+     13
+    ],
+    "d23_citadel_d150__phys": [
+     13
+    ],
+    "p4_citadel__sir0": [
+     13
+    ],
+    "clean_3b3e8e4941": [
+     13
+    ],
+    "p4_citadel__sir10": [
+     13
+    ],
+    "clean_0b811be896": [
+     13
+    ],
+    "p3_jamctl_a0.25__sir0": [
+     13
+    ],
+    "p3_jamctl_a0.75__sir0": [
+     13
+    ],
+    "p1_citadel__wb_sir-10": [
+     13
+    ],
+    "p1_citadel__wb_sir10": [
+     13
+    ],
+    "p1_citadel__tr_sir0": [
+     13
+    ],
+    "p1_citadel__jam": [
+     13
+    ],
+    "p3_citadel_M1__sir0": [
+     13
+    ],
+    "p3_citadel_M2__sir0": [
+     13
+    ],
+    "b1_citadel_M4__sir0": [
+     13
+    ],
+    "b1_citadel_M2_csi0.1__sir0": [
+     13
+    ],
+    "b1_citadel_M2_csi0.01__sir0": [
+     13
+    ],
+    "p3_citadel_greybox__sir0": [
+     13
+    ],
+    "p3_citadel_sigbudget__sir0": [
+     13
+    ],
+    "b3_citadel_redraw__none": [
+     13
+    ],
+    "b3_citadel_redraw__a1deny": [
+     13
+    ],
+    "b3_citadel_streak_redraw__none": [
+     13
+    ],
+    "b3_citadel_streak_redraw__a1deny": [
+     13
+    ],
+    "p3_citadel_redraw__none": [
+     13
+    ],
+    "p3_citadel_redraw__deny": [
+     13
+    ],
+    "p3_citadel_snrdrop__none": [
+     13
+    ],
+    "p3_citadel_streak_redraw__none": [
+     13
+    ],
+    "p3_citadel_streak_redraw__deny": [
+     13
+    ],
+    "p3_citadel_streak_snrdrop__none": [
+     13
+    ],
+    "h7_citadel__a2": [
+     13
+    ],
+    "h7_citadel__a1": [
+     13
+    ],
+    "h7_citadel_peruser__a2": [
+     13
+    ],
+    "clean_69fac9f0c0": [
+     13
+    ],
+    "h7_citadel_peruser__a1": [
+     13
+    ],
+    "clean_7188cad35c": [
+     13
+    ],
+    "h3v_a1__sir0": [
+     13
+    ],
+    "h3v_redraw__none": [
+     13
+    ],
+    "h3v_snrdrop__none": [
+     13
+    ],
+    "p1_meta_deepsic__wb_sir-10": [
+     14
+    ],
+    "clean_1950a64849": [
+     14
+    ],
+    "p1_meta_deepsic__wb_sir10": [
+     14
+    ],
+    "p1_meta_deepsic__tr_sir0": [
+     14
+    ],
+    "p1_meta_deepsic__jam": [
+     14
+    ],
+    "d23_lmmse_d35__phys": [
+     11
+    ],
+    "d23_lmmse_d75__phys": [
+     11
+    ],
+    "d23_lmmse_d150__phys": [
+     11
+    ],
+    "b3_lmmse_redraw__none": [
+     11
+    ],
+    "b3_lmmse_redraw__a1deny": [
+     11
+    ],
+    "clean_59f668f264": [
+     11
+    ]
+   }
+  },
+  "pool2": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "p3_citadel_unroll50__sir0": [
+     14
+    ],
+    "p3_citadel_pgd100_r5__sir0": [
+     14
+    ],
+    "p3_citadel_pgd100_r5__sir10": [
+     14
+    ],
+    "p3_citadel_strongest__sir0": [
+     14
+    ],
+    "b2_a4_a0.25_pgd20__sir0": [
+     14
+    ],
+    "p3_citadel_query__sir0": [
+     14
+    ],
+    "p3_a4_a0.25__sir0": [
+     14
+    ],
+    "p3_a4_a0.75__sir0": [
+     14
+    ],
+    "p3_citadel_unroll10__sir0": [
+     14
+    ],
+    "p3_citadel_unroll10__sir10": [
+     14
+    ],
+    "p3_citadel_softgate__sir0": [
+     14
+    ],
+    "p3_citadel_softgate__sir10": [
+     14
+    ],
+    "h3v_a4_a0.25__sir0": [
+     14
+    ],
+    "h3v_a4_a0.75__sir0": [
+     14
+    ],
+    "d8_citadel_joint__wb_sir0": [
+     14
+    ],
+    "clean_c1416e9241": [
+     14
+    ],
+    "d23_citadel_d35__phys": [
+     14
+    ],
+    "d23_citadel_d75__phys": [
+     14
+    ],
+    "d23_citadel_d150__phys": [
+     14
+    ],
+    "p4_citadel__sir0": [
+     14
+    ],
+    "clean_3b3e8e4941": [
+     14
+    ],
+    "p4_citadel__sir10": [
+     14
+    ],
+    "clean_0b811be896": [
+     14
+    ],
+    "p3_jamctl_a0.25__sir0": [
+     14
+    ],
+    "p3_jamctl_a0.75__sir0": [
+     14
+    ],
+    "p1_citadel__wb_sir-10": [
+     14
+    ],
+    "p1_citadel__wb_sir10": [
+     14
+    ],
+    "p1_citadel__tr_sir0": [
+     14
+    ],
+    "p1_citadel__jam": [
+     14
+    ],
+    "p3_citadel_M1__sir0": [
+     14
+    ],
+    "p3_citadel_M2__sir0": [
+     14
+    ],
+    "b1_citadel_M4__sir0": [
+     14
+    ],
+    "b1_citadel_M2_csi0.1__sir0": [
+     14
+    ],
+    "b1_citadel_M2_csi0.01__sir0": [
+     14
+    ],
+    "p3_citadel_greybox__sir0": [
+     14
+    ],
+    "p3_citadel_sigbudget__sir0": [
+     14
+    ],
+    "b3_citadel_redraw__none": [
+     14
+    ],
+    "b3_citadel_redraw__a1deny": [
+     14
+    ],
+    "b3_citadel_streak_redraw__none": [
+     14
+    ],
+    "b3_citadel_streak_redraw__a1deny": [
+     14
+    ],
+    "p3_citadel_redraw__none": [
+     14
+    ],
+    "p3_citadel_redraw__deny": [
+     14
+    ],
+    "p3_citadel_snrdrop__none": [
+     14
+    ],
+    "p3_citadel_streak_redraw__none": [
+     14
+    ],
+    "p3_citadel_streak_redraw__deny": [
+     14
+    ],
+    "p3_citadel_streak_snrdrop__none": [
+     14
+    ],
+    "h7_citadel__a2": [
+     14
+    ],
+    "h7_citadel__a1": [
+     14
+    ],
+    "h7_citadel_peruser__a2": [
+     14
+    ],
+    "clean_69fac9f0c0": [
+     14
+    ],
+    "h7_citadel_peruser__a1": [
+     14
+    ],
+    "clean_7188cad35c": [
+     14
+    ],
+    "h3v_a1__sir0": [
+     14
+    ],
+    "h3v_redraw__none": [
+     14
+    ],
+    "h3v_snrdrop__none": [
+     14
+    ],
+    "p1_online_select__wb_sir-10": [
+     13,
+     14
+    ],
+    "clean_5bcc406a08": [
+     13,
+     14
+    ],
+    "p1_online_select__wb_sir10": [
+     13,
+     14
+    ],
+    "p1_online_select__tr_sir0": [
+     13,
+     14
+    ],
+    "p1_online_select__jam": [
+     13,
+     14
+    ]
+   }
+  },
+  "pool3": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "p3_citadel_unroll50__sir0": [
+     12
+    ],
+    "p3_citadel_pgd100_r5__sir0": [
+     12
+    ],
+    "p3_citadel_pgd100_r5__sir10": [
+     12
+    ],
+    "p3_citadel_strongest__sir0": [
+     12
+    ],
+    "b2_a4_a0.25_pgd20__sir0": [
+     12
+    ],
+    "p3_citadel_query__sir0": [
+     12
+    ],
+    "p3_a4_a0.25__sir0": [
+     12
+    ],
+    "p3_a4_a0.75__sir0": [
+     12
+    ],
+    "p3_citadel_unroll10__sir0": [
+     12
+    ],
+    "p3_citadel_unroll10__sir10": [
+     12
+    ],
+    "p3_citadel_softgate__sir0": [
+     12
+    ],
+    "p3_citadel_softgate__sir10": [
+     12
+    ],
+    "h3v_a4_a0.25__sir0": [
+     12
+    ],
+    "h3v_a4_a0.75__sir0": [
+     12
+    ],
+    "d8_citadel_joint__wb_sir0": [
+     12
+    ],
+    "clean_c1416e9241": [
+     12
+    ],
+    "d23_citadel_d35__phys": [
+     12
+    ],
+    "d23_citadel_d75__phys": [
+     12
+    ],
+    "d23_citadel_d150__phys": [
+     12
+    ],
+    "d8_crc_rollback_joint__wb_sir0": [
+     14
+    ],
+    "clean_0b811be896": [
+     12
+    ],
+    "p3_jamctl_a0.25__sir0": [
+     12
+    ],
+    "p3_jamctl_a0.75__sir0": [
+     12
+    ],
+    "p3_citadel_M1__sir0": [
+     12
+    ],
+    "p3_citadel_M2__sir0": [
+     12
+    ],
+    "b1_citadel_M4__sir0": [
+     12
+    ],
+    "b1_citadel_M2_csi0.1__sir0": [
+     12
+    ],
+    "b1_citadel_M2_csi0.01__sir0": [
+     12
+    ],
+    "p3_citadel_greybox__sir0": [
+     12
+    ],
+    "p3_citadel_sigbudget__sir0": [
+     12
+    ],
+    "b3_citadel_redraw__none": [
+     12
+    ],
+    "b3_citadel_redraw__a1deny": [
+     12
+    ],
+    "b3_citadel_streak_redraw__none": [
+     12
+    ],
+    "b3_citadel_streak_redraw__a1deny": [
+     12
+    ],
+    "p3_citadel_redraw__none": [
+     12
+    ],
+    "p3_citadel_redraw__deny": [
+     12
+    ],
+    "p3_citadel_snrdrop__none": [
+     12
+    ],
+    "p3_citadel_streak_redraw__none": [
+     12
+    ],
+    "p3_citadel_streak_redraw__deny": [
+     12
+    ],
+    "p3_citadel_streak_snrdrop__none": [
+     12
+    ],
+    "h7_citadel__a2": [
+     12
+    ],
+    "h7_citadel__a1": [
+     12
+    ],
+    "h7_citadel_peruser__a2": [
+     12
+    ],
+    "clean_69fac9f0c0": [
+     12
+    ],
+    "h7_citadel_peruser__a1": [
+     12
+    ],
+    "clean_7188cad35c": [
+     12
+    ],
+    "h3v_a1__sir0": [
+     12
+    ],
+    "h3v_redraw__none": [
+     12
+    ],
+    "h3v_snrdrop__none": [
+     12
+    ],
+    "p1_meta_deepsic__wb_sir-10": [
+     13
+    ],
+    "clean_1950a64849": [
+     13
+    ],
+    "p1_meta_deepsic__wb_sir10": [
+     13
+    ],
+    "p1_meta_deepsic__tr_sir0": [
+     13
+    ],
+    "p1_meta_deepsic__jam": [
+     13
+    ],
+    "d23_crc_rollback_d35__phys": [
+     14
+    ],
+    "d23_crc_rollback_d75__phys": [
+     14
+    ],
+    "d23_crc_rollback_d150__phys": [
+     14
+    ],
+    "p1_crc_rollback__wb_sir-10": [
+     14
+    ],
+    "clean_4e1098edcf": [
+     14
+    ],
+    "p1_crc_rollback__wb_sir10": [
+     14
+    ],
+    "p1_crc_rollback__tr_sir0": [
+     14
+    ],
+    "p1_crc_rollback__jam": [
+     14
+    ],
+    "clean_c1b8e62df3": [
+     14
+    ],
+    "d23_lmmse_d35__phys": [
+     12,
+     10
+    ],
+    "d23_lmmse_d75__phys": [
+     12,
+     10
+    ],
+    "d23_lmmse_d150__phys": [
+     12,
+     10
+    ],
+    "b3_lmmse_redraw__none": [
+     12,
+     10
+    ],
+    "b3_lmmse_redraw__a1deny": [
+     12,
+     10
+    ],
+    "p3_lmmse_redraw__none": [
+     12
+    ],
+    "p3_lmmse_redraw__deny": [
+     12
+    ],
+    "p3_lmmse_snrdrop__none": [
+     12
+    ],
+    "clean_59f668f264": [
+     12,
+     10
+    ]
+   }
+  },
+  "pool4": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "b5_a3star_e0.05__long1000": [
+     10
+    ],
+    "b2_a4_a0.25_pgd20__sir0": [
+     10
+    ],
+    "h3v_a4_a0.25__sir0": [
+     10
+    ],
+    "h3v_a4_a0.75__sir0": [
+     10
+    ],
+    "d8_citadel_joint__wb_sir0": [
+     10
+    ],
+    "clean_c1416e9241": [
+     10
+    ],
+    "d23_citadel_d35__phys": [
+     10
+    ],
+    "d23_citadel_d75__phys": [
+     10
+    ],
+    "d23_citadel_d150__phys": [
+     10
+    ],
+    "p3_online_strongest__sir0": [
+     13,
+     12
+    ],
+    "d8_online_deepsic_joint__wb_sir0": [
+     13,
+     12
+    ],
+    "d8_crc_rollback_joint__wb_sir0": [
+     13,
+     11
+    ],
+    "clean_a14ebcbf4c": [
+     10
+    ],
+    "clean_0b811be896": [
+     10
+    ],
+    "b1_citadel_M4__sir0": [
+     10
+    ],
+    "b1_citadel_M2_csi0.1__sir0": [
+     10
+    ],
+    "b1_citadel_M2_csi0.01__sir0": [
+     10
+    ],
+    "b3_citadel_redraw__none": [
+     10
+    ],
+    "b3_citadel_redraw__a1deny": [
+     10
+    ],
+    "b3_citadel_streak_redraw__none": [
+     10
+    ],
+    "b3_citadel_streak_redraw__a1deny": [
+     10
+    ],
+    "h7_citadel__a2": [
+     10
+    ],
+    "h7_citadel__a1": [
+     10
+    ],
+    "h7_citadel_peruser__a2": [
+     10
+    ],
+    "clean_69fac9f0c0": [
+     10
+    ],
+    "h7_citadel_peruser__a1": [
+     10
+    ],
+    "clean_7188cad35c": [
+     10
+    ],
+    "h3v_a1__sir0": [
+     10
+    ],
+    "h3v_redraw__none": [
+     10
+    ],
+    "h3v_snrdrop__none": [
+     10
+    ],
+    "p3_online_deepsic_query__sir0": [
+     13,
+     12
+    ],
+    "d23_online_deepsic_d35__phys": [
+     13,
+     12
+    ],
+    "d23_online_deepsic_d75__phys": [
+     13,
+     12
+    ],
+    "d23_online_deepsic_d150__phys": [
+     13,
+     12
+    ],
+    "d23_crc_rollback_d35__phys": [
+     13,
+     11
+    ],
+    "d23_crc_rollback_d75__phys": [
+     13,
+     11
+    ],
+    "d23_crc_rollback_d150__phys": [
+     13,
+     11
+    ],
+    "p1_online_deepsic__wb_sir-10": [
+     13
+    ],
+    "clean_1a7479201b": [
+     13,
+     12
+    ],
+    "p1_online_deepsic__wb_sir10": [
+     13
+    ],
+    "p1_online_deepsic__tr_sir0": [
+     13
+    ],
+    "p1_online_deepsic__jam": [
+     13
+    ],
+    "p3_online_deepsic_M1__sir0": [
+     13,
+     12
+    ],
+    "p3_online_deepsic_M2__sir0": [
+     13,
+     12
+    ],
+    "b1_online_deepsic_M4__sir0": [
+     13,
+     12
+    ],
+    "b1_online_deepsic_M2_csi0.1__sir0": [
+     13,
+     12
+    ],
+    "b1_online_deepsic_M2_csi0.01__sir0": [
+     13,
+     12
+    ],
+    "p3_online_deepsic_sigbudget__sir0": [
+     13,
+     12
+    ],
+    "b3_online_deepsic_redraw__none": [
+     13,
+     12
+    ],
+    "b3_online_deepsic_redraw__a1deny": [
+     13,
+     12
+    ],
+    "p3_online_deepsic_redraw__none": [
+     13,
+     12
+    ],
+    "p3_online_deepsic_redraw__deny": [
+     13,
+     12
+    ],
+    "p3_online_deepsic_snrdrop__none": [
+     13,
+     12
+    ],
+    "h7_online_deepsic__a2": [
+     13,
+     12
+    ],
+    "clean_fa0f3fbeb2": [
+     13,
+     12
+    ],
+    "p1_crc_rollback__wb_sir-10": [
+     13
+    ],
+    "clean_4e1098edcf": [
+     13
+    ],
+    "p1_crc_rollback__wb_sir10": [
+     13
+    ],
+    "p1_crc_rollback__tr_sir0": [
+     13
+    ],
+    "p1_crc_rollback__jam": [
+     13
+    ],
+    "clean_c1b8e62df3": [
+     13,
+     11
+    ],
+    "d23_lmmse_d35__phys": [
+     13
+    ],
+    "d23_lmmse_d75__phys": [
+     13
+    ],
+    "d23_lmmse_d150__phys": [
+     13
+    ],
+    "b3_lmmse_redraw__none": [
+     13
+    ],
+    "b3_lmmse_redraw__a1deny": [
+     13
+    ],
+    "p3_lmmse_redraw__none": [
+     13
+    ],
+    "p3_lmmse_redraw__deny": [
+     13
+    ],
+    "p3_lmmse_snrdrop__none": [
+     13
+    ],
+    "clean_59f668f264": [
+     13
+    ]
+   }
+  },
+  "pool5": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "b5_a3star_e0.05__long1000": [
+     11
+    ],
+    "b2_a4_a0.25_pgd20__sir0": [
+     11
+    ],
+    "h3v_a4_a0.25__sir0": [
+     11
+    ],
+    "h3v_a4_a0.75__sir0": [
+     11
+    ],
+    "d8_citadel_joint__wb_sir0": [
+     11
+    ],
+    "clean_c1416e9241": [
+     11
+    ],
+    "d23_citadel_d35__phys": [
+     11
+    ],
+    "d23_citadel_d75__phys": [
+     11
+    ],
+    "d23_citadel_d150__phys": [
+     11
+    ],
+    "p3_online_strongest__sir0": [
+     14
+    ],
+    "d8_online_deepsic_joint__wb_sir0": [
+     14,
+     10,
+     11
+    ],
+    "d8_crc_rollback_joint__wb_sir0": [
+     10,
+     12
+    ],
+    "clean_a14ebcbf4c": [
+     11
+    ],
+    "clean_0b811be896": [
+     11
+    ],
+    "b1_citadel_M4__sir0": [
+     11
+    ],
+    "b1_citadel_M2_csi0.1__sir0": [
+     11
+    ],
+    "b1_citadel_M2_csi0.01__sir0": [
+     11
+    ],
+    "b3_citadel_redraw__none": [
+     11
+    ],
+    "b3_citadel_redraw__a1deny": [
+     11
+    ],
+    "b3_citadel_streak_redraw__none": [
+     11
+    ],
+    "b3_citadel_streak_redraw__a1deny": [
+     11
+    ],
+    "h7_citadel__a2": [
+     11
+    ],
+    "h7_citadel__a1": [
+     11
+    ],
+    "h7_citadel_peruser__a2": [
+     11
+    ],
+    "clean_69fac9f0c0": [
+     11
+    ],
+    "h7_citadel_peruser__a1": [
+     11
+    ],
+    "clean_7188cad35c": [
+     11
+    ],
+    "h3v_a1__sir0": [
+     11
+    ],
+    "h3v_redraw__none": [
+     11
+    ],
+    "h3v_snrdrop__none": [
+     11
+    ],
+    "p3_online_deepsic_query__sir0": [
+     14
+    ],
+    "d23_online_deepsic_d35__phys": [
+     14,
+     10,
+     11
+    ],
+    "d23_online_deepsic_d75__phys": [
+     14,
+     10,
+     11
+    ],
+    "d23_online_deepsic_d150__phys": [
+     14,
+     10,
+     11
+    ],
+    "d23_crc_rollback_d35__phys": [
+     10,
+     12
+    ],
+    "d23_crc_rollback_d75__phys": [
+     10,
+     12
+    ],
+    "d23_crc_rollback_d150__phys": [
+     10,
+     12
+    ],
+    "p1_online_deepsic__wb_sir-10": [
+     14
+    ],
+    "clean_1a7479201b": [
+     14,
+     10,
+     11
+    ],
+    "p1_online_deepsic__wb_sir10": [
+     14
+    ],
+    "p1_online_deepsic__tr_sir0": [
+     14
+    ],
+    "p1_online_deepsic__jam": [
+     14
+    ],
+    "p3_online_deepsic_M1__sir0": [
+     14
+    ],
+    "p3_online_deepsic_M2__sir0": [
+     14
+    ],
+    "b1_online_deepsic_M4__sir0": [
+     14,
+     10,
+     11
+    ],
+    "b1_online_deepsic_M2_csi0.1__sir0": [
+     14,
+     10,
+     11
+    ],
+    "b1_online_deepsic_M2_csi0.01__sir0": [
+     14,
+     10,
+     11
+    ],
+    "p3_online_deepsic_sigbudget__sir0": [
+     14
+    ],
+    "b3_online_deepsic_redraw__none": [
+     14,
+     10,
+     11
+    ],
+    "b3_online_deepsic_redraw__a1deny": [
+     14,
+     10,
+     11
+    ],
+    "p3_online_deepsic_redraw__none": [
+     14
+    ],
+    "p3_online_deepsic_redraw__deny": [
+     14
+    ],
+    "p3_online_deepsic_snrdrop__none": [
+     14
+    ],
+    "h7_online_deepsic__a2": [
+     14,
+     10,
+     11
+    ],
+    "clean_fa0f3fbeb2": [
+     14,
+     10,
+     11
+    ],
+    "clean_c1b8e62df3": [
+     10,
+     12
+    ],
+    "d23_lmmse_d35__phys": [
+     14
+    ],
+    "d23_lmmse_d75__phys": [
+     14
+    ],
+    "d23_lmmse_d150__phys": [
+     14
+    ],
+    "b3_lmmse_redraw__none": [
+     14
+    ],
+    "b3_lmmse_redraw__a1deny": [
+     14
+    ],
+    "p3_lmmse_redraw__none": [
+     14
+    ],
+    "p3_lmmse_redraw__deny": [
+     14
+    ],
+    "p3_lmmse_snrdrop__none": [
+     14
+    ],
+    "clean_59f668f264": [
+     14
+    ]
+   }
+  },
+  "pool6": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "d4s_citadel_8x32s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_fd5475317b": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "p6s_citadel_4x16s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_14c6d5f538": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "d4s_online_deepsic_8x32s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_cd9eecb9b3": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "p6s_online_deepsic_4x16s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_1135058394": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "d4s_lmmse_8x32s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_dc8fe6c9d7": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "p6s_lmmse_4x16s__sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_22f325a6b3": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   }
+  },
+  "pool7": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "d23s_citadel_d35__phys": [
+     10,
+     12,
+     14
+    ],
+    "d23s_citadel_d75__phys": [
+     10,
+     12,
+     14
+    ],
+    "d23s_citadel_d150__phys": [
+     10,
+     12,
+     14
+    ],
+    "clean_d631069611": [
+     10,
+     12,
+     14
+    ],
+    "d23s_online_deepsic_d35__phys": [
+     13
+    ],
+    "d23s_online_deepsic_d75__phys": [
+     13
+    ],
+    "d23s_online_deepsic_d150__phys": [
+     13
+    ],
+    "d23s_crc_rollback_d35__phys": [
+     10,
+     12,
+     14
+    ],
+    "d23s_crc_rollback_d75__phys": [
+     10,
+     12,
+     14
+    ],
+    "d23s_crc_rollback_d150__phys": [
+     10,
+     12,
+     14
+    ],
+    "clean_c0e4707cb7": [
+     13
+    ],
+    "clean_d103bdad55": [
+     10,
+     12,
+     14
+    ],
+    "d23s_lmmse_d35__phys": [
+     12,
+     14
+    ],
+    "d23s_lmmse_d75__phys": [
+     12,
+     14
+    ],
+    "d23s_lmmse_d150__phys": [
+     12,
+     14
+    ],
+    "clean_0e0253d36b": [
+     12,
+     14
+    ]
+   }
+  },
+  "pool8": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "d23s_citadel_d35__phys": [
+     11,
+     13
+    ],
+    "d23s_citadel_d75__phys": [
+     11,
+     13
+    ],
+    "d23s_citadel_d150__phys": [
+     11,
+     13
+    ],
+    "clean_d631069611": [
+     11,
+     13
+    ],
+    "d23s_online_deepsic_d35__phys": [
+     10,
+     11,
+     12,
+     14
+    ],
+    "d23s_online_deepsic_d75__phys": [
+     10,
+     11,
+     12,
+     14
+    ],
+    "d23s_online_deepsic_d150__phys": [
+     10,
+     11,
+     12,
+     14
+    ],
+    "d23s_crc_rollback_d35__phys": [
+     11,
+     13
+    ],
+    "d23s_crc_rollback_d75__phys": [
+     11,
+     13
+    ],
+    "d23s_crc_rollback_d150__phys": [
+     11,
+     13
+    ],
+    "clean_c0e4707cb7": [
+     10,
+     11,
+     12,
+     14
+    ],
+    "clean_d103bdad55": [
+     11,
+     13
+    ],
+    "d23s_lmmse_d35__phys": [
+     10,
+     11,
+     13
+    ],
+    "d23s_lmmse_d75__phys": [
+     10,
+     11,
+     13
+    ],
+    "d23s_lmmse_d150__phys": [
+     10,
+     11,
+     13
+    ],
+    "clean_0e0253d36b": [
+     10,
+     11,
+     13
+    ]
+   }
+  },
+  "pool9": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "h3v_a4_a0.25__sir0": [
+     15,
+     17,
+     19
+    ],
+    "h3v_a4_a0.75__sir0": [
+     15,
+     17,
+     19
+    ],
+    "clean_2cb3064d71": [
+     15,
+     17,
+     19
+    ],
+    "h3v_a1__sir0": [
+     15,
+     17,
+     19
+    ],
+    "h3v_redraw__none": [
+     15,
+     17,
+     19
+    ],
+    "h3v_snrdrop__none": [
+     15,
+     17,
+     19
+    ]
+   }
+  },
+  "pool10": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "h3v_a4_a0.25__sir0": [
+     16,
+     18
+    ],
+    "h3v_a4_a0.75__sir0": [
+     16,
+     18
+    ],
+    "clean_2cb3064d71": [
+     16,
+     18
+    ],
+    "h3v_a1__sir0": [
+     16,
+     18
+    ],
+    "h3v_redraw__none": [
+     16,
+     18
+    ],
+    "h3v_snrdrop__none": [
+     16,
+     18
+    ]
+   }
+  },
+  "pool11": {
+   "until": "2026-11-07T20:00:00+00:00",
+   "runs": {
+    "p2t_drift_deepsic__wb_sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_561d9aa753": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "p2t_medbn_deepsic__wb_sir0": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ],
+    "clean_0af30a992e": [
+     10,
+     11,
+     12,
+     13,
+     14
+    ]
+   }
+  }
+ },
+ "dropped_note": "tune_joint_ep300_*: dropped before any test run of the second backbone (compute). d4_*_8x32, p6_*_4x16 and their clean twins: the unstretched SED profile illuminates only about U+3 antennas; replaced by the stretched profile (d4s_*, p6s_*, channel.sed_stretch=true); the unstretched runs already made (8x32 seeds 10-14, 4x16 seeds 10-11) are disclosed in the paper (Sec. VI-H); d23_* and their clean twins: coded scene without NR scrambling, in which the all-zero codeword passes the CRC-24A check; replaced by d23s_* (frame.ldpc_scramble=true)"
+}

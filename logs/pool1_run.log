@@ -1,0 +1,151 @@
+== pool1: 69 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~68 left | 0.4 h, ~28.7 h to go at this pace] t1 P3adapt p3_citadel_unroll50__sir0 s13 OK 25 min  == p3_citadel_unroll50__sir0 seed 13: ser_mean=0.0250 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0448 ser_post=0.0127
+[2 done, ~67 left | 0.5 h, ~16.0 h to go at this pace] t1 P3adapt p3_citadel_pgd100_r5__sir10 s13 OK 29 min  == p3_citadel_pgd100_r5__sir10 seed 13: ser_mean=0.0206 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0342 ser_post=0.0124
+[3 done, ~66 left | 0.5 h, ~11.3 h to go at this pace] t1 P3adapt p3_citadel_pgd100_r5__sir0 s13 OK 31 min  == p3_citadel_pgd100_r5__sir0 seed 13: ser_mean=0.0253 ser_median=0.0139 ser_pre=0.0086 ser_attack=0.0458 ser_post=0.0126
+[4 done, ~65 left | 0.7 h, ~11.2 h to go at this pace] t1 P3know p3_citadel_query__sir0 s13 OK 13 min  == p3_citadel_query__sir0 seed 13: ser_mean=0.0249 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0450 ser_post=0.0124
+pushed results to GitHub (18:00)
+[5 done, ~64 left | 1.1 h, ~13.6 h to go at this pace] t1 P3refdeg p3_a4_a0.25__sir0 s13 OK 33 min  == p3_a4_a0.25__sir0 seed 13: ser_mean=0.0432 ser_median=0.0141 ser_pre=0.0086 ser_attack=0.0904 ser_post=0.0126
+[6 done, ~63 left | 1.3 h, ~13.2 h to go at this pace] t1 P3refdeg p3_a4_a0.75__sir0 s13 OK 34 min  == p3_a4_a0.75__sir0 seed 13: ser_mean=0.0390 ser_median=0.0148 ser_pre=0.0086 ser_attack=0.0799 ser_post=0.0126
+[7 done, ~62 left | 1.3 h, ~11.6 h to go at this pace] t1 P3adapt p3_citadel_unroll10__sir0 s13 OK 15 min  == p3_citadel_unroll10__sir0 seed 13: ser_mean=0.0250 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0451 ser_post=0.0124
+[8 done, ~61 left | 1.4 h, ~10.9 h to go at this pace] t1 P3adapt p3_citadel_unroll10__sir10 s13 OK 10 min  == p3_citadel_unroll10__sir10 seed 13: ser_mean=0.0207 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0343 ser_post=0.0124
+[9 done, ~60 left | 1.4 h, ~9.7 h to go at this pace] t1 P3adapt p3_citadel_strongest__sir0 s13 OK 87 min  == p3_citadel_strongest__sir0 seed 13: ser_mean=0.0253 ser_median=0.0137 ser_pre=0.0086 ser_attack=0.0457 ser_post=0.0125
+pushed results to GitHub (18:45)
+[10 done, ~59 left | 1.6 h, ~9.2 h to go at this pace] t1 P3adapt p3_citadel_softgate__sir0 s13 OK 15 min  == p3_citadel_softgate__sir0 seed 13: ser_mean=0.0248 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0445 ser_post=0.0126
+[11 done, ~58 left | 1.7 h, ~8.8 h to go at this pace] t1 P3adapt p3_citadel_softgate__sir10 s13 OK 15 min  == p3_citadel_softgate__sir10 seed 13: ser_mean=0.0205 ser_median=0.0131 ser_pre=0.0086 ser_attack=0.0339 ser_post=0.0124
+[12 done, ~57 left | 2.1 h, ~9.8 h to go at this pace] t1 H3v h3v_a4_a0.25__sir0 s13 OK 37 min  == h3v_a4_a0.25__sir0 seed 13: ser_mean=0.0381 ser_median=0.0140 ser_pre=0.0086 ser_attack=0.0777 ser_post=0.0127
+[13 done, ~56 left | 2.2 h, ~9.3 h to go at this pace] t1 H3v h3v_a4_a0.75__sir0 s13 OK 35 min  == h3v_a4_a0.75__sir0 seed 13: ser_mean=0.0340 ser_median=0.0140 ser_pre=0.0086 ser_attack=0.0678 ser_post=0.0123
+[14 done, ~55 left | 2.2 h, ~8.5 h to go at this pace] t1 B2 b2_a4_a0.25_pgd20__sir0 s13 OK 105 min  == b2_a4_a0.25_pgd20__sir0 seed 13: ser_mean=0.0360 ser_median=0.0145 ser_pre=0.0086 ser_attack=0.0721 ser_post=0.0130
+pushed results to GitHub (19:30)
+[15 done, ~54 left | 2.4 h, ~8.6 h to go at this pace] t1 D8 clean_c1416e9241 s13 OK 20 min  == clean_c1416e9241 seed 13: ser_mean=0.0235 ser_median=0.0201
+[16 done, ~53 left | 2.4 h, ~8.0 h to go at this pace] t1 D8 d8_citadel_joint__wb_sir0 s13 OK 44 min  == d8_citadel_joint__wb_sir0 seed 13: ser_mean=0.0253 ser_median=0.0226 ser_pre=0.0076 ser_attack=0.0338 ser_post=0.0229
+[17 done, ~52 left | 2.6 h, ~7.8 h to go at this pace] t1 P4 p4_citadel__sir0 s13 OK 9 min  == p4_citadel__sir0 seed 13: ser_mean=0.0204 ser_median=0.0139 ser_pre=0.0229 ser_attack=0.0245 ser_post=0.0124
+[18 done, ~51 left | 2.7 h, ~7.6 h to go at this pace] t1 P4 clean_3b3e8e4941 s13 OK 8 min  == clean_3b3e8e4941 seed 13: ser_mean=0.0150 ser_median=0.0126
+[19 done, ~50 left | 2.7 h, ~7.2 h to go at this pace] t1 D23 d23_citadel_d35__phys s13 OK 36 min  == d23_citadel_d35__phys seed 13: ser_mean=0.6389 ser_median=0.8297 ser_pre=0.0191 ser_attack=0.8715 ser_post=0.6124
+[20 done, ~49 left | 2.8 h, ~6.8 h to go at this pace] t1 D23 d23_citadel_d75__phys s13 OK 35 min  == d23_citadel_d75__phys seed 13: ser_mean=0.5379 ser_median=0.7467 ser_pre=0.0191 ser_attack=0.5874 ser_post=0.6393
+[21 done, ~48 left | 2.8 h, ~6.5 h to go at this pace] t1 P4 p4_citadel__sir10 s13 OK 9 min  == p4_citadel__sir10 seed 13: ser_mean=0.0178 ser_median=0.0129 ser_pre=0.0229 ser_attack=0.0177 ser_post=0.0127
+[22 done, ~47 left | 2.9 h, ~6.1 h to go at this pace] t1 P3refdeg clean_0b811be896 s13 OK 8 min  == clean_0b811be896 seed 13: ser_mean=0.0150 ser_median=0.0126
+[23 done, ~46 left | 2.9 h, ~5.8 h to go at this pace] t1 P3refdeg p3_jamctl_a0.25__sir0 s13 OK 8 min  == p3_jamctl_a0.25__sir0 seed 13: ser_mean=0.3278 ser_median=0.0188 ser_pre=0.0086 ser_attack=0.8025 ser_post=0.0122
+[24 done, ~45 left | 3.0 h, ~5.5 h to go at this pace] t1 D23 d23_citadel_d150__phys s13 OK 33 min  == d23_citadel_d150__phys seed 13: ser_mean=0.4428 ser_median=0.1861 ser_pre=0.0191 ser_attack=0.3585 ser_post=0.6317
+[25 done, ~44 left | 3.0 h, ~5.2 h to go at this pace] t1 P3refdeg p3_jamctl_a0.75__sir0 s13 OK 8 min  == p3_jamctl_a0.75__sir0 seed 13: ser_mean=0.2080 ser_median=0.0189 ser_pre=0.0086 ser_attack=0.5027 ser_post=0.0123
+pushed results to GitHub (20:15)
+[26 done, ~43 left | 3.0 h, ~5.0 h to go at this pace] t1 P1 p1_citadel__wb_sir-10 s13 OK 9 min  == p1_citadel__wb_sir-10 seed 13: ser_mean=0.0260 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0476 ser_post=0.0126
+[27 done, ~42 left | 3.0 h, ~4.7 h to go at this pace] t1 P1 p1_citadel__wb_sir10 s13 OK 9 min  == p1_citadel__wb_sir10 seed 13: ser_mean=0.0213 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0356 ser_post=0.0126
+[28 done, ~41 left | 3.1 h, ~4.6 h to go at this pace] t1 P1 p1_citadel__jam s13 OK 8 min  == p1_citadel__jam seed 13: ser_mean=0.3475 ser_median=0.0184 ser_pre=0.0086 ser_attack=0.8516 ser_post=0.0123
+[29 done, ~40 left | 3.2 h, ~4.4 h to go at this pace] t1 P1 p1_citadel__tr_sir0 s13 OK 13 min  == p1_citadel__tr_sir0 seed 13: ser_mean=0.0250 ser_median=0.0140 ser_pre=0.0086 ser_attack=0.0450 ser_post=0.0126
+[30 done, ~39 left | 3.2 h, ~4.2 h to go at this pace] t1 P3phys p3_citadel_M1__sir0 s13 OK 13 min  == p3_citadel_M1__sir0 seed 13: ser_mean=0.0235 ser_median=0.0137 ser_pre=0.0086 ser_attack=0.0411 ser_post=0.0126
+[31 done, ~38 left | 3.3 h, ~4.0 h to go at this pace] t1 P3phys p3_citadel_M2__sir0 s13 OK 13 min  == p3_citadel_M2__sir0 seed 13: ser_mean=0.0245 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0437 ser_post=0.0125
+[32 done, ~37 left | 3.3 h, ~3.8 h to go at this pace] t1 B1 b1_citadel_M4__sir0 s13 OK 9 min  == b1_citadel_M4__sir0 seed 13: ser_mean=0.0248 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0446 ser_post=0.0125
+[33 done, ~36 left | 3.3 h, ~3.6 h to go at this pace] t1 B1 b1_citadel_M2_csi0.1__sir0 s13 OK 9 min  == b1_citadel_M2_csi0.1__sir0 seed 13: ser_mean=0.0242 ser_median=0.0136 ser_pre=0.0086 ser_attack=0.0428 ser_post=0.0126
+[34 done, ~35 left | 3.4 h, ~3.5 h to go at this pace] t1 B1 b1_citadel_M2_csi0.01__sir0 s13 OK 9 min  == b1_citadel_M2_csi0.01__sir0 seed 13: ser_mean=0.0246 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0440 ser_post=0.0126
+[35 done, ~34 left | 3.4 h, ~3.3 h to go at this pace] t1 P3know p3_citadel_sigbudget__sir0 s13 OK 9 min  == p3_citadel_sigbudget__sir0 seed 13: ser_mean=0.0252 ser_median=0.0136 ser_pre=0.0086 ser_attack=0.0452 ser_post=0.0127
+[36 done, ~33 left | 3.5 h, ~3.2 h to go at this pace] t1 B3 b3_citadel_redraw__none s13 OK 13 min  == b3_citadel_redraw__none seed 13: ser_mean=0.0265 ser_median=0.0159
+[37 done, ~32 left | 3.6 h, ~3.1 h to go at this pace] t1 P3know p3_citadel_greybox__sir0 s13 OK 21 min  == p3_citadel_greybox__sir0 seed 13: ser_mean=0.0256 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0464 ser_post=0.0125
+[38 done, ~31 left | 3.6 h, ~3.0 h to go at this pace] t1 B3 b3_citadel_redraw__a1deny s13 OK 14 min  == b3_citadel_redraw__a1deny seed 13: ser_mean=0.0407 ser_median=0.0324 ser_pre=0.0188 ser_attack=0.0642 ser_post=0.0107
+[39 done, ~30 left | 3.6 h, ~2.8 h to go at this pace] t1 B3 b3_citadel_streak_redraw__none s13 OK 13 min  == b3_citadel_streak_redraw__none seed 13: ser_mean=0.0265 ser_median=0.0159
+[40 done, ~29 left | 3.7 h, ~2.7 h to go at this pace] t1 B3 b3_citadel_streak_redraw__a1deny s13 OK 10 min  == b3_citadel_streak_redraw__a1deny seed 13: ser_mean=0.0365 ser_median=0.0293 ser_pre=0.0188 ser_attack=0.0562 ser_post=0.0088
+[41 done, ~28 left | 3.7 h, ~2.6 h to go at this pace] t1 P3deny p3_citadel_redraw__none s13 OK 8 min  == p3_citadel_redraw__none seed 13: ser_mean=0.0265 ser_median=0.0159
+[42 done, ~27 left | 3.8 h, ~2.4 h to go at this pace] t1 P3deny p3_citadel_redraw__deny s13 OK 8 min  == p3_citadel_redraw__deny seed 13: ser_mean=0.0849 ser_median=0.0324 ser_pre=0.0188 ser_attack=0.1520 ser_post=0.0134
+pushed results to GitHub (21:00)
+[43 done, ~26 left | 3.8 h, ~2.3 h to go at this pace] t1 P3deny p3_citadel_streak_redraw__none s13 OK 8 min  == p3_citadel_streak_redraw__none seed 13: ser_mean=0.0265 ser_median=0.0159
+[44 done, ~25 left | 3.8 h, ~2.2 h to go at this pace] t1 P3deny p3_citadel_snrdrop__none s13 OK 13 min  == p3_citadel_snrdrop__none seed 13: ser_mean=0.2373 ser_median=0.1968
+[45 done, ~24 left | 3.9 h, ~2.1 h to go at this pace] t1 P3deny p3_citadel_streak_redraw__deny s13 OK 8 min  == p3_citadel_streak_redraw__deny seed 13: ser_mean=0.0849 ser_median=0.0324 ser_pre=0.0188 ser_attack=0.1520 ser_post=0.0134
+[46 done, ~23 left | 4.0 h, ~2.0 h to go at this pace] t1 P3deny p3_citadel_streak_snrdrop__none s13 OK 13 min  == p3_citadel_streak_snrdrop__none seed 13: ser_mean=0.2373 ser_median=0.1968
+[47 done, ~22 left | 4.0 h, ~1.9 h to go at this pace] t1 H7 h7_citadel__a2 s13 OK 9 min  == h7_citadel__a2 seed 13: ser_mean=0.0248 ser_median=0.0139 ser_pre=0.0086 ser_attack=0.0445 ser_post=0.0126
+[48 done, ~21 left | 4.0 h, ~1.7 h to go at this pace] t1 H7 h7_citadel__a1 s13 OK 9 min  == h7_citadel__a1 seed 13: ser_mean=0.0248 ser_median=0.0135 ser_pre=0.0086 ser_attack=0.0446 ser_post=0.0125
+[49 done, ~20 left | 4.0 h, ~1.6 h to go at this pace] t1 D23 clean_7188cad35c s13 OK 0 min  == clean_7188cad35c seed 13: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[50 done, ~19 left | 4.1 h, ~1.6 h to go at this pace] t1 H7 h7_citadel_peruser__a2 s13 OK 13 min  == h7_citadel_peruser__a2 seed 13: ser_mean=0.0254 ser_median=0.0136 ser_pre=0.0086 ser_attack=0.0459 ser_post=0.0125
+[51 done, ~17 left | 4.1 h, ~1.4 h to go at this pace] t1 H7 clean_69fac9f0c0 s13 OK 8 min  == clean_69fac9f0c0 seed 13: ser_mean=0.0157 ser_median=0.0131
+[52 done, ~15 left | 4.1 h, ~1.2 h to go at this pace] t1 H7 h7_citadel_peruser__a1 s13 OK 9 min  == h7_citadel_peruser__a1 seed 13: ser_mean=0.0265 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0483 ser_post=0.0129
+[53 done, ~14 left | 4.2 h, ~1.1 h to go at this pace] t1 H3v clean_2cb3064d71 s13 OK 14 min  == clean_2cb3064d71 seed 13: ser_mean=0.0150 ser_median=0.0126
+[54 done, ~13 left | 4.3 h, ~1.0 h to go at this pace] t1 H3v h3v_a1__sir0 s13 OK 9 min  == h3v_a1__sir0 seed 13: ser_mean=0.0249 ser_median=0.0138 ser_pre=0.0086 ser_attack=0.0448 ser_post=0.0125
+[55 done, ~12 left | 4.3 h, ~0.9 h to go at this pace] t1 H3v h3v_redraw__none s13 OK 14 min  == h3v_redraw__none seed 13: ser_mean=0.0265 ser_median=0.0159
+[56 done, ~11 left | 4.3 h, ~0.9 h to go at this pace] t1 H3v h3v_snrdrop__none s13 OK 13 min  == h3v_snrdrop__none seed 13: ser_mean=0.2373 ser_median=0.1968
+pushed results to GitHub (21:45)
+[57 done, ~10 left | 4.7 h, ~0.8 h to go at this pace] t1 P1 p1_meta_deepsic__wb_sir-10 s14 OK 27 min  == p1_meta_deepsic__wb_sir-10 seed 14: ser_mean=0.4214 ser_median=0.0940 ser_pre=0.0193 ser_attack=0.9516 ser_post=0.0814
+[58 done, ~9 left | 4.8 h, ~0.7 h to go at this pace] t1 P1 p1_meta_deepsic__wb_sir10 s14 OK 28 min  == p1_meta_deepsic__wb_sir10 seed 14: ser_mean=0.1388 ser_median=0.0785 ser_pre=0.0193 ser_attack=0.2673 ser_post=0.0626
+[59 done, ~8 left | 4.8 h, ~0.7 h to go at this pace] t1 D23 d23_lmmse_d35__phys s11 OK 0 min  == d23_lmmse_d35__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[60 done, ~7 left | 4.8 h, ~0.6 h to go at this pace] t1 D23 d23_lmmse_d75__phys s11 OK 0 min  == d23_lmmse_d75__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[61 done, ~6 left | 4.8 h, ~0.5 h to go at this pace] t1 D23 d23_lmmse_d150__phys s11 OK 0 min  == d23_lmmse_d150__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[62 done, ~5 left | 4.8 h, ~0.4 h to go at this pace] t1 B3 b3_lmmse_redraw__none s11 OK 1 min  == b3_lmmse_redraw__none seed 11: ser_mean=0.2979 ser_median=0.2467
+[63 done, ~4 left | 4.8 h, ~0.3 h to go at this pace] t1 P1 p1_meta_deepsic__tr_sir0 s14 OK 28 min  == p1_meta_deepsic__tr_sir0 seed 14: ser_mean=0.1308 ser_median=0.0523 ser_pre=0.0193 ser_attack=0.2676 ser_post=0.0453
+[64 done, ~3 left | 4.8 h, ~0.2 h to go at this pace] t1 D23 clean_59f668f264 s11 OK 0 min  == clean_59f668f264 seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[65 done, ~2 left | 4.9 h, ~0.1 h to go at this pace] t1 B3 b3_lmmse_redraw__a1deny s11 OK 4 min  == b3_lmmse_redraw__a1deny seed 11: ser_mean=0.4244 ser_median=0.5526 ser_pre=0.0493 ser_attack=0.6809 ser_post=0.6419
+[66 done, ~1 left | 5.2 h, ~0.1 h to go at this pace] t1 P1 clean_1950a64849 s14 OK 57 min  == clean_1950a64849 seed 14: ser_mean=0.0361 ser_median=0.0341
+pushed results to GitHub (22:30)
+== pool1: 69 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~68 left | 0.0 h, ~0.1 h to go at this pace] t1 P3adapt p3_citadel_pgd100_r5__sir0 s13 OK 0 min  == p3_citadel_pgd100_r5__sir0 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_pgd100_r5__sir0_s13_718a267ba9c1.json)
+[2 done, ~67 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_pgd100_r5__sir10 s13 OK 0 min  == p3_citadel_pgd100_r5__sir10 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_pgd100_r5__sir10_s13_cdcd1954f572.json)
+[3 done, ~66 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_unroll50__sir0 s13 OK 0 min  == p3_citadel_unroll50__sir0 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_unroll50__sir0_s13_7ada12321397.json)
+[4 done, ~65 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_strongest__sir0 s13 OK 0 min  == p3_citadel_strongest__sir0 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_strongest__sir0_s13_019ad68dffdd.json)
+[5 done, ~64 left | 0.0 h, ~0.0 h to go at this pace] t1 B2 b2_a4_a0.25_pgd20__sir0 s13 OK 0 min  == b2_a4_a0.25_pgd20__sir0 seed 13: exists, skipped (results/rev2_a4_pgd20/b2_a4_a0.25_pgd20__sir0_s13_fcfd01c91a7b.json)
+[6 done, ~63 left | 0.0 h, ~0.0 h to go at this pace] t1 P3know p3_citadel_query__sir0 s13 OK 0 min  == p3_citadel_query__sir0 seed 13: exists, skipped (results/rev_p3_know/p3_citadel_query__sir0_s13_fe083055ae94.json)
+[7 done, ~62 left | 0.0 h, ~0.0 h to go at this pace] t1 P3refdeg p3_a4_a0.75__sir0 s13 OK 0 min  == p3_a4_a0.75__sir0 seed 13: exists, skipped (results/rev_p3_refdeg/p3_a4_a0.75__sir0_s13_e21d27cbc93e.json)
+[8 done, ~61 left | 0.0 h, ~0.0 h to go at this pace] t1 P3refdeg p3_a4_a0.25__sir0 s13 OK 0 min  == p3_a4_a0.25__sir0 seed 13: exists, skipped (results/rev_p3_refdeg/p3_a4_a0.25__sir0_s13_4955784408b2.json)
+[9 done, ~60 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_unroll10__sir0 s13 OK 0 min  == p3_citadel_unroll10__sir0 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_unroll10__sir0_s13_aa761c90cc48.json)
+[10 done, ~59 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_unroll10__sir10 s13 OK 0 min  == p3_citadel_unroll10__sir10 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_unroll10__sir10_s13_178f7e1d5a7e.json)
+[11 done, ~58 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_softgate__sir10 s13 OK 0 min  == p3_citadel_softgate__sir10 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_softgate__sir10_s13_cb7fe61c58af.json)
+[12 done, ~57 left | 0.0 h, ~0.0 h to go at this pace] t1 P3adapt p3_citadel_softgate__sir0 s13 OK 0 min  == p3_citadel_softgate__sir0 seed 13: exists, skipped (results/rev_p3_adaptive/p3_citadel_softgate__sir0_s13_3100002882aa.json)
+[13 done, ~56 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v h3v_a4_a0.75__sir0 s13 OK 0 min  == h3v_a4_a0.75__sir0 seed 13: exists, skipped (results/rev2_abstain_v3/h3v_a4_a0.75__sir0_s13_334bce98b7fc.json)
+[14 done, ~55 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v h3v_a4_a0.25__sir0 s13 OK 0 min  == h3v_a4_a0.25__sir0 seed 13: exists, skipped (results/rev2_abstain_v3/h3v_a4_a0.25__sir0_s13_05f1ff730118.json)
+[15 done, ~54 left | 0.0 h, ~0.0 h to go at this pace] t1 D8 d8_citadel_joint__wb_sir0 s13 OK 0 min  == d8_citadel_joint__wb_sir0 seed 13: exists, skipped (results/rev2_joint/d8_citadel_joint__wb_sir0_s13_4e731f4e9073.json)
+[16 done, ~53 left | 0.0 h, ~0.0 h to go at this pace] t1 D8 clean_c1416e9241 s13 OK 0 min  == clean_c1416e9241 seed 13: exists, skipped (results/rev_clean_pool1/clean_c1416e9241_s13_97e0dae6a6c7.json)
+[17 done, ~52 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_citadel_d75__phys s13 OK 0 min  == d23_citadel_d75__phys seed 13: exists, skipped (results/rev2_umi_ldpc/d23_citadel_d75__phys_s13_edd77ecfc0b3.json)
+[18 done, ~51 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_citadel_d35__phys s13 OK 0 min  == d23_citadel_d35__phys seed 13: exists, skipped (results/rev2_umi_ldpc/d23_citadel_d35__phys_s13_dd0568b5d4c6.json)
+[19 done, ~50 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_citadel_d150__phys s13 OK 0 min  == d23_citadel_d150__phys seed 13: exists, skipped (results/rev2_umi_ldpc/d23_citadel_d150__phys_s13_7ff27f0a270c.json)
+[20 done, ~49 left | 0.0 h, ~0.0 h to go at this pace] t1 P4 p4_citadel__sir0 s13 OK 0 min  == p4_citadel__sir0 seed 13: exists, skipped (results/rev_p4_paired/p4_citadel__sir0_s13_54eb130aaa0e.json)
+[21 done, ~48 left | 0.0 h, ~0.0 h to go at this pace] t1 P3refdeg clean_0b811be896 s13 OK 0 min  == clean_0b811be896 seed 13: exists, skipped (results/rev_clean_pool1/clean_0b811be896_s13_57b51876c40d.json)
+[22 done, ~47 left | 0.0 h, ~0.0 h to go at this pace] t1 P3refdeg p3_jamctl_a0.25__sir0 s13 OK 0 min  == p3_jamctl_a0.25__sir0 seed 13: exists, skipped (results/rev_p3_refdeg/p3_jamctl_a0.25__sir0_s13_be58a3a54902.json)
+[23 done, ~46 left | 0.0 h, ~0.0 h to go at this pace] t1 P4 clean_3b3e8e4941 s13 OK 0 min  == clean_3b3e8e4941 seed 13: exists, skipped (results/rev_clean_pool1/clean_3b3e8e4941_s13_6c968b712d10.json)
+[24 done, ~45 left | 0.0 h, ~0.0 h to go at this pace] t1 P4 p4_citadel__sir10 s13 OK 0 min  == p4_citadel__sir10 seed 13: exists, skipped (results/rev_p4_paired/p4_citadel__sir10_s13_52e38583ead9.json)
+[25 done, ~44 left | 0.0 h, ~0.0 h to go at this pace] t1 P3refdeg p3_jamctl_a0.75__sir0 s13 OK 0 min  == p3_jamctl_a0.75__sir0 seed 13: exists, skipped (results/rev_p3_refdeg/p3_jamctl_a0.75__sir0_s13_8105b4bb37bf.json)
+[26 done, ~43 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_citadel__wb_sir-10 s13 OK 0 min  == p1_citadel__wb_sir-10 seed 13: exists, skipped (results/rev_p1/p1_citadel__wb_sir-10_s13_f84b74feb0ad.json)
+[27 done, ~42 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_citadel__wb_sir10 s13 OK 0 min  == p1_citadel__wb_sir10 seed 13: exists, skipped (results/rev_p1/p1_citadel__wb_sir10_s13_8d7a4808acbe.json)
+[28 done, ~41 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_citadel__tr_sir0 s13 OK 0 min  == p1_citadel__tr_sir0 seed 13: exists, skipped (results/rev_p1/p1_citadel__tr_sir0_s13_60a60b77a150.json)
+[29 done, ~40 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_citadel__jam s13 OK 0 min  == p1_citadel__jam seed 13: exists, skipped (results/rev_p1/p1_citadel__jam_s13_6120cec8d73b.json)
+[30 done, ~39 left | 0.0 h, ~0.0 h to go at this pace] t1 P3phys p3_citadel_M1__sir0 s13 OK 0 min  == p3_citadel_M1__sir0 seed 13: exists, skipped (results/rev_p3_phys/p3_citadel_M1__sir0_s13_85cb5ebadcc6.json)
+[31 done, ~38 left | 0.0 h, ~0.0 h to go at this pace] t1 P3phys p3_citadel_M2__sir0 s13 OK 0 min  == p3_citadel_M2__sir0 seed 13: exists, skipped (results/rev_p3_phys/p3_citadel_M2__sir0_s13_b503e40679ce.json)
+[32 done, ~37 left | 0.0 h, ~0.0 h to go at this pace] t1 B1 b1_citadel_M4__sir0 s13 OK 0 min  == b1_citadel_M4__sir0 seed 13: exists, skipped (results/rev2_phys/b1_citadel_M4__sir0_s13_9c667f6186b5.json)
+[33 done, ~36 left | 0.0 h, ~0.0 h to go at this pace] t1 B1 b1_citadel_M2_csi0.1__sir0 s13 OK 0 min  == b1_citadel_M2_csi0.1__sir0 seed 13: exists, skipped (results/rev2_phys/b1_citadel_M2_csi0.1__sir0_s13_d70751acea6d.json)
+[34 done, ~35 left | 0.0 h, ~0.0 h to go at this pace] t1 B1 b1_citadel_M2_csi0.01__sir0 s13 OK 0 min  == b1_citadel_M2_csi0.01__sir0 seed 13: exists, skipped (results/rev2_phys/b1_citadel_M2_csi0.01__sir0_s13_1d5ab2b12cc7.json)
+[35 done, ~34 left | 0.0 h, ~0.0 h to go at this pace] t1 P3know p3_citadel_sigbudget__sir0 s13 OK 0 min  == p3_citadel_sigbudget__sir0 seed 13: exists, skipped (results/rev_p3_know/p3_citadel_sigbudget__sir0_s13_003a4ba69582.json)
+[36 done, ~33 left | 0.0 h, ~0.0 h to go at this pace] t1 P3know p3_citadel_greybox__sir0 s13 OK 0 min  == p3_citadel_greybox__sir0 seed 13: exists, skipped (results/rev_p3_know/p3_citadel_greybox__sir0_s13_cee194e5a6b4.json)
+[37 done, ~32 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_citadel_redraw__none s13 OK 0 min  == b3_citadel_redraw__none seed 13: exists, skipped (results/rev2_deny_a1/b3_citadel_redraw__none_s13_3a7a187efa9e.json)
+[38 done, ~31 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_citadel_redraw__a1deny s13 OK 0 min  == b3_citadel_redraw__a1deny seed 13: exists, skipped (results/rev2_deny_a1/b3_citadel_redraw__a1deny_s13_1b08773f60ea.json)
+[39 done, ~30 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_citadel_streak_redraw__none s13 OK 0 min  == b3_citadel_streak_redraw__none seed 13: exists, skipped (results/rev2_deny_a1/b3_citadel_streak_redraw__none_s13_e0619ee9bb17.json)
+[40 done, ~29 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_citadel_streak_redraw__a1deny s13 OK 0 min  == b3_citadel_streak_redraw__a1deny seed 13: exists, skipped (results/rev2_deny_a1/b3_citadel_streak_redraw__a1deny_s13_df8c3a11158d.json)
+[41 done, ~28 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_redraw__none s13 OK 0 min  == p3_citadel_redraw__none seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_redraw__none_s13_35b5b7e32a69.json)
+[42 done, ~27 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_redraw__deny s13 OK 0 min  == p3_citadel_redraw__deny seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_redraw__deny_s13_845491141db8.json)
+[43 done, ~26 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_snrdrop__none s13 OK 0 min  == p3_citadel_snrdrop__none seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_snrdrop__none_s13_fd9dcd8ff62d.json)
+[44 done, ~25 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_streak_redraw__none s13 OK 0 min  == p3_citadel_streak_redraw__none seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_streak_redraw__none_s13_7d38bae64abd.json)
+[45 done, ~24 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_streak_redraw__deny s13 OK 0 min  == p3_citadel_streak_redraw__deny seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_streak_redraw__deny_s13_7302d04292ff.json)
+[46 done, ~23 left | 0.0 h, ~0.0 h to go at this pace] t1 P3deny p3_citadel_streak_snrdrop__none s13 OK 0 min  == p3_citadel_streak_snrdrop__none seed 13: exists, skipped (results/rev_p3_deny/p3_citadel_streak_snrdrop__none_s13_db8447543928.json)
+[47 done, ~22 left | 0.0 h, ~0.0 h to go at this pace] t1 H7 h7_citadel__a2 s13 OK 0 min  == h7_citadel__a2 seed 13: exists, skipped (results/rev2_peruser/h7_citadel__a2_s13_dfd8a328af1f.json)
+[48 done, ~21 left | 0.0 h, ~0.0 h to go at this pace] t1 H7 h7_citadel__a1 s13 OK 0 min  == h7_citadel__a1 seed 13: exists, skipped (results/rev2_peruser/h7_citadel__a1_s13_f212fa5ec47d.json)
+[49 done, ~20 left | 0.0 h, ~0.0 h to go at this pace] t1 H7 h7_citadel_peruser__a2 s13 OK 0 min  == h7_citadel_peruser__a2 seed 13: exists, skipped (results/rev2_peruser/h7_citadel_peruser__a2_s13_ea1e9dd9a3d2.json)
+[50 done, ~19 left | 0.0 h, ~0.0 h to go at this pace] t1 H7 clean_69fac9f0c0 s13 OK 0 min  == clean_69fac9f0c0 seed 13: exists, skipped (results/rev_clean_pool1/clean_69fac9f0c0_s13_ec6c505dfeb9.json)
+[51 done, ~17 left | 0.0 h, ~0.0 h to go at this pace] t1 H7 h7_citadel_peruser__a1 s13 OK 0 min  == h7_citadel_peruser__a1 seed 13: exists, skipped (results/rev2_peruser/h7_citadel_peruser__a1_s13_0e8cf0aa285e.json)
+[52 done, ~15 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 clean_7188cad35c s13 OK 0 min  == clean_7188cad35c seed 13: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[53 done, ~14 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v clean_2cb3064d71 s13 OK 0 min  == clean_2cb3064d71 seed 13: exists, skipped (results/rev_clean_pool1/clean_2cb3064d71_s13_b4e725e07b15.json)
+[54 done, ~13 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v h3v_redraw__none s13 OK 0 min  == h3v_redraw__none seed 13: exists, skipped (results/rev2_abstain_v3/h3v_redraw__none_s13_219802c62717.json)
+[55 done, ~12 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v h3v_a1__sir0 s13 OK 0 min  == h3v_a1__sir0 seed 13: exists, skipped (results/rev2_abstain_v3/h3v_a1__sir0_s13_34237e0f24f4.json)
+[56 done, ~11 left | 0.0 h, ~0.0 h to go at this pace] t1 H3v h3v_snrdrop__none s13 OK 0 min  == h3v_snrdrop__none seed 13: exists, skipped (results/rev2_abstain_v3/h3v_snrdrop__none_s13_11a8f55f73a5.json)
+[57 done, ~10 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_meta_deepsic__wb_sir-10 s14 OK 0 min  == p1_meta_deepsic__wb_sir-10 seed 14: exists, skipped (results/rev_p1/p1_meta_deepsic__wb_sir-10_s14_cfb119d507f2.json)
+[58 done, ~9 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 clean_1950a64849 s14 OK 0 min  == clean_1950a64849 seed 14: exists, skipped (results/rev_clean_pool1/clean_1950a64849_s14_a1044d7962e8.json)
+[59 done, ~8 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_meta_deepsic__wb_sir10 s14 OK 0 min  == p1_meta_deepsic__wb_sir10 seed 14: exists, skipped (results/rev_p1/p1_meta_deepsic__wb_sir10_s14_c9a1fcb9aa73.json)
+[60 done, ~7 left | 0.0 h, ~0.0 h to go at this pace] t1 P1 p1_meta_deepsic__tr_sir0 s14 OK 0 min  == p1_meta_deepsic__tr_sir0 seed 14: exists, skipped (results/rev_p1/p1_meta_deepsic__tr_sir0_s14_a2e30604f87b.json)
+[61 done, ~6 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_lmmse_d75__phys s11 OK 0 min  == d23_lmmse_d75__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[62 done, ~5 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_lmmse_d35__phys s11 OK 0 min  == d23_lmmse_d35__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[63 done, ~4 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 d23_lmmse_d150__phys s11 OK 0 min  == d23_lmmse_d150__phys seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[64 done, ~3 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_lmmse_redraw__a1deny s11 OK 0 min  == b3_lmmse_redraw__a1deny seed 11: exists, skipped (results/rev2_deny_a1/b3_lmmse_redraw__a1deny_s11_9599c8680b06.json)
+[65 done, ~2 left | 0.0 h, ~0.0 h to go at this pace] t1 B3 b3_lmmse_redraw__none s11 OK 0 min  == b3_lmmse_redraw__none seed 11: exists, skipped (results/rev2_deny_a1/b3_lmmse_redraw__none_s11_64c43017f49b.json)
+[66 done, ~1 left | 0.0 h, ~0.0 h to go at this pace] t1 D23 clean_59f668f264 s11 OK 0 min  == clean_59f668f264 seed 11: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+pushed results to GitHub (23:18)
+[67 done, ~0 left | 0.8 h, ~0.0 h to go at this pace] t1 P1 p1_meta_deepsic__jam s14 OK 48 min  == p1_meta_deepsic__jam seed 14: ser_mean=0.3604 ser_median=0.0458 ser_pre=0.0193 ser_attack=0.8532 ser_post=0.0353
+paired displacement rev_p4_paired: rc 0
+| attack | SIR | clip kappa | seeds | max D_K in window | design bound 2 kappa_K n(W) | extended structural bound (A2) | max D_anchor |
+|---|---|---|---|---|---|---|---|
+| a1 | 0 | [8.5, 4.5] | 1 | 4.20 | 18.00 | 16.79 | 5.81 |
+| a1 | 10 | [8.5, 4.5] | 1 | 3.44 | 18.00 | 13.09 | 6.90 |
+
+== pool1 finished: 67 runs, 0 failed, 0.8 h
+pushed results to GitHub (23:22)

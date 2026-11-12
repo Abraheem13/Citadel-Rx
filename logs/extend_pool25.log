@@ -1,0 +1,5 @@
+attacked  b5_a3star_e0.05__long1000            seed 13  ~ 257 min  -> results/rev2_drift_long_more
+clean     ext_twin_b1000_8b400816              seed 13  ~  86 min  -> results/rev_clean_pool25
+2 jobs, ~343 CPU-min
+20:36:36 clean ext_twin_b1000_8b400816 s13: done in 5121 s
+22:31:15 attacked b5_a3star_e0.05__long1000 s13: done in 12000 s

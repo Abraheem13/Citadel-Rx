@@ -1,0 +1,59 @@
+== pool7: 36 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~35 left | 0.6 h, ~21.2 h to go at this pace] t1 D23s d23s_citadel_d35__phys s10 OK 36 min  == d23s_citadel_d35__phys seed 10: ser_mean=0.4534 ser_median=0.1222 ser_pre=0.0550 ser_attack=0.9929 ser_post=0.1275
+[2 done, ~34 left | 0.6 h, ~10.3 h to go at this pace] t1 D23s d23s_citadel_d75__phys s10 OK 36 min  == d23s_citadel_d75__phys seed 10: ser_mean=0.4461 ser_median=0.1222 ser_pre=0.0550 ser_attack=0.9744 ser_post=0.1279
+[3 done, ~33 left | 0.6 h, ~6.7 h to go at this pace] t1 D23s d23s_citadel_d150__phys s10 OK 36 min  == d23s_citadel_d150__phys seed 10: ser_mean=0.3727 ser_median=0.1023 ser_pre=0.0550 ser_attack=0.7909 ser_post=0.1279
+[4 done, ~32 left | 0.6 h, ~5.0 h to go at this pace] t1 D23s d23s_citadel_d35__phys s12 OK 38 min  == d23s_citadel_d35__phys seed 12: ser_mean=0.4633 ser_median=0.1623 ser_pre=0.1463 ser_attack=0.9880 ser_post=0.0369
+pushed results to GitHub (20:34)
+[5 done, ~31 left | 1.2 h, ~7.3 h to go at this pace] t1 D23s d23s_citadel_d75__phys s12 OK 35 min  == d23s_citadel_d75__phys seed 12: ser_mean=0.4658 ser_median=0.1623 ser_pre=0.1463 ser_attack=0.9943 ser_post=0.0369
+[6 done, ~30 left | 1.2 h, ~5.9 h to go at this pace] t1 D23s d23s_citadel_d150__phys s12 OK 35 min  == d23s_citadel_d150__phys seed 12: ser_mean=0.4512 ser_median=0.1623 ser_pre=0.1463 ser_attack=0.9579 ser_post=0.0369
+[7 done, ~29 left | 1.2 h, ~5.0 h to go at this pace] t1 D23s d23s_citadel_d35__phys s14 OK 36 min  == d23s_citadel_d35__phys seed 14: ser_mean=0.4082 ser_median=0.1632 ser_pre=0.1796 ser_attack=0.9349 ser_post=0.0231
+[8 done, ~28 left | 1.2 h, ~4.3 h to go at this pace] t1 D23s d23s_citadel_d75__phys s14 OK 36 min  == d23s_citadel_d75__phys seed 14: ser_mean=0.3169 ser_median=0.1632 ser_pre=0.1796 ser_attack=0.7067 ser_post=0.0231
+pushed results to GitHub (21:19)
+[9 done, ~27 left | 1.8 h, ~5.3 h to go at this pace] t1 D23s clean_d631069611 s10 OK 35 min  == clean_d631069611 seed 10: ser_mean=0.2258 ser_median=0.0782
+[10 done, ~26 left | 1.8 h, ~4.6 h to go at this pace] t1 D23s d23s_citadel_d150__phys s14 OK 35 min  == d23s_citadel_d150__phys seed 14: ser_mean=0.3408 ser_median=0.1632 ser_pre=0.1796 ser_attack=0.7664 ser_post=0.0231
+[11 done, ~25 left | 1.8 h, ~4.1 h to go at this pace] t1 D23s clean_d631069611 s12 OK 35 min  == clean_d631069611 seed 12: ser_mean=0.2549 ser_median=0.0613
+[12 done, ~24 left | 1.8 h, ~3.6 h to go at this pace] t1 D23s clean_d631069611 s14 OK 35 min  == clean_d631069611 seed 14: ser_mean=0.1367 ser_median=0.0327
+[13 done, ~23 left | 1.9 h, ~3.4 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s13 OK 9 min  == d23s_online_deepsic_d35__phys seed 13: ser_mean=0.2607 ser_median=0.0596 ser_pre=0.0349 ser_attack=0.5861 ser_post=0.0461
+[14 done, ~22 left | 1.9 h, ~3.0 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s13 OK 9 min  == d23s_online_deepsic_d75__phys seed 13: ser_mean=0.1767 ser_median=0.1026 ser_pre=0.0349 ser_attack=0.3559 ser_post=0.0633
+[15 done, ~21 left | 1.9 h, ~2.7 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s13 OK 9 min  == d23s_online_deepsic_d150__phys seed 13: ser_mean=0.1171 ser_median=0.1049 ser_pre=0.0349 ser_attack=0.1933 ser_post=0.0750
+== restarted after container restart 21:51
+== pool7: 36 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~35 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d75__phys s10 OK 0 min  == d23s_citadel_d75__phys seed 10: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d75__phys_s10_1aa08eab6403.json)
+[2 done, ~34 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d35__phys s12 OK 0 min  == d23s_citadel_d35__phys seed 12: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d35__phys_s12_f9f3cef6e766.json)
+[3 done, ~33 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d35__phys s10 OK 0 min  == d23s_citadel_d35__phys seed 10: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d35__phys_s10_725f1b49ebaa.json)
+[4 done, ~32 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d150__phys s10 OK 0 min  == d23s_citadel_d150__phys seed 10: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d150__phys_s10_8acd91978328.json)
+[5 done, ~31 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d75__phys s12 OK 0 min  == d23s_citadel_d75__phys seed 12: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d75__phys_s12_e85d74cc5432.json)
+[6 done, ~30 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d150__phys s12 OK 0 min  == d23s_citadel_d150__phys seed 12: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d150__phys_s12_7cf9f8cec545.json)
+[7 done, ~29 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d75__phys s14 OK 0 min  == d23s_citadel_d75__phys seed 14: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d75__phys_s14_e6994ea1712b.json)
+[8 done, ~28 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d35__phys s14 OK 0 min  == d23s_citadel_d35__phys seed 14: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d35__phys_s14_68c6b5c1adc6.json)
+[9 done, ~27 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s clean_d631069611 s10 OK 0 min  == clean_d631069611 seed 10: exists, skipped (results/rev_clean_pool7/clean_d631069611_s10_6f226c8523ec.json)
+[10 done, ~26 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_citadel_d150__phys s14 OK 0 min  == d23s_citadel_d150__phys seed 14: exists, skipped (results/rev2_umi_ldpc_scr/d23s_citadel_d150__phys_s14_43229a33dbb2.json)
+[11 done, ~25 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s clean_d631069611 s12 OK 0 min  == clean_d631069611 seed 12: exists, skipped (results/rev_clean_pool7/clean_d631069611_s12_0eb0f136d810.json)
+[12 done, ~24 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s clean_d631069611 s14 OK 0 min  == clean_d631069611 seed 14: exists, skipped (results/rev_clean_pool7/clean_d631069611_s14_97d93adb14d3.json)
+[13 done, ~23 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s13 OK 0 min  == d23s_online_deepsic_d150__phys seed 13: exists, skipped (results/rev2_umi_ldpc_scr/d23s_online_deepsic_d150__phys_s13_968016deaafb.json)
+[14 done, ~22 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s13 OK 0 min  == d23s_online_deepsic_d75__phys seed 13: exists, skipped (results/rev2_umi_ldpc_scr/d23s_online_deepsic_d75__phys_s13_225187326c14.json)
+[15 done, ~21 left | 0.0 h, ~0.0 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s13 OK 0 min  == d23s_online_deepsic_d35__phys seed 13: exists, skipped (results/rev2_umi_ldpc_scr/d23s_online_deepsic_d35__phys_s13_30ce99391327.json)
+[16 done, ~20 left | 0.2 h, ~0.3 h to go at this pace] t1 D23s d23s_crc_rollback_d150__phys s10 OK 12 min  == d23s_crc_rollback_d150__phys seed 10: ser_mean=0.8698 ser_median=0.9997 ser_pre=0.5370 ser_attack=0.9994 ser_post=0.9990
+[17 done, ~19 left | 0.2 h, ~0.2 h to go at this pace] t1 D23s d23s_crc_rollback_d75__phys s10 OK 12 min  == d23s_crc_rollback_d75__phys seed 10: ser_mean=0.8698 ser_median=0.9997 ser_pre=0.5370 ser_attack=0.9994 ser_post=0.9990
+[18 done, ~18 left | 0.2 h, ~0.2 h to go at this pace] t1 D23s d23s_crc_rollback_d35__phys s10 OK 12 min  == d23s_crc_rollback_d35__phys seed 10: ser_mean=0.8698 ser_median=0.9997 ser_pre=0.5370 ser_attack=0.9994 ser_post=0.9990
+[19 done, ~17 left | 0.2 h, ~0.2 h to go at this pace] t1 D23s d23s_crc_rollback_d35__phys s12 OK 12 min  == d23s_crc_rollback_d35__phys seed 12: ser_mean=0.8892 ser_median=1.0000 ser_pre=0.7362 ser_attack=1.0000 ser_post=1.0000
+[20 done, ~16 left | 0.4 h, ~0.3 h to go at this pace] t1 D23s d23s_crc_rollback_d75__phys s12 OK 12 min  == d23s_crc_rollback_d75__phys seed 12: ser_mean=0.8892 ser_median=1.0000 ser_pre=0.7362 ser_attack=1.0000 ser_post=1.0000
+[21 done, ~15 left | 0.4 h, ~0.3 h to go at this pace] t1 D23s d23s_crc_rollback_d150__phys s12 OK 12 min  == d23s_crc_rollback_d150__phys seed 12: ser_mean=0.8892 ser_median=1.0000 ser_pre=0.7362 ser_attack=1.0000 ser_post=1.0000
+[22 done, ~14 left | 0.4 h, ~0.3 h to go at this pace] t1 D23s d23s_crc_rollback_d35__phys s14 OK 14 min  == d23s_crc_rollback_d35__phys seed 14: ser_mean=0.8398 ser_median=0.9928 ser_pre=0.1751 ser_attack=0.8677 ser_post=0.9998
+[23 done, ~13 left | 0.4 h, ~0.2 h to go at this pace] t1 D23s d23s_crc_rollback_d75__phys s14 OK 14 min  == d23s_crc_rollback_d75__phys seed 14: ser_mean=0.8352 ser_median=1.0000 ser_pre=0.1751 ser_attack=0.8561 ser_post=1.0000
+[24 done, ~12 left | 0.5 h, ~0.2 h to go at this pace] t1 D23s clean_c0e4707cb7 s13 OK 4 min  == clean_c0e4707cb7 seed 13: ser_mean=0.0941 ser_median=0.0740
+[25 done, ~11 left | 0.6 h, ~0.3 h to go at this pace] t1 D23s d23s_crc_rollback_d150__phys s14 OK 13 min  == d23s_crc_rollback_d150__phys seed 14: ser_mean=0.8388 ser_median=0.9996 ser_pre=0.1751 ser_attack=0.8652 ser_post=1.0000
+[26 done, ~10 left | 0.6 h, ~0.2 h to go at this pace] t1 D23s clean_d103bdad55 s10 OK 13 min  == clean_d103bdad55 seed 10: ser_mean=0.8698 ser_median=0.9997
+[27 done, ~9 left | 0.6 h, ~0.2 h to go at this pace] t1 D23s clean_d103bdad55 s12 OK 13 min  == clean_d103bdad55 seed 12: ser_mean=0.8892 ser_median=1.0000
+[28 done, ~8 left | 0.7 h, ~0.2 h to go at this pace] t1 D23s clean_d103bdad55 s14 OK 12 min  == clean_d103bdad55 seed 14: ser_mean=0.7825 ser_median=1.0000
+[29 done, ~7 left | 0.7 h, ~0.2 h to go at this pace] t1 D23s d23s_lmmse_d35__phys s12 OK 5 min  == d23s_lmmse_d35__phys seed 12: ser_mean=0.4223 ser_median=0.0974 ser_pre=0.0795 ser_attack=0.9558 ser_post=0.0369
+[30 done, ~6 left | 0.7 h, ~0.1 h to go at this pace] t1 D23s d23s_lmmse_d75__phys s12 OK 5 min  == d23s_lmmse_d75__phys seed 12: ser_mean=0.3643 ser_median=0.0949 ser_pre=0.0795 ser_attack=0.8107 ser_post=0.0369
+[31 done, ~5 left | 0.7 h, ~0.1 h to go at this pace] t1 D23s d23s_lmmse_d150__phys s12 OK 5 min  == d23s_lmmse_d150__phys seed 12: ser_mean=0.2367 ser_median=0.0912 ser_pre=0.0795 ser_attack=0.4917 ser_post=0.0369
+pushed results to GitHub (22:36)
+[32 done, ~4 left | 0.8 h, ~0.1 h to go at this pace] t1 D23s d23s_lmmse_d35__phys s14 OK 5 min  == d23s_lmmse_d35__phys seed 14: ser_mean=0.3889 ser_median=0.1991 ser_pre=0.2074 ser_attack=0.8778 ser_post=0.0231
+[33 done, ~3 left | 0.8 h, ~0.1 h to go at this pace] t1 D23s clean_0e0253d36b s12 OK 3 min  == clean_0e0253d36b seed 12: ser_mean=0.1053 ser_median=0.0582
+[34 done, ~2 left | 0.8 h, ~0.0 h to go at this pace] t1 D23s d23s_lmmse_d75__phys s14 OK 5 min  == d23s_lmmse_d75__phys seed 14: ser_mean=0.2675 ser_median=0.1329 ser_pre=0.2074 ser_attack=0.5741 ser_post=0.0231
+[35 done, ~1 left | 0.8 h, ~0.0 h to go at this pace] t1 D23s clean_0e0253d36b s14 OK 3 min  == clean_0e0253d36b seed 14: ser_mean=0.0861 ser_median=0.0327
+[36 done, ~0 left | 0.8 h, ~0.0 h to go at this pace] t1 D23s d23s_lmmse_d150__phys s14 OK 5 min  == d23s_lmmse_d150__phys seed 14: ser_mean=0.2667 ser_median=0.1329 ser_pre=0.2074 ser_attack=0.5722 ser_post=0.0231
+== pool7 finished: 36 runs, 0 failed, 0.8 h
+pushed results to GitHub (22:39)

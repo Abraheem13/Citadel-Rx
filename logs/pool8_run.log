@@ -1,0 +1,49 @@
+== pool8: 44 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~43 left | 0.5 h, ~23.6 h to go at this pace] t1 D23s d23s_citadel_d75__phys s11 OK 33 min  == d23s_citadel_d75__phys seed 11: ser_mean=0.5398 ser_median=0.6806 ser_pre=0.4175 ser_attack=0.9684 ser_post=0.0541
+[2 done, ~42 left | 0.6 h, ~11.6 h to go at this pace] t1 D23s d23s_citadel_d35__phys s11 OK 33 min  == d23s_citadel_d35__phys seed 11: ser_mean=0.5472 ser_median=0.6806 ser_pre=0.4175 ser_attack=0.9871 ser_post=0.0541
+[3 done, ~41 left | 0.6 h, ~7.5 h to go at this pace] t1 D23s d23s_citadel_d35__phys s13 OK 33 min  == d23s_citadel_d35__phys seed 13: ser_mean=0.3798 ser_median=0.1275 ser_pre=0.0194 ser_attack=0.8518 ser_post=0.0777
+[4 done, ~40 left | 0.6 h, ~5.5 h to go at this pace] t1 D23s d23s_citadel_d150__phys s11 OK 33 min  == d23s_citadel_d150__phys seed 11: ser_mean=0.5279 ser_median=0.6806 ser_pre=0.4175 ser_attack=0.9389 ser_post=0.0541
+pushed results to GitHub (20:29)
+[5 done, ~39 left | 1.1 h, ~8.4 h to go at this pace] t1 D23s clean_d631069611 s11 OK 32 min  == clean_d631069611 seed 11: ser_mean=0.3442 ser_median=0.1581
+[6 done, ~38 left | 1.1 h, ~6.9 h to go at this pace] t1 D23s clean_d631069611 s13 OK 32 min  == clean_d631069611 seed 13: ser_mean=0.1260 ser_median=0.0194
+[7 done, ~37 left | 1.1 h, ~5.7 h to go at this pace] t1 D23s d23s_citadel_d75__phys s13 OK 32 min  == d23s_citadel_d75__phys seed 13: ser_mean=0.3099 ser_median=0.0305 ser_pre=0.0194 ser_attack=0.7261 ser_post=0.0361
+[8 done, ~36 left | 1.1 h, ~4.9 h to go at this pace] t1 D23s d23s_citadel_d150__phys s13 OK 32 min  == d23s_citadel_d150__phys seed 13: ser_mean=0.1627 ser_median=0.0194 ser_pre=0.0194 ser_attack=0.3579 ser_post=0.0361
+[9 done, ~35 left | 1.2 h, ~4.7 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s10 OK 8 min  == d23s_online_deepsic_d35__phys seed 10: ser_mean=0.3422 ser_median=0.2005 ser_pre=0.0691 ser_attack=0.6857 ser_post=0.1517
+[10 done, ~34 left | 1.2 h, ~4.2 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s10 OK 8 min  == d23s_online_deepsic_d75__phys seed 10: ser_mean=0.2919 ser_median=0.2147 ser_pre=0.0691 ser_attack=0.5428 ser_post=0.1730
+[11 done, ~33 left | 1.2 h, ~3.7 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s10 OK 8 min  == d23s_online_deepsic_d150__phys seed 10: ser_mean=0.2385 ser_median=0.2316 ser_pre=0.0691 ser_attack=0.4090 ser_post=0.1736
+[12 done, ~32 left | 1.2 h, ~3.3 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s11 OK 8 min  == d23s_online_deepsic_d35__phys seed 11: ser_mean=0.4278 ser_median=0.3635 ser_pre=0.2113 ser_attack=0.7665 ser_post=0.1907
+[13 done, ~31 left | 1.3 h, ~3.1 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s11 OK 5 min  == d23s_online_deepsic_d75__phys seed 11: ser_mean=0.3477 ser_median=0.3468 ser_pre=0.2113 ser_attack=0.5854 ser_post=0.1622
+[14 done, ~30 left | 1.3 h, ~2.8 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s11 OK 5 min  == d23s_online_deepsic_d150__phys seed 11: ser_mean=0.3173 ser_median=0.3014 ser_pre=0.2113 ser_attack=0.4853 ser_post=0.1980
+[15 done, ~29 left | 1.4 h, ~2.6 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s12 OK 8 min  == d23s_online_deepsic_d35__phys seed 12: ser_mean=0.4520 ser_median=0.2824 ser_pre=0.1546 ser_attack=0.8412 ser_post=0.2813
+[16 done, ~28 left | 1.4 h, ~2.4 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s12 OK 8 min  == d23s_online_deepsic_d75__phys seed 12: ser_mean=0.3706 ser_median=0.2796 ser_pre=0.1546 ser_attack=0.6418 ser_post=0.2722
+[17 done, ~27 left | 1.4 h, ~2.2 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s12 OK 5 min  == d23s_online_deepsic_d150__phys seed 12: ser_mean=0.2810 ser_median=0.2429 ser_pre=0.1546 ser_attack=0.4322 ser_post=0.2400
+[18 done, ~26 left | 1.4 h, ~2.1 h to go at this pace] t1 D23s d23s_online_deepsic_d35__phys s14 OK 8 min  == d23s_online_deepsic_d35__phys seed 14: ser_mean=0.2656 ser_median=0.2343 ser_pre=0.1751 ser_attack=0.4492 ser_post=0.1343
+[19 done, ~25 left | 1.4 h, ~1.9 h to go at this pace] t1 D23s d23s_online_deepsic_d75__phys s14 OK 5 min  == d23s_online_deepsic_d75__phys seed 14: ser_mean=0.3076 ser_median=0.2083 ser_pre=0.1751 ser_attack=0.5812 ser_post=0.1113
+[20 done, ~24 left | 1.4 h, ~1.7 h to go at this pace] t1 D23s d23s_online_deepsic_d150__phys s14 OK 5 min  == d23s_online_deepsic_d150__phys seed 14: ser_mean=0.2429 ser_median=0.2078 ser_pre=0.1751 ser_attack=0.3959 ser_post=0.1315
+pushed results to GitHub (21:14)
+[21 done, ~23 left | 1.7 h, ~1.8 h to go at this pace] t1 D23s d23s_crc_rollback_d35__phys s11 OK 18 min  == d23s_crc_rollback_d35__phys seed 11: ser_mean=0.8600 ser_median=0.9996 ser_pre=0.5770 ser_attack=0.9990 ser_post=1.0000
+[22 done, ~22 left | 1.7 h, ~1.7 h to go at this pace] t1 D23s d23s_crc_rollback_d150__phys s11 OK 15 min  == d23s_crc_rollback_d150__phys seed 11: ser_mean=0.8600 ser_median=0.9996 ser_pre=0.5770 ser_attack=0.9990 ser_post=1.0000
+[23 done, ~21 left | 1.7 h, ~1.6 h to go at this pace] t1 D23s d23s_crc_rollback_d35__phys s13 OK 17 min  == d23s_crc_rollback_d35__phys seed 13: ser_mean=0.8571 ser_median=0.9838 ser_pre=0.1397 ser_attack=0.9298 ser_post=0.9937
+[24 done, ~20 left | 1.7 h, ~1.4 h to go at this pace] t1 D23s d23s_crc_rollback_d75__phys s11 OK 18 min  == d23s_crc_rollback_d75__phys seed 11: ser_mean=0.8600 ser_median=0.9996 ser_pre=0.5770 ser_attack=0.9990 ser_post=1.0000
+[25 done, ~19 left | 1.8 h, ~1.4 h to go at this pace] t1 D23s clean_c0e4707cb7 s10 OK 4 min  == clean_c0e4707cb7 seed 10: ser_mean=0.2183 ser_median=0.1761
+[26 done, ~18 left | 1.8 h, ~1.2 h to go at this pace] t1 D23s clean_c0e4707cb7 s11 OK 5 min  == clean_c0e4707cb7 seed 11: ser_mean=0.2382 ser_median=0.2585
+[27 done, ~17 left | 1.9 h, ~1.2 h to go at this pace] t1 D23s clean_c0e4707cb7 s12 OK 5 min  == clean_c0e4707cb7 seed 12: ser_mean=0.2426 ser_median=0.2255
+[28 done, ~16 left | 1.9 h, ~1.1 h to go at this pace] t1 D23s clean_c0e4707cb7 s14 OK 5 min  == clean_c0e4707cb7 seed 14: ser_mean=0.1709 ser_median=0.1738
+[29 done, ~15 left | 1.9 h, ~1.0 h to go at this pace] t1 D23s d23s_crc_rollback_d75__phys s13 OK 15 min  == d23s_crc_rollback_d75__phys seed 13: ser_mean=0.8371 ser_median=0.9911 ser_pre=0.1397 ser_attack=0.8761 ser_post=0.9969
+[30 done, ~14 left | 1.9 h, ~0.9 h to go at this pace] t1 D23s d23s_crc_rollback_d150__phys s13 OK 15 min  == d23s_crc_rollback_d150__phys seed 13: ser_mean=0.8371 ser_median=0.9911 ser_pre=0.1397 ser_attack=0.8761 ser_post=0.9969
+[31 done, ~13 left | 2.0 h, ~0.8 h to go at this pace] t1 D23s d23s_lmmse_d35__phys s10 OK 5 min  == d23s_lmmse_d35__phys seed 10: ser_mean=0.3695 ser_median=0.0791 ser_pre=0.0424 ser_attack=0.8488 ser_post=0.0568
+[32 done, ~12 left | 2.0 h, ~0.8 h to go at this pace] t1 D23s d23s_lmmse_d75__phys s10 OK 4 min  == d23s_lmmse_d75__phys seed 10: ser_mean=0.3108 ser_median=0.0791 ser_pre=0.0424 ser_attack=0.7019 ser_post=0.0568
+[33 done, ~11 left | 2.1 h, ~0.7 h to go at this pace] t1 D23s d23s_lmmse_d150__phys s10 OK 4 min  == d23s_lmmse_d150__phys seed 10: ser_mean=0.1586 ser_median=0.0729 ser_pre=0.0424 ser_attack=0.3214 ser_post=0.0568
+[34 done, ~10 left | 2.1 h, ~0.6 h to go at this pace] t1 D23s d23s_lmmse_d35__phys s11 OK 4 min  == d23s_lmmse_d35__phys seed 11: ser_mean=0.5262 ser_median=0.4222 ser_pre=0.3637 ser_attack=0.9789 ser_post=0.0541
+[35 done, ~9 left | 2.1 h, ~0.5 h to go at this pace] t1 D23s clean_d103bdad55 s11 OK 13 min  == clean_d103bdad55 seed 11: ser_mean=0.8600 ser_median=0.9996
+[36 done, ~8 left | 2.1 h, ~0.5 h to go at this pace] t1 D23s clean_d103bdad55 s13 OK 13 min  == clean_d103bdad55 seed 13: ser_mean=0.8371 ser_median=0.9911
+[37 done, ~7 left | 2.1 h, ~0.4 h to go at this pace] t1 D23s d23s_lmmse_d75__phys s11 OK 4 min  == d23s_lmmse_d75__phys seed 11: ser_mean=0.5156 ser_median=0.4222 ser_pre=0.3637 ser_attack=0.9524 ser_post=0.0541
+[38 done, ~6 left | 2.1 h, ~0.3 h to go at this pace] t1 D23s d23s_lmmse_d150__phys s11 OK 4 min  == d23s_lmmse_d150__phys seed 11: ser_mean=0.4584 ser_median=0.4222 ser_pre=0.3637 ser_attack=0.8095 ser_post=0.0541
+[39 done, ~5 left | 2.2 h, ~0.3 h to go at this pace] t1 D23s d23s_lmmse_d35__phys s13 OK 4 min  == d23s_lmmse_d35__phys seed 13: ser_mean=0.3216 ser_median=0.0185 ser_pre=0.0146 ser_attack=0.7722 ser_post=0.0231
+[40 done, ~4 left | 2.2 h, ~0.2 h to go at this pace] t1 D23s d23s_lmmse_d75__phys s13 OK 4 min  == d23s_lmmse_d75__phys seed 13: ser_mean=0.0917 ser_median=0.0110 ser_pre=0.0146 ser_attack=0.1974 ser_post=0.0231
+[41 done, ~3 left | 2.2 h, ~0.2 h to go at this pace] t1 D23s clean_0e0253d36b s10 OK 3 min  == clean_0e0253d36b seed 10: ser_mean=0.1012 ser_median=0.0560
+[42 done, ~2 left | 2.2 h, ~0.1 h to go at this pace] t1 D23s clean_0e0253d36b s11 OK 3 min  == clean_0e0253d36b seed 11: ser_mean=0.2192 ser_median=0.1773
+[43 done, ~1 left | 2.2 h, ~0.1 h to go at this pace] t1 D23s clean_0e0253d36b s13 OK 3 min  == clean_0e0253d36b seed 13: ser_mean=0.0439 ser_median=0.0033
+[44 done, ~0 left | 2.2 h, ~0.0 h to go at this pace] t1 D23s d23s_lmmse_d150__phys s13 OK 4 min  == d23s_lmmse_d150__phys seed 13: ser_mean=0.0477 ser_median=0.0033 ser_pre=0.0146 ser_attack=0.0874 ser_post=0.0231
+== pool8 finished: 44 runs, 0 failed, 2.2 h
+pushed results to GitHub (21:57)

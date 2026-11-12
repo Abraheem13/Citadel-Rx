@@ -1,0 +1,23 @@
+== pool11: 20 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+[1 done, ~19 left | 0.1 h, ~1.7 h to go at this pace] t1 P2t clean_561d9aa753 s11 OK 5 min  == clean_561d9aa753 seed 11: ser_mean=0.0491 ser_median=0.0423
+[2 done, ~18 left | 0.1 h, ~0.8 h to go at this pace] t1 P2t clean_561d9aa753 s10 OK 5 min  == clean_561d9aa753 seed 10: ser_mean=0.0480 ser_median=0.0408
+[3 done, ~17 left | 0.1 h, ~0.5 h to go at this pace] t1 P2t p2t_drift_deepsic__wb_sir0 s10 OK 6 min  == p2t_drift_deepsic__wb_sir0 seed 10: ser_mean=0.4689 ser_median=0.5243 ser_pre=0.0583 ser_attack=0.6433 ser_post=0.6101
+[4 done, ~16 left | 0.1 h, ~0.4 h to go at this pace] t1 P2t p2t_drift_deepsic__wb_sir0 s11 OK 6 min  == p2t_drift_deepsic__wb_sir0 seed 11: ser_mean=0.5065 ser_median=0.6812 ser_pre=0.0615 ser_attack=0.7415 ser_post=0.7023
+[5 done, ~15 left | 0.2 h, ~0.5 h to go at this pace] t1 P2t clean_561d9aa753 s12 OK 5 min  == clean_561d9aa753 seed 12: ser_mean=0.0488 ser_median=0.0434
+[6 done, ~14 left | 0.2 h, ~0.4 h to go at this pace] t1 P2t p2t_drift_deepsic__wb_sir0 s12 OK 6 min  == p2t_drift_deepsic__wb_sir0 seed 12: ser_mean=0.4231 ser_median=0.5704 ser_pre=0.0581 ser_attack=0.7237 ser_post=0.6066
+[7 done, ~13 left | 0.2 h, ~0.3 h to go at this pace] t1 P2t clean_561d9aa753 s13 OK 5 min  == clean_561d9aa753 seed 13: ser_mean=0.0423 ser_median=0.0364
+[8 done, ~12 left | 0.2 h, ~0.3 h to go at this pace] t1 P2t p2t_drift_deepsic__wb_sir0 s13 OK 6 min  == p2t_drift_deepsic__wb_sir0 seed 13: ser_mean=0.6303 ser_median=0.6713 ser_pre=0.0248 ser_attack=0.8064 ser_post=0.6479
+[9 done, ~11 left | 0.3 h, ~0.3 h to go at this pace] t1 P2t p2t_drift_deepsic__wb_sir0 s14 OK 6 min  == p2t_drift_deepsic__wb_sir0 seed 14: ser_mean=0.6081 ser_median=0.6676 ser_pre=0.0232 ser_attack=0.7579 ser_post=0.6424
+[10 done, ~10 left | 0.3 h, ~0.3 h to go at this pace] t1 P2t clean_561d9aa753 s14 OK 5 min  == clean_561d9aa753 seed 14: ser_mean=0.0456 ser_median=0.0421
+[11 done, ~9 left | 0.3 h, ~0.2 h to go at this pace] t1 P2t clean_0af30a992e s10 OK 6 min  == clean_0af30a992e seed 10: ser_mean=0.0282 ser_median=0.0293
+[12 done, ~8 left | 0.3 h, ~0.2 h to go at this pace] t1 P2t p2t_medbn_deepsic__wb_sir0 s10 OK 7 min  == p2t_medbn_deepsic__wb_sir0 seed 10: ser_mean=0.2991 ser_median=0.0706 ser_pre=0.0321 ser_attack=0.6604 ser_post=0.0813
+[13 done, ~7 left | 0.4 h, ~0.2 h to go at this pace] t1 P2t clean_0af30a992e s11 OK 6 min  == clean_0af30a992e seed 11: ser_mean=0.0285 ser_median=0.0284
+[14 done, ~6 left | 0.4 h, ~0.2 h to go at this pace] t1 P2t p2t_medbn_deepsic__wb_sir0 s11 OK 7 min  == p2t_medbn_deepsic__wb_sir0 seed 11: ser_mean=0.2829 ser_median=0.0713 ser_pre=0.0320 ser_attack=0.6254 ser_post=0.0822
+[15 done, ~5 left | 0.4 h, ~0.1 h to go at this pace] t1 P2t p2t_medbn_deepsic__wb_sir0 s12 OK 7 min  == p2t_medbn_deepsic__wb_sir0 seed 12: ser_mean=0.2793 ser_median=0.0682 ser_pre=0.0279 ser_attack=0.6272 ser_post=0.0928
+[16 done, ~4 left | 0.4 h, ~0.1 h to go at this pace] t1 P2t clean_0af30a992e s12 OK 6 min  == clean_0af30a992e seed 12: ser_mean=0.0282 ser_median=0.0272
+[17 done, ~3 left | 0.5 h, ~0.1 h to go at this pace] t1 P2t p2t_medbn_deepsic__wb_sir0 s13 OK 6 min  == p2t_medbn_deepsic__wb_sir0 seed 13: ser_mean=0.3210 ser_median=0.0558 ser_pre=0.0136 ser_attack=0.7304 ser_post=0.0576
+[18 done, ~2 left | 0.5 h, ~0.1 h to go at this pace] t1 P2t clean_0af30a992e s13 OK 6 min  == clean_0af30a992e seed 13: ser_mean=0.0287 ser_median=0.0272
+[19 done, ~1 left | 0.5 h, ~0.0 h to go at this pace] t1 P2t p2t_medbn_deepsic__wb_sir0 s14 OK 6 min  == p2t_medbn_deepsic__wb_sir0 seed 14: ser_mean=0.3278 ser_median=0.0547 ser_pre=0.0149 ser_attack=0.7438 ser_post=0.0603
+[20 done, ~0 left | 0.5 h, ~0.0 h to go at this pace] t1 P2t clean_0af30a992e s14 OK 6 min  == clean_0af30a992e seed 14: ser_mean=0.0292 ser_median=0.0281
+== pool11 finished: 20 runs, 0 failed, 0.5 h
+pushed results to GitHub (01:41)

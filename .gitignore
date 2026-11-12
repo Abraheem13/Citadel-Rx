@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.venv/
+results/**/*.log
+*.npz
+.DS_Store
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/build.log
+results/**/*.part
+cache/

@@ -1,0 +1,15 @@
+# E3 — A1 availability attack vs. SIR for all receivers (degradation and recovery time).
+channel: {model: synthetic, linear: true, fading: cosine, snr_db: 10.0}
+frame: {pilot_bits: 200, data_bits: 50000, n_blocks: 100}
+receiver: {type: citadel, epochs: 300, pretrain: true}
+citadel: {levels: 3, periods: [1, 8, 32], fast_rule: dgd, dgd_delta: 0.1, gates: [g1, g2, g3]}
+attack:
+  type: a1
+  knowledge: whitebox
+  sir_db: 0.0
+  where: pilots
+  start_block: 30
+  end_block: 70
+  pgd_steps: 20
+  unroll_steps: 2
+run: {name: e3_citadel_a1_sir0, out_dir: results/e3, seeds: [0, 1, 2]}

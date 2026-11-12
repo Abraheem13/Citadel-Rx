@@ -1,0 +1,24 @@
+attacked  p3_citadel_strongest__sir0         seed 10 -> results/rev_p3_g1fix
+attacked  p3_citadel_strongest__sir0         seed 11 -> results/rev_p3_g1fix
+attacked  p3_citadel_strongest__sir0         seed 12 -> results/rev_p3_g1fix
+clean     g1fix_twin_citadel                 seed 10 -> results/rev_clean_pool13
+clean     g1fix_twin_citadel                 seed 11 -> results/rev_clean_pool13
+clean     g1fix_twin_citadel                 seed 12 -> results/rev_clean_pool13
+attacked  p3_citadel_softgate__sir0          seed 10 -> results/rev_p3_g1fix
+attacked  p3_citadel_softgate__sir0          seed 11 -> results/rev_p3_g1fix
+attacked  p3_citadel_softgate__sir0          seed 12 -> results/rev_p3_g1fix
+attacked  p3_citadel_softgate__sir10         seed 10 -> results/rev_p3_g1fix
+attacked  p3_citadel_softgate__sir10         seed 11 -> results/rev_p3_g1fix
+attacked  p3_citadel_softgate__sir10         seed 12 -> results/rev_p3_g1fix
+09:40:25 clean g1fix_twin_citadel s10: done in 841 s
+09:49:31 clean g1fix_twin_citadel s11: done in 543 s
+09:58:27 clean g1fix_twin_citadel s12: done in 533 s
+10:16:05 attacked p3_citadel_softgate__sir0 s10: done in 1057 s
+10:34:59 attacked p3_citadel_softgate__sir0 s11: done in 1131 s
+10:54:48 attacked p3_citadel_softgate__sir0 s12: done in 1187 s
+11:08:00 attacked p3_citadel_strongest__sir0 s12: done in 6097 s
+11:13:02 attacked p3_citadel_strongest__sir0 s11: done in 6398 s
+11:13:50 attacked p3_citadel_strongest__sir0 s10: done in 6446 s
+11:16:15 attacked p3_citadel_softgate__sir10 s10: done in 1283 s
+11:27:53 attacked p3_citadel_softgate__sir10 s11: done in 1189 s
+11:30:57 attacked p3_citadel_softgate__sir10 s12: done in 1072 s

@@ -1,0 +1,16 @@
+# E1 — reproduce the Wu et al. availability attack on online DeepSIC / Meta-DeepSIC.
+# Sweep: receiver.type in {online_deepsic, meta_deepsic}; channel.linear in {true,false};
+# channel.model in {synthetic, cost2100}; attack.sir_db grid; attack.knowledge whitebox/transfer.
+channel: {model: synthetic, linear: true, fading: cosine, snr_db: 10.0}
+frame: {pilot_bits: 200, data_bits: 50000, n_blocks: 100}
+receiver: {type: meta_deepsic, epochs: 300, pretrain: false}
+attack:
+  type: a1
+  knowledge: whitebox
+  sir_db: 0.0
+  where: pilots
+  start_block: 30
+  end_block: 70
+  pgd_steps: 20
+  unroll_steps: 2
+run: {name: e1_meta_a1_sir0, out_dir: results/e1, seeds: [0, 1, 2]}

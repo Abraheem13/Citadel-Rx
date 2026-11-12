@@ -1,0 +1,109 @@
+== cloudx: 141 runs queued (before de-duplication), 2 workers, pre-training cache cache/pretrain
+[1 done, ~140 left | 0.3 h, ~38.0 h to go at this pace] t0 H3cal h3cal_ratio__clean s0 OK 16 min  == h3cal_ratio__clean seed 0: ser_mean=0.0154 ser_median=0.0119
+[2 done, ~139 left | 0.3 h, ~19.1 h to go at this pace] t0 H3cal h3cal_ratio__clean s1 OK 16 min  == h3cal_ratio__clean seed 1: ser_mean=0.0149 ser_median=0.0117
+[3 done, ~138 left | 0.6 h, ~26.4 h to go at this pace] t0 H3cal h3cal_ratio__clean s2 OK 18 min  == h3cal_ratio__clean seed 2: ser_mean=0.0149 ser_median=0.0110
+pushed results to GitHub (14:41)
+[4 done, ~137 left | 0.8 h, ~26.6 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.001 s0 OK 30 min  == tune_joint_ep30_lr0.001 seed 0: ser_mean=0.0847 ser_median=0.0881
+[5 done, ~136 left | 1.2 h, ~33.4 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.001 s1 OK 39 min  == tune_joint_ep30_lr0.001 seed 1: ser_mean=0.0811 ser_median=0.0873
+[6 done, ~135 left | 1.5 h, ~32.9 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.001 s2 OK 41 min  == tune_joint_ep30_lr0.001 seed 2: ser_mean=0.0827 ser_median=0.0867
+pushed results to GitHub (15:26)
+[7 done, ~134 left | 2.0 h, ~39.0 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.005 s0 OK 49 min  == tune_joint_ep30_lr0.005 seed 0: ser_mean=0.2882 ser_median=0.3120
+pushed results to GitHub (16:11)
+[8 done, ~133 left | 2.3 h, ~37.8 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.005 s1 OK 49 min  == tune_joint_ep30_lr0.005 seed 1: ser_mean=0.2851 ser_median=0.3030
+[9 done, ~132 left | 2.8 h, ~41.3 h to go at this pace] t0 D8tune tune_joint_ep30_lr0.005 s2 OK 47 min  == tune_joint_ep30_lr0.005 seed 2: ser_mean=0.2839 ser_median=0.3086
+[10 done, ~131 left | 3.0 h, ~38.8 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.001 s0 OK 41 min  == tune_joint_ep100_lr0.001 seed 0: ser_mean=0.0912 ser_median=0.0937
+pushed results to GitHub (16:56)
+[11 done, ~130 left | 3.5 h, ~41.3 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.001 s1 OK 41 min  == tune_joint_ep100_lr0.001 seed 1: ser_mean=0.0882 ser_median=0.0940
+[12 done, ~129 left | 3.6 h, ~39.0 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.001 s2 OK 40 min  == tune_joint_ep100_lr0.001 seed 2: ser_mean=0.0904 ser_median=0.0962
+pushed results to GitHub (17:41)
+[13 done, ~128 left | 4.1 h, ~39.9 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.005 s0 OK 33 min  == tune_joint_ep100_lr0.005 seed 0: ser_mean=0.2657 ser_median=0.2892
+[14 done, ~127 left | 4.1 h, ~37.4 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.005 s1 OK 30 min  == tune_joint_ep100_lr0.005 seed 1: ser_mean=0.2628 ser_median=0.2838
+[15 done, ~126 left | 4.1 h, ~34.7 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.001 s0 OK 0 min  == tune_joint_ep300_lr0.001 seed 0: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[16 done, ~125 left | 4.1 h, ~32.3 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.001 s1 OK 0 min  == tune_joint_ep300_lr0.001 seed 1: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[17 done, ~124 left | 4.1 h, ~30.1 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.001 s2 OK 0 min  == tune_joint_ep300_lr0.001 seed 2: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[18 done, ~123 left | 4.1 h, ~28.2 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.005 s0 OK 0 min  == tune_joint_ep300_lr0.005 seed 0: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[19 done, ~122 left | 4.1 h, ~26.5 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.005 s1 OK 0 min  == tune_joint_ep300_lr0.005 seed 1: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[20 done, ~121 left | 4.1 h, ~25.0 h to go at this pace] t0 D8tune tune_joint_ep300_lr0.005 s2 OK 0 min  == tune_joint_ep300_lr0.005 seed 2: taken over by the nobody (dropped from the plan) machine (configs/claims.json), skipped
+[21 done, ~120 left | 4.1 h, ~23.6 h to go at this pace] t1 D23 d23_citadel_d35__phys s10 OK 0 min  == d23_citadel_d35__phys seed 10: taken over by the pool4 machine (configs/claims.json), skipped
+[22 done, ~119 left | 4.1 h, ~22.3 h to go at this pace] t1 D23 d23_citadel_d35__phys s11 OK 0 min  == d23_citadel_d35__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[23 done, ~118 left | 4.1 h, ~21.2 h to go at this pace] t1 D23 d23_citadel_d35__phys s12 OK 0 min  == d23_citadel_d35__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[24 done, ~117 left | 4.1 h, ~20.1 h to go at this pace] t1 D23 d23_citadel_d35__phys s13 OK 0 min  == d23_citadel_d35__phys seed 13: taken over by the pool1 machine (configs/claims.json), skipped
+[25 done, ~116 left | 4.1 h, ~19.2 h to go at this pace] t1 D23 d23_citadel_d35__phys s14 OK 0 min  == d23_citadel_d35__phys seed 14: taken over by the pool2 machine (configs/claims.json), skipped
+[26 done, ~115 left | 4.1 h, ~18.3 h to go at this pace] t1 D23 clean_7188cad35c s10 OK 0 min  == clean_7188cad35c seed 10: taken over by the pool4 machine (configs/claims.json), skipped
+[27 done, ~114 left | 4.1 h, ~17.5 h to go at this pace] t1 D23 clean_7188cad35c s11 OK 0 min  == clean_7188cad35c seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[28 done, ~113 left | 4.1 h, ~16.7 h to go at this pace] t1 D23 clean_7188cad35c s12 OK 0 min  == clean_7188cad35c seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[29 done, ~112 left | 4.1 h, ~16.0 h to go at this pace] t1 D23 clean_7188cad35c s13 OK 0 min  == clean_7188cad35c seed 13: taken over by the pool1 machine (configs/claims.json), skipped
+[30 done, ~111 left | 4.1 h, ~15.3 h to go at this pace] t1 D23 clean_7188cad35c s14 OK 0 min  == clean_7188cad35c seed 14: taken over by the pool2 machine (configs/claims.json), skipped
+[31 done, ~110 left | 4.1 h, ~14.7 h to go at this pace] t1 D23 d23_online_deepsic_d35__phys s10 OK 0 min  == d23_online_deepsic_d35__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[32 done, ~109 left | 4.1 h, ~14.1 h to go at this pace] t1 D23 d23_online_deepsic_d35__phys s11 OK 0 min  == d23_online_deepsic_d35__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[33 done, ~108 left | 4.1 h, ~13.5 h to go at this pace] t1 D23 d23_online_deepsic_d35__phys s12 OK 0 min  == d23_online_deepsic_d35__phys seed 12: taken over by the pool4 machine (configs/claims.json), skipped
+[34 done, ~107 left | 4.1 h, ~13.0 h to go at this pace] t1 D23 d23_online_deepsic_d35__phys s13 OK 0 min  == d23_online_deepsic_d35__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[35 done, ~106 left | 4.1 h, ~12.5 h to go at this pace] t1 D23 d23_online_deepsic_d35__phys s14 OK 0 min  == d23_online_deepsic_d35__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[36 done, ~105 left | 4.1 h, ~12.1 h to go at this pace] t1 D23 clean_fa0f3fbeb2 s10 OK 0 min  == clean_fa0f3fbeb2 seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[37 done, ~104 left | 4.1 h, ~11.6 h to go at this pace] t1 D23 clean_fa0f3fbeb2 s11 OK 0 min  == clean_fa0f3fbeb2 seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[38 done, ~103 left | 4.1 h, ~11.2 h to go at this pace] t1 D23 clean_fa0f3fbeb2 s12 OK 0 min  == clean_fa0f3fbeb2 seed 12: taken over by the pool4 machine (configs/claims.json), skipped
+[39 done, ~102 left | 4.1 h, ~10.8 h to go at this pace] t1 D23 clean_fa0f3fbeb2 s13 OK 0 min  == clean_fa0f3fbeb2 seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[40 done, ~101 left | 4.1 h, ~10.5 h to go at this pace] t1 D23 clean_fa0f3fbeb2 s14 OK 0 min  == clean_fa0f3fbeb2 seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[41 done, ~100 left | 4.1 h, ~10.1 h to go at this pace] t1 D23 d23_crc_rollback_d35__phys s10 OK 0 min  == d23_crc_rollback_d35__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[42 done, ~99 left | 4.1 h, ~9.8 h to go at this pace] t1 D23 d23_crc_rollback_d35__phys s11 OK 0 min  == d23_crc_rollback_d35__phys seed 11: taken over by the pool4 machine (configs/claims.json), skipped
+[43 done, ~98 left | 4.1 h, ~9.4 h to go at this pace] t1 D23 d23_crc_rollback_d35__phys s12 OK 0 min  == d23_crc_rollback_d35__phys seed 12: taken over by the pool5 machine (configs/claims.json), skipped
+[44 done, ~97 left | 4.1 h, ~9.1 h to go at this pace] t1 D23 d23_crc_rollback_d35__phys s13 OK 0 min  == d23_crc_rollback_d35__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[45 done, ~96 left | 4.1 h, ~8.8 h to go at this pace] t1 D23 d23_crc_rollback_d35__phys s14 OK 0 min  == d23_crc_rollback_d35__phys seed 14: taken over by the pool3 machine (configs/claims.json), skipped
+[46 done, ~95 left | 4.1 h, ~8.6 h to go at this pace] t1 D23 clean_c1b8e62df3 s10 OK 0 min  == clean_c1b8e62df3 seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[47 done, ~94 left | 4.1 h, ~8.3 h to go at this pace] t1 D23 clean_c1b8e62df3 s11 OK 0 min  == clean_c1b8e62df3 seed 11: taken over by the pool4 machine (configs/claims.json), skipped
+[48 done, ~93 left | 4.1 h, ~8.0 h to go at this pace] t1 D23 clean_c1b8e62df3 s12 OK 0 min  == clean_c1b8e62df3 seed 12: taken over by the pool5 machine (configs/claims.json), skipped
+[49 done, ~92 left | 4.1 h, ~7.8 h to go at this pace] t1 D23 clean_c1b8e62df3 s13 OK 0 min  == clean_c1b8e62df3 seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[50 done, ~91 left | 4.1 h, ~7.5 h to go at this pace] t1 D23 clean_c1b8e62df3 s14 OK 0 min  == clean_c1b8e62df3 seed 14: taken over by the pool3 machine (configs/claims.json), skipped
+[51 done, ~90 left | 4.1 h, ~7.3 h to go at this pace] t1 D23 d23_lmmse_d35__phys s10 OK 0 min  == d23_lmmse_d35__phys seed 10: taken over by the pool3 machine (configs/claims.json), skipped
+[52 done, ~89 left | 4.1 h, ~7.1 h to go at this pace] t1 D23 d23_lmmse_d35__phys s11 OK 0 min  == d23_lmmse_d35__phys seed 11: taken over by the pool1 machine (configs/claims.json), skipped
+[53 done, ~88 left | 4.1 h, ~6.9 h to go at this pace] t1 D23 d23_lmmse_d35__phys s12 OK 0 min  == d23_lmmse_d35__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[54 done, ~87 left | 4.1 h, ~6.7 h to go at this pace] t1 D23 d23_lmmse_d35__phys s13 OK 0 min  == d23_lmmse_d35__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[55 done, ~86 left | 4.1 h, ~6.5 h to go at this pace] t1 D23 d23_lmmse_d35__phys s14 OK 0 min  == d23_lmmse_d35__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[56 done, ~85 left | 4.1 h, ~6.3 h to go at this pace] t1 D23 clean_59f668f264 s10 OK 0 min  == clean_59f668f264 seed 10: taken over by the pool3 machine (configs/claims.json), skipped
+[57 done, ~84 left | 4.1 h, ~6.1 h to go at this pace] t1 D23 clean_59f668f264 s11 OK 0 min  == clean_59f668f264 seed 11: taken over by the pool1 machine (configs/claims.json), skipped
+[58 done, ~83 left | 4.1 h, ~5.9 h to go at this pace] t1 D23 clean_59f668f264 s12 OK 0 min  == clean_59f668f264 seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[59 done, ~82 left | 4.2 h, ~5.8 h to go at this pace] t1 D23 clean_59f668f264 s13 OK 0 min  == clean_59f668f264 seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[60 done, ~81 left | 4.2 h, ~5.6 h to go at this pace] t1 D23 clean_59f668f264 s14 OK 0 min  == clean_59f668f264 seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[61 done, ~80 left | 4.2 h, ~5.4 h to go at this pace] t1 D23 d23_citadel_d75__phys s10 OK 0 min  == d23_citadel_d75__phys seed 10: taken over by the pool4 machine (configs/claims.json), skipped
+[62 done, ~79 left | 4.2 h, ~5.3 h to go at this pace] t1 D23 d23_citadel_d75__phys s11 OK 0 min  == d23_citadel_d75__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[63 done, ~78 left | 4.2 h, ~5.1 h to go at this pace] t1 D23 d23_citadel_d75__phys s12 OK 0 min  == d23_citadel_d75__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[64 done, ~77 left | 4.2 h, ~5.0 h to go at this pace] t1 D23 d23_citadel_d75__phys s13 OK 0 min  == d23_citadel_d75__phys seed 13: taken over by the pool1 machine (configs/claims.json), skipped
+[65 done, ~76 left | 4.2 h, ~4.9 h to go at this pace] t1 D23 d23_citadel_d75__phys s14 OK 0 min  == d23_citadel_d75__phys seed 14: taken over by the pool2 machine (configs/claims.json), skipped
+[66 done, ~70 left | 4.2 h, ~4.4 h to go at this pace] t1 D23 d23_online_deepsic_d75__phys s10 OK 0 min  == d23_online_deepsic_d75__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[67 done, ~69 left | 4.2 h, ~4.3 h to go at this pace] t1 D23 d23_online_deepsic_d75__phys s11 OK 0 min  == d23_online_deepsic_d75__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[68 done, ~68 left | 4.2 h, ~4.2 h to go at this pace] t1 D23 d23_online_deepsic_d75__phys s12 OK 0 min  == d23_online_deepsic_d75__phys seed 12: taken over by the pool4 machine (configs/claims.json), skipped
+[69 done, ~67 left | 4.2 h, ~4.0 h to go at this pace] t1 D23 d23_online_deepsic_d75__phys s13 OK 0 min  == d23_online_deepsic_d75__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[70 done, ~66 left | 4.2 h, ~3.9 h to go at this pace] t1 D23 d23_online_deepsic_d75__phys s14 OK 0 min  == d23_online_deepsic_d75__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[71 done, ~60 left | 4.2 h, ~3.5 h to go at this pace] t1 D23 d23_crc_rollback_d75__phys s10 OK 0 min  == d23_crc_rollback_d75__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[72 done, ~59 left | 4.2 h, ~3.4 h to go at this pace] t1 D23 d23_crc_rollback_d75__phys s11 OK 0 min  == d23_crc_rollback_d75__phys seed 11: taken over by the pool4 machine (configs/claims.json), skipped
+[73 done, ~58 left | 4.2 h, ~3.3 h to go at this pace] t1 D23 d23_crc_rollback_d75__phys s12 OK 0 min  == d23_crc_rollback_d75__phys seed 12: taken over by the pool5 machine (configs/claims.json), skipped
+[74 done, ~57 left | 4.2 h, ~3.2 h to go at this pace] t1 D23 d23_crc_rollback_d75__phys s13 OK 0 min  == d23_crc_rollback_d75__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[75 done, ~56 left | 4.2 h, ~3.1 h to go at this pace] t1 D23 d23_crc_rollback_d75__phys s14 OK 0 min  == d23_crc_rollback_d75__phys seed 14: taken over by the pool3 machine (configs/claims.json), skipped
+[76 done, ~50 left | 4.2 h, ~2.7 h to go at this pace] t1 D23 d23_lmmse_d75__phys s10 OK 0 min  == d23_lmmse_d75__phys seed 10: taken over by the pool3 machine (configs/claims.json), skipped
+[77 done, ~49 left | 4.2 h, ~2.6 h to go at this pace] t1 D23 d23_lmmse_d75__phys s11 OK 0 min  == d23_lmmse_d75__phys seed 11: taken over by the pool1 machine (configs/claims.json), skipped
+[78 done, ~48 left | 4.2 h, ~2.6 h to go at this pace] t1 D23 d23_lmmse_d75__phys s12 OK 0 min  == d23_lmmse_d75__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[79 done, ~47 left | 4.2 h, ~2.5 h to go at this pace] t1 D23 d23_lmmse_d75__phys s13 OK 0 min  == d23_lmmse_d75__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[80 done, ~46 left | 4.2 h, ~2.4 h to go at this pace] t1 D23 d23_lmmse_d75__phys s14 OK 0 min  == d23_lmmse_d75__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[81 done, ~40 left | 4.2 h, ~2.1 h to go at this pace] t1 D23 d23_citadel_d150__phys s10 OK 0 min  == d23_citadel_d150__phys seed 10: taken over by the pool4 machine (configs/claims.json), skipped
+[82 done, ~39 left | 4.2 h, ~2.0 h to go at this pace] t1 D23 d23_citadel_d150__phys s11 OK 0 min  == d23_citadel_d150__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[83 done, ~38 left | 4.2 h, ~1.9 h to go at this pace] t1 D23 d23_citadel_d150__phys s12 OK 0 min  == d23_citadel_d150__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[84 done, ~37 left | 4.2 h, ~1.8 h to go at this pace] t1 D23 d23_citadel_d150__phys s13 OK 0 min  == d23_citadel_d150__phys seed 13: taken over by the pool1 machine (configs/claims.json), skipped
+[85 done, ~36 left | 4.2 h, ~1.8 h to go at this pace] t1 D23 d23_citadel_d150__phys s14 OK 0 min  == d23_citadel_d150__phys seed 14: taken over by the pool2 machine (configs/claims.json), skipped
+[86 done, ~30 left | 4.2 h, ~1.5 h to go at this pace] t1 D23 d23_online_deepsic_d150__phys s10 OK 0 min  == d23_online_deepsic_d150__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[87 done, ~29 left | 4.2 h, ~1.4 h to go at this pace] t1 D23 d23_online_deepsic_d150__phys s11 OK 0 min  == d23_online_deepsic_d150__phys seed 11: taken over by the pool5 machine (configs/claims.json), skipped
+[88 done, ~28 left | 4.2 h, ~1.3 h to go at this pace] t1 D23 d23_online_deepsic_d150__phys s12 OK 0 min  == d23_online_deepsic_d150__phys seed 12: taken over by the pool4 machine (configs/claims.json), skipped
+[89 done, ~27 left | 4.2 h, ~1.3 h to go at this pace] t1 D23 d23_online_deepsic_d150__phys s13 OK 0 min  == d23_online_deepsic_d150__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[90 done, ~26 left | 4.2 h, ~1.2 h to go at this pace] t1 D23 d23_online_deepsic_d150__phys s14 OK 0 min  == d23_online_deepsic_d150__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[91 done, ~20 left | 4.2 h, ~0.9 h to go at this pace] t1 D23 d23_crc_rollback_d150__phys s10 OK 0 min  == d23_crc_rollback_d150__phys seed 10: taken over by the pool5 machine (configs/claims.json), skipped
+[92 done, ~19 left | 4.2 h, ~0.9 h to go at this pace] t1 D23 d23_crc_rollback_d150__phys s11 OK 0 min  == d23_crc_rollback_d150__phys seed 11: taken over by the pool4 machine (configs/claims.json), skipped
+[93 done, ~18 left | 4.2 h, ~0.8 h to go at this pace] t1 D23 d23_crc_rollback_d150__phys s12 OK 0 min  == d23_crc_rollback_d150__phys seed 12: taken over by the pool5 machine (configs/claims.json), skipped
+[94 done, ~17 left | 4.2 h, ~0.8 h to go at this pace] t1 D23 d23_crc_rollback_d150__phys s13 OK 0 min  == d23_crc_rollback_d150__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[95 done, ~16 left | 4.2 h, ~0.7 h to go at this pace] t1 D23 d23_crc_rollback_d150__phys s14 OK 0 min  == d23_crc_rollback_d150__phys seed 14: taken over by the pool3 machine (configs/claims.json), skipped
+[96 done, ~10 left | 4.2 h, ~0.4 h to go at this pace] t1 D23 d23_lmmse_d150__phys s10 OK 0 min  == d23_lmmse_d150__phys seed 10: taken over by the pool3 machine (configs/claims.json), skipped
+[97 done, ~9 left | 4.2 h, ~0.4 h to go at this pace] t1 D23 d23_lmmse_d150__phys s11 OK 0 min  == d23_lmmse_d150__phys seed 11: taken over by the pool1 machine (configs/claims.json), skipped
+[98 done, ~8 left | 4.2 h, ~0.3 h to go at this pace] t1 D23 d23_lmmse_d150__phys s12 OK 0 min  == d23_lmmse_d150__phys seed 12: taken over by the pool3 machine (configs/claims.json), skipped
+[99 done, ~7 left | 4.2 h, ~0.3 h to go at this pace] t1 D23 d23_lmmse_d150__phys s13 OK 0 min  == d23_lmmse_d150__phys seed 13: taken over by the pool4 machine (configs/claims.json), skipped
+[100 done, ~6 left | 4.2 h, ~0.3 h to go at this pace] t1 D23 d23_lmmse_d150__phys s14 OK 0 min  == d23_lmmse_d150__phys seed 14: taken over by the pool5 machine (configs/claims.json), skipped
+[101 done, ~0 left | 4.5 h, ~0.0 h to go at this pace] t0 D8tune tune_joint_ep100_lr0.005 s2 OK 26 min  == tune_joint_ep100_lr0.005 seed 2: ser_mean=0.2650 ser_median=0.2800
+== cloudx finished: 101 runs, 0 failed, 4.5 h
+pushed results to GitHub (18:25)

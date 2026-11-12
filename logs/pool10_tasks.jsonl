@@ -1,0 +1,12 @@
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a4_a0.75__sir0", "seed": 18, "ok": true, "seconds": 2093.0, "finished": "2026-11-06T23:01:08.560186+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a4_a0.25__sir0", "seed": 18, "ok": true, "seconds": 2103.2, "finished": "2026-11-06T23:01:18.762604+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a4_a0.25__sir0", "seed": 16, "ok": true, "seconds": 2107.3, "finished": "2026-11-06T23:01:22.811235+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a4_a0.75__sir0", "seed": 16, "ok": true, "seconds": 2128.5, "finished": "2026-11-06T23:01:44.075059+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev_clean_pool10", "name": "clean_2cb3064d71", "seed": 16, "ok": true, "seconds": 496.3, "finished": "2026-11-06T23:09:24.822051+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a1__sir0", "seed": 16, "ok": true, "seconds": 533.0, "finished": "2026-11-06T23:10:11.812044+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_redraw__none", "seed": 16, "ok": true, "seconds": 779.2, "finished": "2026-11-06T23:14:22.036667+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_snrdrop__none", "seed": 16, "ok": true, "seconds": 772.9, "finished": "2026-11-06T23:14:36.983791+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev_clean_pool10", "name": "clean_2cb3064d71", "seed": 18, "ok": true, "seconds": 510.9, "finished": "2026-11-06T23:17:55.774337+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_a1__sir0", "seed": 18, "ok": true, "seconds": 541.3, "finished": "2026-11-06T23:19:13.135520+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_snrdrop__none", "seed": 18, "ok": true, "seconds": 797.4, "finished": "2026-11-06T23:27:54.340848+00:00"}
+{"shard": "pool10", "tier": 1, "group": "H3v", "out": "rev2_abstain_v3", "name": "h3v_redraw__none", "seed": 18, "ok": true, "seconds": 834.1, "finished": "2026-11-06T23:28:16.122710+00:00"}

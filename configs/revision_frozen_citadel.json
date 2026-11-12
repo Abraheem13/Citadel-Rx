@@ -1,0 +1,95 @@
+{
+ "rule": "lowest mean of (clean SER, A1 SIR 0 window SER, COST2100 A1 SIR 0 window SER) on calibration seeds 0-2, among candidates with clean false-rejection rate <= 2% (all candidates if none qualifies)",
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "admissible": [
+  "derived_select_clip",
+  "rel_select_clip",
+  "rel_select_clip_anchorstart"
+ ],
+ "candidates": {
+  "rel_select_clip": {
+   "score": 0.0132904974036136,
+   "clean_ser": 0.01507655783183952,
+   "a1_sir0_window_ser": 0.0245178457106274,
+   "cost2100_sir0_window_ser": 0.0002770886683738796,
+   "clean_false_rejection": 0.0,
+   "records": {
+    "clean": [
+     "results/rev_cal_citadel/cand_rel_select_clip__clean_s0_5c8b1c7a7895.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__clean_s1_d72ba35117d1.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__clean_s2_cdc676811d75.json"
+    ],
+    "a1": [
+     "results/rev_cal_citadel/cand_rel_select_clip__a1_s0_ff7f8a588a9c.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__a1_s1_7aabd1a1a97b.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__a1_s2_4d183889f2f1.json"
+    ],
+    "cost": [
+     "results/rev_cal_citadel/cand_rel_select_clip__cost_s0_3be7f3165932.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__cost_s1_9636e04241cc.json",
+     "results/rev_cal_citadel/cand_rel_select_clip__cost_s2_a411842fc5cf.json"
+    ]
+   }
+  },
+  "derived_select_clip": {
+   "score": 0.014136590375586856,
+   "clean_ser": 0.015016672001707213,
+   "a1_sir0_window_ser": 0.02716769366197183,
+   "cost2100_sir0_window_ser": 0.00022540546308151945,
+   "clean_false_rejection": 0.0,
+   "records": {
+    "clean": [
+     "results/rev_cal_citadel/cand_derived_select_clip__clean_s0_1ce518b084c4.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__clean_s1_a8c57059d485.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__clean_s2_27b050cefea2.json"
+    ],
+    "a1": [
+     "results/rev_cal_citadel/cand_derived_select_clip__a1_s0_0db46a25140d.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__a1_s1_103adc5d9524.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__a1_s2_fa59ccb5dde3.json"
+    ],
+    "cost": [
+     "results/rev_cal_citadel/cand_derived_select_clip__cost_s0_2213233a14c6.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__cost_s1_cbb41fffb2d3.json",
+     "results/rev_cal_citadel/cand_derived_select_clip__cost_s2_c9b5ad4f7e28.json"
+    ]
+   }
+  },
+  "rel_select_clip_anchorstart": {
+   "score": 0.016267672321809645,
+   "clean_ser": 0.01682911865130175,
+   "a1_sir0_window_ser": 0.03175349445155783,
+   "cost2100_sir0_window_ser": 0.00022040386256935553,
+   "clean_false_rejection": 0.0,
+   "records": {
+    "clean": [
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__clean_s0_288125348017.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__clean_s1_171bc33e4195.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__clean_s2_c488ee7e14f1.json"
+    ],
+    "a1": [
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__a1_s0_7b3e9e18029a.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__a1_s1_cd408a9f1278.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__a1_s2_9d9ddd15ca03.json"
+    ],
+    "cost": [
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__cost_s0_1b09c8371dc7.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__cost_s1_1780784beec1.json",
+     "results/rev_cal_citadel/cand_rel_select_clip_anchorstart__cost_s2_eb944451751a.json"
+    ]
+   }
+  }
+ },
+ "chosen": "rel_select_clip",
+ "citadel_overrides": [
+  "citadel.g2_slack_mode=relative",
+  "citadel.crc_select=true",
+  "citadel.consol_clip=[8.5,4.5]",
+  "citadel.consol_mean=normalized"
+ ],
+ "frozen_at": "2026-11-06T08:47:07.610784+00:00"
+}

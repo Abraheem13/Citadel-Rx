@@ -1,0 +1,11 @@
+== cloud: 248 runs queued (before de-duplication), 4 workers, pre-training cache cache/pretrain
+pushed results to GitHub (14:20)
+pushed results to GitHub (15:06)
+pushed results to GitHub (15:51)
+[1 done, ~247 left | 2.4 h, ~590.7 h to go at this pace] t1 D7 d7_online_deepsic__clean2000 s11 OK 143 min  == d7_online_deepsic__clean2000 seed 11: ser_mean=0.0316 ser_median=0.0281
+[2 done, ~246 left | 2.4 h, ~296.9 h to go at this pace] t1 D7 d7_online_deepsic__clean2000 s10 OK 145 min  == d7_online_deepsic__clean2000 seed 10: ser_mean=0.0307 ser_median=0.0271
+pushed results to GitHub (16:36)
+pushed results to GitHub (17:21)
+pushed results to GitHub (18:06)
+[3 done, ~245 left | 5.2 h, ~422.4 h to go at this pace] t1 H5 h5_a3star_e0.05_guard__long s10 OK 167 min  == h5_a3star_e0.05_guard__long seed 10: ser_mean=0.0151 ser_median=0.0115 ser_pre=0.0232 ser_attack=0.0146 ser_post=0.0138
+[4 done, ~244 left | 5.2 h, ~315.5 h to go at this pace] t1 H5 h5_a3star_e0.05_guard__long s11 OK 166 min  == h5_a3star_e0.05_guard__long seed 11: ser_mean=0.0160 ser_median=0.0123 ser_pre=0.0234 ser_attack=0.0156 ser_post=0.0146
