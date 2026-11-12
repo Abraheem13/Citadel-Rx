@@ -1,0 +1,17 @@
+{
+ "machine": "ccrcloud",
+ "time": "2026-11-12T08:17:26.646351+00:00",
+ "platform": "Linux-6.18.44-fc-v378-x86_64-with-glibc2.39",
+ "processor": "x86_64",
+ "python": "3.13.18",
+ "logical_cpus": 4,
+ "torch": "2.9.1+cu128",
+ "torch_cuda": "12.8",
+ "cuda_available": false,
+ "physical_cpus": 4,
+ "ram_gb": 15.7,
+ "disk_free_gb": 18.3,
+ "numpy": "2.5.3",
+ "scipy": "1.18.1",
+ "git_commit": "a1bf0ab"
+}

@@ -1,0 +1,46 @@
+{
+ "machine": "ccrcloud",
+ "rows": [
+  {
+   "device": "cpu",
+   "parallel": 1,
+   "failed": 0,
+   "wall_min": 5.49,
+   "pretrain_s": 281.5,
+   "t_rx_s": 4.42,
+   "full_run_min": 12.8,
+   "runs_per_hour": 4.68
+  },
+  {
+   "device": "cpu",
+   "parallel": 2,
+   "failed": 0,
+   "wall_min": 5.62,
+   "pretrain_s": 274.4,
+   "t_rx_s": 4.46,
+   "full_run_min": 12.8,
+   "runs_per_hour": 9.41
+  },
+  {
+   "device": "cpu",
+   "parallel": 4,
+   "failed": 0,
+   "wall_min": 11.05,
+   "pretrain_s": 582.2,
+   "t_rx_s": 4.73,
+   "full_run_min": 18.3,
+   "runs_per_hour": 13.1
+  }
+ ],
+ "choice": {
+  "device": "cpu",
+  "parallel": 4,
+  "failed": 0,
+  "wall_min": 11.05,
+  "pretrain_s": 582.2,
+  "t_rx_s": 4.73,
+  "full_run_min": 18.3,
+  "runs_per_hour": 13.1
+ },
+ "note": "throughput = parallel runs x 60 / predicted minutes of one full 100-block attacked run"
+}
