@@ -1,0 +1,23 @@
+{
+ "machine": "ws5080",
+ "time": "2026-11-16T08:24:53.401834+00:00",
+ "platform": "Windows-11-10.0.26300-SP0",
+ "processor": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+ "python": "3.12.10",
+ "logical_cpus": 20,
+ "torch": "2.9.1+cu128",
+ "torch_cuda": "12.8",
+ "cuda_available": true,
+ "physical_cpus": 20,
+ "ram_gb": 63.5,
+ "disk_free_gb": 727.3,
+ "gpu": "NVIDIA GeForce RTX 5080",
+ "gpu_mem_gb": 15.9,
+ "capability": [
+  12,
+  0
+ ],
+ "numpy": "2.5.4",
+ "scipy": "1.18.1",
+ "git_commit": "7f46098"
+}

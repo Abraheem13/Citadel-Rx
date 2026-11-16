@@ -1,0 +1,103 @@
+{
+ "clean": {
+  "n_blocks": [
+   100,
+   100
+  ],
+  "ser_mean": [
+   0.015160851472471188,
+   0.014976392445582586
+  ],
+  "window": [
+   null,
+   null
+  ],
+  "ser": {
+   "identical_blocks": 2,
+   "first_difference": 0,
+   "max_abs_diff": 0.0078825224071703
+  },
+  "gamma": {
+   "identical_blocks": 0,
+   "first_difference": 0,
+   "max_abs_diff": 0.22742929560409786
+  },
+  "pass_nn": {
+   "identical_blocks": 0,
+   "first_difference": 0,
+   "max_abs_diff": 0.07106274007682456
+  },
+  "pass_mm": {
+   "identical_blocks": 22,
+   "first_difference": 0,
+   "max_abs_diff": 0.017925736235595346
+  },
+  "eta": {
+   "identical_blocks": 30,
+   "first_difference": 6,
+   "max_abs_diff": 0.0077777777777777776
+  },
+  "attacked": {
+   "identical_blocks": 100,
+   "first_difference": null,
+   "max_abs_diff": null
+  },
+  "bit_identical": false,
+  "record": "results\\v3\\phase0\\repro\\p0_repro_clean_s10_17b679439588.json",
+  "reference": "results\\rev_clean_pool4\\clean_0b811be896_s10_33981e132fc1.json"
+ },
+ "a1": {
+  "n_blocks": [
+   100,
+   100
+  ],
+  "ser_mean": [
+   0.020506562099871957,
+   0.020686219590268885
+  ],
+  "window": [
+   [
+    28,
+    68
+   ],
+   [
+    28,
+    68
+   ]
+  ],
+  "ser": {
+   "identical_blocks": 3,
+   "first_difference": 0,
+   "max_abs_diff": 0.008322663252240722
+  },
+  "gamma": {
+   "identical_blocks": 0,
+   "first_difference": 0,
+   "max_abs_diff": 0.6493069229319973
+  },
+  "pass_nn": {
+   "identical_blocks": 2,
+   "first_difference": 0,
+   "max_abs_diff": 0.3767605633802817
+  },
+  "pass_mm": {
+   "identical_blocks": 15,
+   "first_difference": 0,
+   "max_abs_diff": 0.01632522407170295
+  },
+  "eta": {
+   "identical_blocks": 14,
+   "first_difference": 6,
+   "max_abs_diff": 0.007239558507074048
+  },
+  "attacked": {
+   "identical_blocks": 100,
+   "first_difference": null,
+   "max_abs_diff": null
+  },
+  "bit_identical": false,
+  "record": "results\\v3\\phase0\\repro\\p0_repro_a1_s10_1d64033eeb24.json",
+  "reference": "results\\rev2_peruser\\h7_citadel__a1_s10_3b97b1b5bb7f.json"
+ },
+ "minutes": 6.6
+}

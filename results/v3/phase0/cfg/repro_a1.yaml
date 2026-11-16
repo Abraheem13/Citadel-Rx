@@ -23,6 +23,7 @@ attack:
   random_lo: 10
   restarts: 1
   rho_blk: 1.0
+  schedule: []
   sir_db: 0.0
   sir_from_geometry: false
   soft_gate: false
@@ -120,15 +121,22 @@ frame:
 receiver:
   backbone: deepsic
   crc_select: false
+  csi: ls
   dd_max_symbols: 400
   dd_weight: 0.0
+  detector: lmmse
   drift_threshold: 2.0
   ema_beta: 0.0
   entropy_filter: 0.0
   epochs: 300
+  guard: false
+  guard_innov_tau: 4.0
+  guard_quantile: 0.9999
+  guard_refresh: 10
   hidden_base: 64
   iterations: 3
   joint_hidden: 512
+  kbest_k: 16
   lr: 0.005
   meta_epochs: 300
   meta_every: 5

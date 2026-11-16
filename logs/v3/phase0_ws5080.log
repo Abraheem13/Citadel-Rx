@@ -1,0 +1,43 @@
+== Phase 0 on ws5080, 2026-11-16 13:24, steps ['env', 'tests', 'repro', 'bench']
+== 1. machine
+   machine          ws5080
+   time             2026-11-16T08:24:53.401834+00:00
+   platform         Windows-11-10.0.26300-SP0
+   processor        Intel64 Family 6 Model 198 Stepping 2, GenuineIntel
+   python           3.12.10
+   logical_cpus     20
+   torch            2.9.1+cu128
+   torch_cuda       12.8
+   cuda_available   True
+   physical_cpus    20
+   ram_gb           63.5
+   disk_free_gb     727.3
+   gpu              NVIDIA GeForce RTX 5080
+   gpu_mem_gb       15.9
+   capability       [12, 0]
+   numpy            2.5.4
+   scipy            1.18.1
+   git_commit       7f46098
+== 2. unit tests (a few minutes)
+   pytest: 50 passed, 1 warning in 49.57s   (0.8 min, exit code 0)
+== 3. reproduction of two stored records (about 15 minutes)
+   started p0_repro_clean (reference results\rev_clean_pool4\clean_0b811be896_s10_33981e132fc1.json)
+   started p0_repro_a1 (reference results\rev2_peruser\h7_citadel__a1_s10_3b97b1b5bb7f.json)
+   clean bit-identical to the stored record: False; identical SER on 2/100 blocks, max |dSER| 0.0078825224071703, mean SER 0.01516 vs 0.01498
+   a1    bit-identical to the stored record: False; identical SER on 3/100 blocks, max |dSER| 0.008322663252240722, mean SER 0.02051 vs 0.02069
+== 4. throughput benchmark (about 30-45 minutes)
+   cpu: 1 parallel run(s) ...
+      pre-train 121.5 s, 2.19 s per block, a full 100-block attacked run about 6.1 min, throughput 9.89 runs/hour, failed 0
+   cpu: 10 parallel run(s) ...
+      pre-train 225.6 s, 2.36 s per block, a full 100-block attacked run about 8.1 min, throughput 74.2 runs/hour, failed 0
+   cpu: 20 parallel run(s) ...
+      pre-train 519.4 s, 3.36 s per block, a full 100-block attacked run about 14.7 min, throughput 81.52 runs/hour, failed 0
+   cuda: 1 parallel run(s) ...
+      pre-train 20.8 s, 3.44 s per block, a full 100-block attacked run about 6.4 min, throughput 9.35 runs/hour, failed 0
+   cuda: 4 parallel run(s) ...
+      pre-train 15.9 s, 3.28 s per block, a full 100-block attacked run about 6.1 min, throughput 39.53 runs/hour, failed 0
+   cuda: 10 parallel run(s) ...
+      pre-train 31.8 s, 4.99 s per block, a full 100-block attacked run about 9.4 min, throughput 63.89 runs/hour, failed 0
+   best: device cpu with 20 parallel runs, about 81.52 full runs per hour
+== summary: tests OK, repro OK, bench OK
+   next: commit and push results/v3/phase0 and logs/v3 (see docs/v3/PHASE0.md)

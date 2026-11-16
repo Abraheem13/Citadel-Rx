@@ -1,0 +1,76 @@
+{
+ "machine": "ws5080",
+ "rows": [
+  {
+   "device": "cpu",
+   "parallel": 1,
+   "failed": 0,
+   "wall_min": 2.45,
+   "pretrain_s": 121.5,
+   "t_rx_s": 2.19,
+   "full_run_min": 6.1,
+   "runs_per_hour": 9.89
+  },
+  {
+   "device": "cpu",
+   "parallel": 10,
+   "failed": 0,
+   "wall_min": 4.3,
+   "pretrain_s": 225.6,
+   "t_rx_s": 2.36,
+   "full_run_min": 8.1,
+   "runs_per_hour": 74.2
+  },
+  {
+   "device": "cpu",
+   "parallel": 20,
+   "failed": 0,
+   "wall_min": 9.52,
+   "pretrain_s": 519.4,
+   "t_rx_s": 3.36,
+   "full_run_min": 14.7,
+   "runs_per_hour": 81.52
+  },
+  {
+   "device": "cuda",
+   "parallel": 1,
+   "failed": 0,
+   "wall_min": 1.07,
+   "pretrain_s": 20.8,
+   "t_rx_s": 3.44,
+   "full_run_min": 6.4,
+   "runs_per_hour": 9.35
+  },
+  {
+   "device": "cuda",
+   "parallel": 4,
+   "failed": 0,
+   "wall_min": 0.96,
+   "pretrain_s": 15.9,
+   "t_rx_s": 3.28,
+   "full_run_min": 6.1,
+   "runs_per_hour": 39.53
+  },
+  {
+   "device": "cuda",
+   "parallel": 10,
+   "failed": 0,
+   "wall_min": 1.6,
+   "pretrain_s": 31.8,
+   "t_rx_s": 4.99,
+   "full_run_min": 9.4,
+   "runs_per_hour": 63.89
+  }
+ ],
+ "choice": {
+  "device": "cpu",
+  "parallel": 20,
+  "failed": 0,
+  "wall_min": 9.52,
+  "pretrain_s": 519.4,
+  "t_rx_s": 3.36,
+  "full_run_min": 14.7,
+  "runs_per_hour": 81.52
+ },
+ "note": "throughput = parallel runs x 60 / predicted minutes of one full 100-block attacked run"
+}
