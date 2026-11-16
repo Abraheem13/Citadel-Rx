@@ -94,7 +94,26 @@ def phase1() -> List[Job]:
            "frame.pilot_bits=400"]
     for r in ("citadel", "online_deepsic", "model_lmmse", "model_kbest"):
         J.append(Job("1f", f"v3p1f_{r}_qam16w__sir0", T20[:5], rx(r) + q16 + RND + a1(0), priority=4))
+    # 1R: regime scan for Phase 2, CALIBRATION seeds 0-2, clean runs only. Where do adapting deep receivers
+    # beat ML detection with the LS estimate? The main regime of the paper is chosen from these runs by the
+    # rule in docs/v3/PHASE1.md (fixed before the runs). Every R1-R5 regime uses the seed-varying complex
+    # Rician Gauss-Markov channel and ensemble pre-training on 32 draws that exclude every test channel.
+    for reg, rov in REGIMES.items():
+        for r in ("online_deepsic", "citadel", "frozen_deepsic", "model_lmmse", "model_ml", "model_kbest"):
+            J.append(Job("1R", f"v3p1R_{reg}_{r}__clean", CAL, rx(r) + rov + ["attack.type=none"], twin=False, priority=-1))
     return J
+
+
+CGM = ["channel.fading=complex_gm", "channel.jakes_fd_tb=0.01", "channel.rician_k=1.0",
+       "receiver.pretrain_draws=32", "receiver.pretrain_draw_bits=2000"]
+REGIMES = {
+    "R0sed": [],                                                         # the benchmark of the paper (reference)
+    "R1cgm": CGM,                                                        # complex, seed-varying, linear front-end
+    "R2adc3": CGM + ["channel.adc_bits=3"],                              # 3-bit ADCs
+    "R3sat": CGM + ["channel.pa_sat=0.7"],                               # LNA saturation at 0.7 x rms
+    "R4iq": CGM + ["channel.iq_eps=0.15", "channel.iq_phi_deg=15"],      # IQ imbalance
+    "R5np32": CGM + ["frame.pilot_bits=64"],                             # 32 pilot symbols per block
+}
 
 
 PHASES = {1: phase1}

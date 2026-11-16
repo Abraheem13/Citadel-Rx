@@ -107,6 +107,21 @@ def pretraining_blocks(cfg: Config, frames: FrameGenerator) -> List[Tuple[np.nda
     bits per SNR in `pretrain_snrs` (fading disabled)."""
     rc = cfg.receiver
     out = []
+    if getattr(rc, "pretrain_draws", 0) > 0:
+        # v3 ensemble: independent draws of the configured channel family, channel seeds 1,000,000 + d
+        # (no test or calibration seed is that large), through the same front-end, no abrupt change
+        rng = np.random.default_rng(cfg.channel.seed + 77)
+        for d in range(rc.pretrain_draws):
+            pcfg = copy.deepcopy(cfg.channel)
+            pcfg.seed, pcfg.abrupt_block = 1_000_000 + d, -1
+            pcfg.snr_db = float(rc.pretrain_snrs[d % len(rc.pretrain_snrs)])
+            ch = make_channel(pcfg, frames.mod.is_complex)
+            st = ch.state(0)
+            bits = rng.integers(0, 2, size=(cfg.channel.n_user, rc.pretrain_draw_bits))
+            idx = frames.mod.bits_to_indices(bits).T
+            y = ch.frontend(ch.transmit(frames.mod.modulate_indices(idx), st, rng), st)
+            out.append((y, idx))
+        return out
     pcfg = copy.deepcopy(cfg.channel)
     pcfg.fading = "static"
     rng = np.random.default_rng(cfg.channel.seed + 77)
@@ -135,7 +150,7 @@ def run_experiment(cfg: Config, seed: Optional[int] = None, save: bool = True, v
     receiver = make_receiver(cfg, device)
     attacker = make_attacker(cfg, device, seed)
     if hasattr(receiver, "set_channel_rho"):
-        receiver.set_channel_rho(channel.rho if cfg.channel.fading == "jakes" else 1.0)
+        receiver.set_channel_rho(channel.rho if cfg.channel.fading in ("jakes", "complex_gm") else 1.0)
 
     t0 = time.time()
     pretrain_cached = False
@@ -162,6 +177,9 @@ def run_experiment(cfg: Config, seed: Optional[int] = None, save: bool = True, v
         y_p_adv, y_d_adv, astats = attacker.craft(b, y_p, blk.idx_pilot, y_d, receiver, noise_var,
                                                   idx_d=blk.idx_data, H_true=st.H, framer=frames)
         t_attack = time.time() - tb
+        # v3 front-end (identity unless impairments are configured): after the attack, so the attacker's
+        # signal passes through the receiver's hardware like the users' signals
+        y_p_adv, y_d_adv = channel.frontend(y_p_adv, st), channel.frontend(y_d_adv, st)
         tb = time.time()
         out = receiver.process_block(b, y_p_adv, blk.idx_pilot, y_d_adv, aux={"framer": frames, "state": st})
         t_rx = time.time() - tb

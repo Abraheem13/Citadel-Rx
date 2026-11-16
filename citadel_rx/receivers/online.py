@@ -91,11 +91,16 @@ class DeepSICReceiver(Receiver):
     def pretrain(self, blocks: List[Tuple[np.ndarray, np.ndarray]]) -> None:
         """Reference `joint_*`: train sequentially on each pre-training block
         (many SNRs / channel realisations), with pretrain_epochs."""
-        for y, idx in blocks:
-            yf, it = self.to_feat(y), self.to_idx(idx)
-            self.params = self.core.sequential_adapt(
-                self.params, yf, it,
-                lambda p, q, X, t: adam_train_stage(self.core, p, q, X, t, self.lr, self.cfg.receiver.pretrain_epochs))
+        train = lambda p, q, X, t: adam_train_stage(self.core, p, q, X, t, self.lr, self.cfg.receiver.pretrain_epochs)
+        if getattr(self.cfg.receiver, "pretrain_draws", 0) > 0 and blocks:
+            # v3 ensemble: one joint (full-batch) fit on all draws, so no draw is forgotten for the last one
+            yf = torch.cat([self.to_feat(y) for y, _ in blocks])
+            it = torch.cat([self.to_idx(i) for _, i in blocks])
+            self.params = self.core.sequential_adapt(self.params, yf, it, train)
+        else:
+            for y, idx in blocks:
+                yf, it = self.to_feat(y), self.to_idx(idx)
+                self.params = self.core.sequential_adapt(self.params, yf, it, train)
         self.pretrained_params = clone_params(self.params)
         if self.cfg.receiver.reg == "ewc":
             self._compute_fisher(blocks)

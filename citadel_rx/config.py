@@ -33,6 +33,19 @@ class ChannelConfig:
     # N > U only about U + 3 antennas carry it (audit D4: an "8 x 32" array is then nearly 8 x 11).
     # True: exp(-|i U / N - j|), the same profile stretched over the whole array
     sed_stretch: bool = False
+    # v3 (roadmap Phase 2): fading = "complex_gm" is complex Rician block fading around the SED profile,
+    # H_b = sqrt(K/(K+1)) H_los + sqrt(1/(K+1)) G_b, with H_los = SED profile x per-seed random phases and
+    # G_b a complex Gauss-Markov process (rho = J0(2 pi jakes_fd_tb)) with the SED profile as its std
+    rician_k: float = 1.0
+    # v3 receiver front-end impairments, applied after the attacker's perturbation (the attack passes through
+    # the same hardware): IQ imbalance -> LNA saturation (Rapp) -> uniform ADC. The AGC level is the block's
+    # mean received power per antenna. All off by default.
+    iq_eps: float = 0.0               # amplitude imbalance (gain 1 + eps)
+    iq_phi_deg: float = 0.0           # phase imbalance in degrees
+    pa_sat: float = 0.0               # >0: Rapp saturation amplitude in units of the received rms
+    pa_p: float = 2.0                 # Rapp smoothness
+    adc_bits: int = 0                 # >0: bits per real dimension of a uniform mid-rise quantiser
+    adc_clip: float = 2.0             # clipping level per real dimension in units of its rms
 
 
 @dataclass
@@ -71,6 +84,12 @@ class ReceiverConfig:
     pretrain_bits: int = 5000
     pretrain_snrs: List[float] = field(default_factory=lambda: [2, 4, 6, 8, 10, 12, 14, 16])
     pretrain_epochs: int = 300
+    # v3: >0 pre-trains jointly on this many channel draws of the configured family (channel seeds
+    # 1,000,000 + d, disjoint from every test seed), SNRs cycling through pretrain_snrs, each with
+    # pretrain_draw_bits pilot bits per user, through the same front-end. 0: the legacy pre-training
+    # (static channel = block 0 of the SED test channel, one block per SNR, trained in sequence).
+    pretrain_draws: int = 0
+    pretrain_draw_bits: int = 2000
     # meta
     meta_lr: float = 0.01
     meta_every: int = 5

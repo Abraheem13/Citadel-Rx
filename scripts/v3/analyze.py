@@ -193,6 +193,50 @@ def compare(pa: List[Tuple[dict, dict]], pb: List[Tuple[dict, dict]], metric: st
             "equivalent": bool(-MARGIN < lo90 and hi90 < MARGIN)}
 
 
+REGIME_RX = ["online_deepsic", "citadel", "frozen_deepsic", "model_lmmse", "model_ml", "model_kbest"]
+
+
+def regime_scan(plain: List[dict]) -> Optional[dict]:
+    """Group 1R and the pre-registered rule of docs/v3/PHASE1.md: the main regime of Phase 2 is the R1-R5
+    regime with the largest ratio r = SER(ML, LS CSI) / min(SER(online DeepSIC), SER(Citadel-Rx)), clean SER
+    over blocks 50-99, geometric mean over seeds 0-2; if max r < 1.25, no regime favours the plain DeepSIC
+    backbone and Phase 2 first introduces the channel-conditioned backbone and repeats the scan with it."""
+    import re
+    runs: Dict[Tuple[str, str], Dict[int, dict]] = {}
+    for r in plain:
+        m = re.match(r"v3p1R_(R\d\w*?)_(.+)__clean$", r["name"])
+        if m:
+            runs.setdefault((m.group(1), m.group(2)), {})[r["seed"]] = r
+    if not runs:
+        return None
+    rows: Dict[str, dict] = {}
+    for (reg, rx_), by_seed in sorted(runs.items()):
+        s1 = [float(np.mean(arr(r)[5:])) for r in by_seed.values()]
+        s2 = [max(float(np.mean(arr(r)[50:])), 1e-5) for r in by_seed.values()]
+        row = rows.setdefault(reg, {"_seeds": {}})
+        row[rx_] = (float(np.mean(s1)), float(np.exp(np.mean(np.log(s2)))))
+        row["_seeds"][rx_] = {s: max(float(np.mean(arr(r)[50:])), 1e-5) for s, r in by_seed.items()}
+        if rx_ == "citadel":
+            g = np.concatenate([arr(r, "gamma")[5:] for r in by_seed.values()])
+            row["frr"] = float(np.mean(g < 0.5))
+    best, best_r = None, -1.0
+    for reg, row in rows.items():
+        sd = row["_seeds"]
+        if not all(k in sd for k in ("model_ml", "online_deepsic", "citadel")):
+            continue
+        seeds = sorted(set(sd["model_ml"]) & set(sd["online_deepsic"]) & set(sd["citadel"]))
+        lr = [np.log(sd["model_ml"][s] / min(sd["online_deepsic"][s], sd["citadel"][s])) for s in seeds]
+        row["ratio"] = float(np.exp(np.mean(lr))) if lr else float("nan")
+        if reg != "R0sed" and lr and row["ratio"] > best_r:
+            best, best_r = reg, row["ratio"]
+    for row in rows.values():
+        row.pop("_seeds", None)
+    decision = (f"main regime {best} (r = {best_r:.2f})" if best_r >= 1.25 else
+                f"no regime reaches r >= 1.25 (best {best}, r = {best_r:.2f}): Phase 2 introduces the channel-conditioned"
+                " backbone and repeats the scan with it")
+    return {"receivers": REGIME_RX, "rows": rows, "decision": decision, "best": best, "best_ratio": best_r}
+
+
 def fmt(x, nd=4):
     if x is None or (isinstance(x, float) and np.isnan(x)):
         return "–"
@@ -235,6 +279,16 @@ def main() -> int:
             if c:
                 lines.append(f"| {label} | {c['n']} | {c['diff']:+.4f} | [{c['ci95'][0]:+.4f}, {c['ci95'][1]:+.4f}] | "
                              f"[{c['ci90'][0]:+.4f}, {c['ci90'][1]:+.4f}] | {c['p']:.3g} | {c['equivalent']} |")
+    regime = regime_scan(plain) if a.phase == 1 else None
+    if regime:
+        lines += ["", "## Regime scan (group 1R, calibration seeds 0-2, clean)", "",
+                  "Clean SER over blocks 5-99 / 50-99 (steady state); Citadel-Rx false rejections over blocks 5-99.", "",
+                  "| regime | " + " | ".join(regime["receivers"]) + " | Citadel FRR | ML / best adapting (50-99) |",
+                  "|---|" + "---|" * (len(regime["receivers"]) + 2)]
+        for reg, row in regime["rows"].items():
+            cells_ = [f"{row[r][0]:.4f} / {row[r][1]:.4f}" if r in row else "–" for r in regime["receivers"]]
+            lines.append(f"| {reg} | " + " | ".join(cells_) + f" | {row.get('frr', float('nan')):.3f} | {row.get('ratio', float('nan')):.2f} |")
+        lines += ["", f"Rule (docs/v3/PHASE1.md): {regime['decision']}"]
     os.makedirs(os.path.join(ROOT, "docs", "v3"), exist_ok=True)
     md = os.path.join(ROOT, "docs", "v3", f"PHASE{a.phase}_TABLES.md")
     open(md, "w").write("\n".join(lines) + "\n")

@@ -17,6 +17,7 @@ Every attacked run has a clean twin from the same machine.
 | 1d | LMMSE, ML, K-best (K = 16) and MMSE-SIC with a pilot-domain guard (noise inflation and channel innovation, fallback to the last accepted estimate, CRC selection), under A1; the guard against a channel-estimate spoof S_p Z^T | Is a simple model-based defense as good as Citadel-Rx? |
 | 1e | The same four detectors without the guard (LS CSI) under A1, and with perfect CSI (clean) | The missing model-based baselines and the genie bounds |
 | 1f | 16-QAM at 20 dB with the reference width (64 × 16 = 1024 hidden units; the second campaign used 256): Citadel-Rx, online DeepSIC, LMMSE, K-best | Was the 16-QAM failure caused by the narrow network? |
+| 1R | **Regime scan for Phase 2. Calibration seeds 0–2, clean runs only, run first.** Six settings: R0 = the SED benchmark; R1 = seed-varying complex Rician Gauss–Markov channel (K = 1, f_D·T_b = 0.01) with ensemble pre-training on 32 draws that exclude every test channel; R2 = R1 + 3-bit ADCs; R3 = R1 + LNA saturation at 0.7 × rms; R4 = R1 + IQ imbalance (15%, 15°); R5 = R1 + 32 pilot symbols. Six receivers: online DeepSIC, Citadel-Rx, frozen DeepSIC, LMMSE, ML and K-best (LS CSI). | Where does an adapting deep receiver beat ML detection with the LS estimate? This chooses the paper's main setting. |
 
 ## Decision rules (fixed before any result was seen)
 
@@ -33,6 +34,14 @@ interval excludes zero.
 | 1d: a guarded model-based receiver has a window SER equivalent to or below Citadel-Rx's | It becomes the main baseline. Phase 2 must show a regime where Citadel-Rx beats it; otherwise the contribution is reframed. |
 | 1f: Citadel-Rx's clean SER ≤ LMMSE's and its clean false rejection ≤ 2% | The 16-QAM failure was the width; 16-QAM moves into Phase 2 at width 1024. |
 | 1f: otherwise | 16-QAM stays a reported limitation, with the width tested. |
+| 1R | Main regime of Phase 2: the one of R1–R5 with the largest r = SER(ML, LS CSI) / min(SER(online DeepSIC), SER(Citadel-Rx)), clean SER over blocks 50–99, geometric mean over seeds 0–2 (`analyze.py::regime_scan`). |
+| 1R: max r < 1.25 | No regime favors the plain DeepSIC backbone. Phase 2 first introduces the channel-conditioned backbone (below) and repeats the scan with it, under the same rule. |
+
+Disclosure: before this rule was written, a three-block smoke test on calibration seed 0 (R2 with
+Citadel-Rx and ML; R1 with online DeepSIC) was run to time the ensemble pre-training. Its SER was
+0.92 → 0.36 (Citadel-Rx, R2), 0.60 → 0.34 (online DeepSIC, R1) and 0.087 (ML, R2). No test seed was
+involved. It showed that a pre-trained DeepSIC is far from the channel when that channel is new, as
+it always is outside the SED benchmark.
 
 ## Commands (Windows PowerShell, in the repository folder)
 

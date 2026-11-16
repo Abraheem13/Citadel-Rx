@@ -26,6 +26,32 @@ A 9/10 needs four things:
 
 All on held-out seeds, with pre-registered settings and equivalence statistics.
 
+## 0b. Re-evaluation for Q1 novelty (2026-11-16, after Phase 0)
+
+**Smoke-test finding.** On a seed-varying complex channel, pre-trained DeepSIC starts at an SER of
+0.6–0.9 and needs many blocks to adapt, while ML with the LS estimate is at 0.09 even with 3-bit
+ADCs. The SED benchmark used by the online-deep-receiver literature (and by the attack paper it
+defends against) pre-trains on block 0 of the test channel, which hides this. It is the most likely
+cause of the 3GPP-scene failure.
+
+**What this means for a Q1 paper (IEEE TWC / JSAC / TIFS).** A defense paper is only as strong as
+the learner it protects. The contribution is therefore re-centered on four pillars, each of which
+has to be novel and evidenced:
+
+| Pillar | Claim | Evidence (phase) | Novelty check |
+|---|---|---|---|
+| P1 Principle | A test-time-learning receiver resists pilot poisoning when it consolidates only what a label-free physical check verifies **against a protected memory**; checking against an attacker-reachable reference fails | CRC-Rollback failure (old campaign); a new proposition: rollback with an attacker-degradable reference has an absorbing poisoned state (Phase 5); ablations (Phase 2) | No published defense against pilot poisoning of test-time-learning receivers (literature check, 2026-11-12) |
+| P2 Receiver | A channel-conditioned DeepSIC (inputs augmented with the LMMSE estimate from the block's pilots) that pre-trains across channels and adapts at test time to hardware impairments that model-based detectors cannot handle | Regime scan 1R and its repeat (Phase 2); clean gains over ML, K-best and LMMSE with LS CSI | It makes the learner worth protecting, and it opens a second attack surface (the conditioning), which the attacks must differentiate through |
+| P3 Theory | A bound on the excess error rate (not only on weight displacement) from the CRC design rule, the rejection rate and the anchor's drift; every term measurable | Phase 5, checked against every attack | Certified bounds for online poisoning exist only for mean estimation and classification (Bose et al., AISTATS 2025) |
+| P4 Attacks | The first adaptive evaluation of a PHY test-time learner that searches the acceptance boundary with an exact receiver copy, and attacks the gate state (cold start, ratchet) | Phase 1 (1b, 1c), Phase 3 | Adaptive-attack methodology (Tramèr et al. 2020) applied to a physical-layer learner |
+
+**Plan changes.**
+- The regime scan (1R) moves into Phase 1, on calibration seeds 0–2, with a selection rule fixed
+  before the runs.
+- Phase 2 starts with the channel-conditioned backbone, including a differentiable attack path
+  through the LS estimate.
+- Phase 4 (3GPP link) reuses that backbone.
+
 ## 1. Protocol rules (they apply to every phase)
 
 1. **Seeds.** Seeds 0–2 are for calibration only. The new test seeds are 20–29 (10 seeds on every
@@ -181,8 +207,8 @@ that of every adapting baseline.
 
 | Phase | Code | Runs | Report | Gate |
 |---|---|---|---|---|
-| 0 | done (pushed) | on ws5080 | – | – |
-| 1 | done (pushed) | – | – | – |
+| 0 | done | done (ws5080) | `docs/v3/PHASE0_REPORT.md` | passed |
+| 1 | done (+ regime scan 1R) | – | – | – |
 | 2 | – | – | – | – |
 | 3 | – | – | – | – |
 | 4 | – | – | – | – |

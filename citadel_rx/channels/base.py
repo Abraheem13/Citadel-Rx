@@ -52,8 +52,12 @@ class BlockFadingChannel:
         self._abrupt_H: Optional[np.ndarray] = None
         self.H_mean = self._sed_mean()
         self.rho = 1.0
-        if cfg.fading == "jakes":
+        if cfg.fading in ("jakes", "complex_gm"):
             self.rho = float(j0(2 * np.pi * cfg.jakes_fd_tb))
+        # complex_gm draws from its own generator, so the noise stream of self.rng is that of the other modes
+        self.h_rng = np.random.default_rng(cfg.seed + 2000)
+        self._los: Optional[np.ndarray] = None
+        self._G: Optional[np.ndarray] = None
 
     # ---- channel matrices --------------------------------------------
     def _sed_mean(self) -> np.ndarray:
@@ -75,6 +79,15 @@ class BlockFadingChannel:
             else:
                 dev = self.rho * (self._H_prev - self.H_mean) + np.sqrt(1 - self.rho ** 2) * 0.1 * self.rng.standard_normal(H.shape)
             H = self.H_mean + dev
+        elif mode == "complex_gm":
+            if not self.is_complex:
+                raise ValueError("fading=complex_gm needs a complex modulation")
+            if self._los is None:   # per-seed line-of-sight phases
+                self._los = self.H_mean * np.exp(2j * np.pi * self.h_rng.random(H.shape))
+            W = self.H_mean * (self.h_rng.standard_normal(H.shape) + 1j * self.h_rng.standard_normal(H.shape)) / np.sqrt(2)
+            self._G = W if self._G is None else self.rho * self._G + np.sqrt(1 - self.rho ** 2) * W
+            K = float(self.cfg.rician_k)
+            H = np.sqrt(K / (K + 1)) * self._los + np.sqrt(1 / (K + 1)) * self._G
         elif mode == "static":
             pass
         else:
@@ -168,6 +181,42 @@ class BlockFadingChannel:
 
     def apply_nonlinearity(self, y_lin: np.ndarray) -> np.ndarray:
         return y_lin if self.cfg.linear else np.tanh(0.5 * y_lin)
+
+    # ---- v3 receiver front-end ------------------------------------------
+    @property
+    def has_frontend(self) -> bool:
+        c = self.cfg
+        return bool(getattr(c, "iq_eps", 0) or getattr(c, "iq_phi_deg", 0) or getattr(c, "pa_sat", 0) or getattr(c, "adc_bits", 0))
+
+    def frontend(self, y: np.ndarray, st: ChannelState) -> np.ndarray:
+        """IQ imbalance -> LNA saturation (Rapp) -> uniform ADC, applied to what reaches the antennas (users'
+        signals, noise and any attack). AGC: the level is the block's mean received power per antenna,
+        P = mean_n sum_u |H_nu|^2 + E|w|^2, so pilots and data of a block see the same gain. Identity when
+        no impairment is configured."""
+        if not self.has_frontend:
+            return y
+        c = self.cfg
+        cplx = np.iscomplexobj(y)
+        P = float(np.mean(np.sum(np.abs(st.H) ** 2, axis=1))) + (st.noise_var / 2 if cplx else st.noise_var)
+        rms = np.sqrt(P)
+        if cplx and (c.iq_eps or c.iq_phi_deg):
+            g, ph = 1.0 + c.iq_eps, np.deg2rad(c.iq_phi_deg)
+            k1, k2 = (1 + g * np.exp(-1j * ph)) / 2, (1 - g * np.exp(1j * ph)) / 2
+            y = k1 * y + k2 * np.conj(y)
+        if c.pa_sat > 0:
+            A, p = c.pa_sat * rms, c.pa_p
+            r = np.abs(y)
+            gain = 1.0 / (1.0 + (r / A) ** (2 * p)) ** (1.0 / (2 * p))
+            y = y * gain
+        if c.adc_bits > 0:
+            levels = 2 ** int(c.adc_bits)
+            clip = c.adc_clip * (rms / np.sqrt(2) if cplx else rms)
+            step = 2 * clip / levels
+
+            def q(x):
+                return (np.clip(np.floor(x / step), -levels // 2, levels // 2 - 1) + 0.5) * step
+            y = q(y.real) + 1j * q(y.imag) if cplx else q(y)
+        return y
 
 
 def make_channel(cfg: ChannelConfig, is_complex: bool) -> BlockFadingChannel:
