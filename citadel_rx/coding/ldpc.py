@@ -19,6 +19,9 @@ class LDPCFramer:
         # importing Sionna seeds torch's global generator from OS entropy: keep the run's RNG state
         state = torch.get_rng_state()
         import sionna.phy
+        # the framer works on numpy arrays on the CPU; Sionna would otherwise put its modules on a GPU
+        # when one is present (and fail on CPU inputs), and CPU keeps the runs identical to the stored records
+        sionna.phy.config.device = "cpu"
         sionna.phy.config.seed = 0
         from sionna.phy.fec.crc import CRCDecoder, CRCEncoder
         from sionna.phy.fec.ldpc import LDPC5GDecoder, LDPC5GEncoder

@@ -52,6 +52,7 @@ if torch.cuda.is_available():
     torch.cuda.synchronize()
     out["gpu_kernel_ok"] = bool(torch.isfinite(w.grad).all().item())
 import sionna.phy
+sionna.phy.config.device = "cpu"   # as citadel_rx/coding/ldpc.py
 from sionna.phy.fec.ldpc import LDPC5GEncoder, LDPC5GDecoder
 enc = LDPC5GEncoder(520, 1000); dec = LDPC5GDecoder(enc, num_iter=5, hard_out=True, return_infobits=True)
 u = torch.randint(0, 2, (2, 520)).float()

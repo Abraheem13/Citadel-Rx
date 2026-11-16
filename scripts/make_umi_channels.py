@@ -46,6 +46,7 @@ OUT = os.path.join(ROOT, "resources", "umi")
 
 def drop(seed: int, dists, n_ant: int, n_user: int, n_blocks: int, t_block: float, fc: float, speed_kmh: float) -> dict:
     import sionna.phy
+    sionna.phy.config.device = "cpu"   # the stored drops were generated on the CPU
     from sionna.phy.channel.tr38901 import UMi, PanelArray
     sionna.phy.config.seed = seed
     rng = np.random.default_rng(seed + 38901)
