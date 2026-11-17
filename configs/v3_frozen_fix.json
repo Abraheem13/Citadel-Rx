@@ -1,0 +1,64 @@
+{
+ "rule": "fix of the cold-start hole (Phase 1 report, 1b). Candidates: base (first-version settings), F1\n(rejected blocks vote for the memory), F2 (references seeded only by accepted blocks), F1F2. On seeds 0-2:\n  * admissible: clean false-rejection rate <= 2% (clean twins, blocks >= 5);\n  * chosen: the lowest mean of (warm A1 excess, cold A1 excess); within 0.001 of the lowest, the simplest\n    in the order base, F2, F1, F1F2.",
+ "table": {
+  "base": {
+   "warm_excess": 0.020028075650874947,
+   "cold_excess": 0.03892745678617158,
+   "score": 0.029477766218523264,
+   "clean_frr": 0.0,
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "overrides": []
+  },
+  "F2": {
+   "warm_excess": 0.020028075650874947,
+   "cold_excess": 0.039248892979086646,
+   "score": 0.029638484314980798,
+   "clean_frr": 0.0,
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "overrides": [
+    "citadel.gate_warmup=prior"
+   ]
+  },
+  "F1": {
+   "warm_excess": 0.021078411758429363,
+   "cold_excess": 0.03992711000853606,
+   "score": 0.030502760883482714,
+   "clean_frr": 0.0035087719298245615,
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "overrides": [
+    "citadel.consol_mean=vote"
+   ]
+  },
+  "F1F2": {
+   "warm_excess": 0.021078411758429363,
+   "cold_excess": 0.039968790012804095,
+   "score": 0.03052360088561673,
+   "clean_frr": 0.0035087719298245615,
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "overrides": [
+    "citadel.consol_mean=vote",
+    "citadel.gate_warmup=prior"
+   ]
+  }
+ },
+ "chosen": "base",
+ "overrides": [],
+ "problems": [],
+ "frozen_at": "2026-11-17T10:09:06.079454+00:00"
+}
