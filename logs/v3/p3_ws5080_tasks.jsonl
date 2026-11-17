@@ -317,3 +317,4 @@
 {"time": "2026-11-17T22:53:58.886371", "group": "3D", "name": "v3p3D_R7_cls_ml__spoof", "seed": 26, "ok": true, "minutes": 5.53, "machine": "ws5080"}
 {"time": "2026-11-17T22:53:59.805041", "group": "3D", "name": "v3p3D_R7_cls_ml__spoof", "seed": 25, "ok": true, "minutes": 5.57, "machine": "ws5080"}
 {"time": "2026-11-17T22:54:29.599248", "group": "3D", "name": "v3p3D_R7_cls_ml__spoof", "seed": 28, "ok": true, "minutes": 5.57, "machine": "ws5080"}
+{"time": "2026-11-18T01:37:44.083637", "group": "3D", "name": "v3p3D_R7_cls_ml__spoof", "seed": 29, "ok": true, "minutes": 5.66, "machine": "ws5080"}
