@@ -122,6 +122,10 @@ class ReceiverConfig:
     guard_quantile: float = 0.9999    # chi-square quantile of the noise-inflation test
     guard_innov_tau: float = 4.0      # innovation energy relative to its running level on accepted blocks
     guard_refresh: int = 10           # consecutive rejections after which the estimate is re-based (legit change)
+    guard_noise_ref: str = "nominal"  # initial noise reference of the guard tests: nominal (the configured SNR) |
+                                      # calibrated (the receiver's clean LS residual level measured offline on its
+                                      # pre-training draws at the configured SNR: model mismatch of the front-end
+                                      # such as IQ imbalance or saturation is then part of the reference)
     guard_rebase: str = "count"       # count: re-base after guard_refresh rejections (Phase 1: captured by a lasting
                                       #   attack) | never: keep the last accepted estimate | crc: a block that fails the
                                       #   tests is still accepted if its decisions pass at least as many CRCs as those
@@ -177,6 +181,9 @@ class CitadelConfig:
     # v3 fix F2 (gate_warmup = "prior"): the gates' running references are seeded only by blocks they accept,
     # judged against the neutral prior (no forced acceptance of the first blocks). "legacy": first three blocks.
     gate_warmup: str = "legacy"
+    # v3 Citadel-LS (receivers/modelbased.py): clip of every consolidation step of the channel-estimate memory,
+    # as a fraction of the level's norm (design bound); 0 disables
+    ls_clip_frac: float = 0.5
     abstain: bool = False             # reference-degradation abstain state (H3)
     abstain_z: float = 4.0
     # "legacy": pass fraction or residual of the reference against statistics of accepted blocks (the

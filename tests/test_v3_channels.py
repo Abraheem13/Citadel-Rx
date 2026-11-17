@@ -84,3 +84,11 @@ def test_impaired_complex_run_end_to_end():
     for rx in ("model", "online_deepsic"):
         cfg.receiver.type = rx
         assert 0 <= run_experiment(cfg, seed=0, save=False, verbose=False)["summary"]["ser_mean"] <= 1
+
+
+def test_complex_gm_redraw_is_a_new_drop():
+    cfg, ch = _ch(abrupt_block=5, abrupt_type="redraw", jakes_fd_tb=0.001, seed=2)
+    Hs = [ch.state(b).H for b in range(10)]
+    assert np.linalg.norm(Hs[4] - Hs[3]) < 0.2 * np.linalg.norm(Hs[3])        # slow fading before
+    assert np.linalg.norm(Hs[5] - Hs[4]) > 0.5 * np.linalg.norm(Hs[4])        # a new drop at the redraw
+    assert np.linalg.norm(Hs[9] - Hs[8]) < 0.2 * np.linalg.norm(Hs[8])        # slow fading after

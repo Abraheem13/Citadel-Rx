@@ -31,6 +31,12 @@ def rx(name: str) -> List[str]:
         return ["receiver.type=online_deepsic", "@BASE:online_deepsic", "receiver.epochs=0"]
     if name == "frozen_select":        # the same, with per-sub-block CRC selection against LMMSE (roadmap 1a)
         return ["receiver.type=online_select", "@BASE:online_deepsic", "receiver.epochs=0"]
+    if name.startswith("cls_"):         # v3 Citadel-LS: multi-rate verified channel-estimate memory (Phase 3)
+        return ["receiver.type=citadel_ls", f"receiver.detector={name[4:]}", "@CIT", "receiver.guard_noise_ref=calibrated"]
+    if name in ("ml_never", "ml_crc", "ml_count", "lmmse_never", "lmmse_crc"):   # single-state model-based guards
+        det, mode = name.split("_")   # Phase 3: the same offline noise calibration as Citadel-LS (fairness)
+        return (rx(f"model_{det}_guard") + ([] if mode == "count" else [f"receiver.guard_rebase={mode}"])
+                + ["receiver.guard_noise_ref=calibrated"])
     if name.endswith("_cc"):           # v3 channel-conditioned backbone (receivers/conditioning.py)
         base = {"online_cc": "online_deepsic", "frozen_cc": "frozen_deepsic", "citadel_cc": "citadel"}[name]
         return rx(base) + ["receiver.cond=lmmse"]
@@ -167,4 +173,52 @@ def phase2() -> List[Job]:
     return J
 
 
-PHASES = {1: phase1, 2: phase2}
+LS = ["attack.type=ls", "attack.sir_db=0"]
+LS_SG = LS + ["attack.soft_gate=true"]
+SPOOF = ["attack.type=deny", "attack.sir_db=0"]
+SPOOF_REDRAW = ["channel.abrupt_block=50", "channel.abrupt_type=redraw", "attack.type=deny", "attack.sir_db=10",
+                "attack.start_mode=fixed", "attack.start_block=40", "attack.end_block=90"]
+GUARDED = ("cls_ml", "ml_never", "ml_crc", "ml_count")
+
+
+def phase3() -> List[Job]:
+    """Capture-lock grid (test seeds 20-29) in the main regime R7 and on SED, and the large-scale scan
+    (calibration seeds 0-2). Rules: docs/v3/PHASE3.md."""
+    J: List[Job] = []
+    # 3D: the dichotomy grid. R7: the main regime by the rule of Phase 2 (largest r); R4: the largest r among the
+    # regimes where CRC verification has resolution for every user (docs/v3/PHASE3.md, verifiability condition).
+    for reg in ("R4iq", "R7sat"):
+        for r in ("citadel_cc", "online_cc", "cls_ml", "ml", "ml_never", "ml_crc", "ml_count"):
+            deep = r.endswith("_cc")
+            cells = {"ls": RND + LS, "spoof": RND + SPOOF, "spoofredraw": SPOOF_REDRAW}
+            if deep:
+                cells["a1"] = RND + a1(0)
+            if r in GUARDED:
+                cells["lssg"] = RND + LS_SG
+            for c, cov in cells.items():
+                J.append(Job("3D", f"v3p3D_{reg[:2]}_{r}__{c}", T20, rx(r) + REGIMES2[reg] + cov,
+                             priority=(0 if reg == "R4iq" else 1) + (2 if deep else 0)))
+    # 3S: the same dichotomy on the SED benchmark (Phase 1/2 hold A1, spoof and redraw for the guards)
+    for r in ("cls_ml", "ml_never", "ml_crc", "citadel"):
+        cells = {"ls": RND + LS, "spoofredraw": SPOOF_REDRAW}
+        if r in GUARDED:
+            cells["lssg"] = RND + LS_SG
+        if r == "cls_ml":
+            cells.update(a1=RND + a1(0), spoof=RND + SPOOF)
+        for c, cov in cells.items():
+            J.append(Job("3S", f"v3p3S_{r}__{c}", T20, rx(r) + cov, priority=2))
+    # 3L: large-scale scan, 8 x 32, calibration seeds 0-2, clean, 60 blocks; ML is infeasible, K-best (K = 32)
+    big = ["channel.n_user=8", "channel.n_ant=32", "channel.sed_stretch=true", "frame.n_blocks=60",
+           "receiver.pretrain_draws=16", "receiver.pretrain_epochs=100"]   # pre-training capped for cost (8 x 32)
+    mods = {"qpsk": [], "qam16": ["frame.modulation=QAM16", "receiver.hidden_base=64", "channel.snr_db=20",
+                                  "frame.data_bits=40000", "frame.pilot_bits=400", "receiver.pretrain_draw_bits=4000"]}
+    for mod, mov in mods.items():
+        for reg in ("R1cgm", "R7sat", "R8hw"):
+            for r in ("online_cc", "citadel_cc", "frozen_cc", "model_kbest", "model_mmse", "model_lmmse"):
+                extra = ["receiver.kbest_k=32"] if r == "model_kbest" else []
+                J.append(Job("3L", f"v3p3L_{reg}{mod}_{r}__clean", CAL, rx(r) + REGIMES2[reg] + big + mov + extra +
+                             ["attack.type=none"], twin=False, priority=4, stage="cal"))
+    return J
+
+
+PHASES = {1: phase1, 2: phase2, 3: phase3}

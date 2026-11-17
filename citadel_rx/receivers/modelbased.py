@@ -145,6 +145,30 @@ class ModelReceiver(Receiver):
         self.H_acc: Optional[np.ndarray] = None
         self.n_rej = 0
 
+    def pretrain(self, blocks) -> None:
+        """Offline noise calibration (receiver.guard_noise_ref = calibrated): the median LS residual power, per entry,
+        of the pre-training draws at the configured SNR (the nearest SNR if none matches), each estimated from as
+        many symbols as a block has pilots. Model mismatch of the front-end (IQ imbalance, saturation) then belongs
+        to the reference, instead of looking like an attack."""
+        rc = self.cfg.receiver
+        if getattr(rc, "guard_noise_ref", "nominal") != "calibrated" or not blocks:
+            return
+        snrs = list(rc.pretrain_snrs)
+        snr_of = [float(snrs[i % len(snrs)]) for i in range(len(blocks))]
+        target = min(set(snr_of), key=lambda x: abs(x - self.cfg.channel.snr_db))
+        n_p, vals = self.cfg.pilot_symbols, []
+        for (y, idx), snr in zip(blocks, snr_of):
+            if snr != target:
+                continue
+            s = self.mod.modulate_indices(idx[:n_p])
+            H = ls_channel_estimate(y[:n_p], s, self.noise_var)
+            vals.append(float(np.sum(np.abs(y[:n_p] - s @ H.T) ** 2) / (self.n_ant * max(n_p - self.n_user, 1))))
+        if vals:
+            self.s2_cal = float(np.median(vals))
+
+    def _initial_s2_ref(self) -> float:
+        return float(getattr(self, "s2_cal", None) or self.nv_nominal)
+
     def _thresholds(self, n_p: int) -> float:
         d = self.n_ant * max(n_p - self.n_user, 1) * (2 if self.mod.is_complex else 1)
         return float(chi2.ppf(self.cfg.receiver.guard_quantile, d) / d)
@@ -169,7 +193,7 @@ class ModelReceiver(Receiver):
 
         # ---- guard ----
         if self.s2_ref is None:
-            self.s2_ref = self.nv_nominal
+            self.s2_ref = self._initial_s2_ref()
         tau_s = self._thresholds(n_p)
         g_noise = s2 / max(self.s2_ref, 1e-12)
         expected = self.H_acc.size * self.s2_ref / n_p if self.H_acc is not None else 0.0
@@ -232,3 +256,130 @@ class ModelReceiver(Receiver):
     def _out(self, idx: np.ndarray, stats: Dict[str, Any]) -> BlockOutput:
         probs = torch.nn.functional.one_hot(torch.as_tensor(idx, dtype=torch.long), self.mod.order).float().to(self.device)
         return BlockOutput(probs_data=probs, idx_hat=idx, stats=stats)
+
+
+# --------------------------------------------------------------------------------------- Citadel-LS
+class CitadelLS(ModelReceiver):
+    """Multi-rate verified memory of the channel estimate for a model-based detector (v3, Phase 3).
+
+    The learner is the per-block LS channel estimate. Its persistent memory is two slow levels of
+    estimates, H2 (period C2) and H3 (period C3), updated only by consolidation:
+
+        H_k <- H_k + Pi_kappa( eta_k * (sum gamma / |B|) * (m - H_k) ),   m = sum gamma H_f / sum gamma,
+
+    the vote rule (rejected blocks vote for the current memory), so a block that passes the gates owns at
+    most 1/|B| of a full step whatever the other verdicts, and the clip kappa = ls_clip_frac * ||H_k||
+    bounds every step (design bound). Gates, all relative to the protected memory (anchor H_a = H2, or the
+    last accepted estimate before the first consolidation):
+      noise  s2_f / s2_ref <= chi2_q(d)/d, with s2_ref from the configured SNR, then updated only by
+             consolidation (never by a single block);
+      CRC    F_u(H_f) >= tau2(F_u(H_a)) * F_u(H_a) for EVERY user u: the fast estimate's decisions pass nearly as
+             many of user u's CRCs as the anchor's (tau2 from the relative-slack design rule of Citadel-Rx's G2,
+             rho = 1, floor 2e-3), less a 3-sigma binomial margin of the pass-rate estimate over the n_sub
+             sub-blocks. Per user, because a test pooled over the users is passed by an attacker that
+             concentrates its damage on one user.
+    Accepted blocks detect with H_f, rejected ones with H_a, and per (sub-block, user) the first CRC-passing
+    of the candidates (H_f, H_a, H3 in the accepted order, H_a first when rejected) is emitted. A legitimate
+    change passes (the fresh estimate verifies better than the stale anchor) and is consolidated within C2
+    blocks; a lasting attack is rejected and leaks are diluted (no single-state capture).
+    """
+
+    def __init__(self, cfg: Config, device: torch.device):
+        super().__init__(cfg, device)
+        cc = cfg.citadel
+        self.C2, self.C3 = int(cc.periods[1]), int(cc.periods[2])
+        lr = list(cc.level_lr)
+        self.eta2, self.eta3 = float(lr[0]), float(lr[1])
+        self.clip = float(getattr(cc, "ls_clip_frac", 0.5))
+        self.rel, self.abs_min = cc.g2_rel_slack, cc.g2_abs_min_slack
+        self.L = cfg.frame.crc_subblock_symbols
+        self.H2 = self.H3 = None
+        self.H_last: Optional[np.ndarray] = None
+        self.buf2, self.buf3 = [], []
+        self.name = f"citadel_ls_{self.kind}"
+
+    def _tau2(self, F_ref: float) -> float:
+        p_ref = 1.0 - float(np.clip(F_ref, 1e-9, 1.0)) ** (1.0 / self.L)
+        xi = max(self.abs_min, self.rel * p_ref)
+        return float(((1.0 - min(p_ref + xi, 0.999)) / max(1.0 - p_ref, 1e-9)) ** self.L)
+
+    def _step(self, H: Optional[np.ndarray], buf, eta: float) -> Optional[np.ndarray]:
+        g = np.array([x[0] for x in buf], dtype=float)
+        if g.sum() <= 0:
+            return H
+        m = sum(gi * Hi for gi, Hi in buf) / g.sum()
+        if H is None:
+            return m
+        inc = eta * (g.sum() / len(g)) * (m - H)
+        n, cap = np.linalg.norm(inc), self.clip * np.linalg.norm(H)
+        if self.clip > 0 and n > cap:
+            inc = inc * (cap / n)
+        return H + inc
+
+    def process_block(self, b, y_p, idx_p, y_d, aux=None) -> BlockOutput:
+        aux = aux or {}
+        framer = aux.get("framer")
+        s_p = self.mod.modulate_indices(idx_p)
+        H_f = ls_channel_estimate(y_p, s_p, self.noise_var)
+        n_p = y_p.shape[0]
+        s2 = float(np.sum(np.abs(y_p - s_p @ H_f.T) ** 2) / (self.n_ant * max(n_p - self.n_user, 1)))
+        if self.s2_ref is None:
+            self.s2_ref = self._initial_s2_ref()
+        g_noise = s2 / max(self.s2_ref, 1e-12)
+        noise_ok = g_noise <= self._thresholds(n_p)
+        H_a = self.H2 if self.H2 is not None else self.H_last
+        idx_f = detect(self.kind, y_d, H_f, s2, self.mod, self.K)
+        stats: Dict[str, Any] = {"noise_hat": s2, "guard_noise": g_noise}
+        has_crc = framer is not None and framer.framer.enabled
+        chk = (lambda i: framer.framer.check(framer.decided_bits_to_subblocks(i))) if has_crc else None
+        if H_a is None:                     # nothing protected yet: the first estimate that passes the noise test
+            accept = noise_ok
+            idx_a = None
+        else:
+            idx_a = detect(self.kind, y_d, H_a, self.s2_ref, self.mod, self.K)
+            if has_crc:
+                # per user: an attacker can concentrate its damage on one user, which a pass rate pooled over the
+                # users hardly sees (Phase 3 smoke run, calibration seed 0); every user must verify
+                ok_f, ok_a = chk(idx_f), chk(idx_a)                                   # (n_sub, U)
+                f_f, f_a = ok_f.mean(axis=0), ok_a.mean(axis=0)
+                n_sub = ok_f.shape[0]
+                # threshold on user u's pass rate: tau2 * F_a minus a 3-sigma binomial margin of the estimate
+                thr = [self._tau2(float(f_a[u])) * float(f_a[u]) - 3.0 * np.sqrt(f_a[u] * (1 - f_a[u]) / n_sub)
+                       for u in range(len(f_a))]
+                margin = [float(f_f[u] - thr[u]) for u in range(len(f_a))]
+                worst = int(np.argmin(margin))
+                stats.update(ls_pass_f=float(f_f.mean()), ls_pass_a=float(f_a.mean()), ls_margin_min=margin[worst],
+                             ls_worst_user=worst, ls_pass_f_worst=float(f_f[worst]), ls_pass_a_worst=float(f_a[worst]))
+                crc_ok = all(m >= 0 for m in margin)
+            else:
+                crc_ok = True
+            accept = noise_ok and crc_ok
+        gamma = 1.0 if accept else 0.0
+        stats["gamma"] = gamma
+        cands = [idx_f] + ([idx_a] if idx_a is not None else [])
+        if not accept and idx_a is not None:
+            cands = [idx_a, idx_f]
+            stats["fallback"] = True
+        if self.H3 is not None and has_crc:
+            cands.append(detect(self.kind, y_d, self.H3, self.s2_ref, self.mod, self.K))
+        idx = self._crc_select(framer, cands) if (has_crc and len(cands) > 1) else cands[0]
+        # memory: the buffer of this period, consolidation by the vote rule
+        if accept:
+            self.H_last = H_f
+        self.buf2.append((gamma, H_f, s2))
+        if (b + 1) % self.C2 == 0 and self.buf2:
+            prev = self.H2
+            self.H2 = self._step(self.H2, [(g, H) for g, H, _ in self.buf2], self.eta2)
+            gs = np.array([g for g, _, _ in self.buf2])
+            if gs.sum() > 0:   # noise reference: vote rule on the accepted blocks' noise estimates
+                m_s2 = sum(g * s for g, _, s in self.buf2) / gs.sum()
+                self.s2_ref = self.s2_ref + self.eta2 * (gs.sum() / len(gs)) * (m_s2 - self.s2_ref)
+            if self.H2 is not None:
+                self.buf3.append((float(gs.mean()), self.H2.copy()))
+            stats["consolidated"] = 2
+            stats["h2_step"] = float(np.linalg.norm(self.H2 - prev)) if (prev is not None and self.H2 is not None) else None
+            self.buf2 = []
+        if (b + 1) % self.C3 == 0 and self.buf3:
+            self.H3 = self._step(self.H3, self.buf3, self.eta3)
+            self.buf3 = []
+        return self._out(idx, stats)

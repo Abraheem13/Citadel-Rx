@@ -95,3 +95,43 @@ def test_guard_rebase_modes_against_a_lasting_spoof_and_a_legit_redraw():
         rec = run_experiment(_tiny(**{**red, "receiver.guard_rebase": mode}), seed=1, save=False, verbose=False)
         ser[mode] = np.mean([b["ser"] for b in rec["blocks"][8:]])
     assert ser["crc"] < ser["never"]
+
+
+def _cls(**kw):
+    base = {"receiver.type": "citadel_ls", "receiver.detector": "ml"}
+    return _tiny(**{**base, **kw})
+
+
+def test_citadel_ls_escapes_capture_and_lock():
+    torch.set_num_threads(1)
+    long = {"frame.n_blocks": "40", "attack.start_block": "10", "attack.end_block": "34"}
+    # clean: as good as ML without protection, no false rejection after the first consolidation
+    clean = run_experiment(_cls(**{"frame.n_blocks": "40"}), seed=4, save=False, verbose=False)
+    ml = run_experiment(_tiny(**{"receiver.detector": "ml", "frame.n_blocks": "40"}), seed=4, save=False, verbose=False)
+    s_cls, s_ml = np.mean([b["ser"] for b in clean["blocks"]]), np.mean([b["ser"] for b in ml["blocks"]])
+    assert s_cls <= s_ml * 1.2 + 1e-3
+    assert np.mean([b["gamma"] for b in clean["blocks"][8:]]) > 0.95
+    # a lasting channel-estimate spoof: rejected throughout (no capture), damage far below unprotected ML
+    att = run_experiment(_cls(**{**long, "attack.type": "deny", "attack.sir_db": "0"}), seed=4, save=False, verbose=False)
+    unp = run_experiment(_tiny(**{**long, "receiver.detector": "ml", "attack.type": "deny", "attack.sir_db": "0"}),
+                         seed=4, save=False, verbose=False)
+    win = [b["block"] for b in att["blocks"] if b.get("attacked")]
+    assert np.mean([att["blocks"][i]["gamma"] for i in win]) < 0.1
+    assert np.mean([att["blocks"][i]["ser"] for i in win]) < 0.25 * np.mean([unp["blocks"][i]["ser"] for i in win])
+    # a legitimate redraw: followed (no lock), as ML without protection
+    red = {"frame.n_blocks": "40", "channel.abrupt_block": "12", "channel.abrupt_type": "redraw"}
+    r_cls = run_experiment(_cls(**red), seed=4, save=False, verbose=False)
+    r_ml = run_experiment(_tiny(**{**red, "receiver.detector": "ml"}), seed=4, save=False, verbose=False)
+    after = lambda r: np.mean([b["ser"] for b in r["blocks"][12:]])
+    assert after(r_cls) <= after(r_ml) * 1.2 + 1e-3
+
+
+def test_ls_attack_hurts_unprotected_ml_and_runs_gate_aware():
+    torch.set_num_threads(1)
+    w = {"attack.type": "ls", "attack.sir_db": "0", "attack.pgd_steps": "5", "receiver.detector": "ml"}
+    clean = run_experiment(_tiny(**{"receiver.detector": "ml"}), seed=5, save=False, verbose=False)
+    att = run_experiment(_tiny(**w), seed=5, save=False, verbose=False)
+    win = [b["block"] for b in att["blocks"] if b.get("attacked")]
+    assert np.mean([att["blocks"][i]["ser"] for i in win]) > np.mean([clean["blocks"][i]["ser"] for i in win]) + 0.05
+    soft = run_experiment(_cls(**{**w, "attack.soft_gate": "true"}), seed=5, save=False, verbose=False)
+    assert all(np.isfinite(b["obj"]) for b in soft["blocks"] if b.get("attacked"))

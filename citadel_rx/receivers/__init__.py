@@ -35,6 +35,9 @@ def make_receiver(cfg, device):
         rx = OnlineDeepSIC(c, device)
         rx.name = t
         return rx
+    if t == "citadel_ls":   # v3: multi-rate verified memory of the channel estimate (Phase 3)
+        from .modelbased import CitadelLS
+        return CitadelLS(cfg, device)
     if t == "model":   # v3: model-based detectors, LS or perfect CSI, optional pilot-domain guard
         from .modelbased import ModelReceiver
         return ModelReceiver(cfg, device)

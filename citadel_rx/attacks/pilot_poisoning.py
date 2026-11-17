@@ -420,6 +420,9 @@ class Attacker:
             stats.update(eps=eps, e_norm=float(np.linalg.norm(E)))
             return y_p + E, y_d, stats
 
+        if t == "ls":   # v3: white-box attack on LS-based receivers (through the LS estimate)
+            return self._ls_attack(b, y_p, idx_p, y_d, idx_d, receiver, framer, sig_p, stats, is_complex)
+
         if self.ac.knowledge == "query":   # B6: gradient-free NES across blocks on the victim's NACK feedback
             eps = self.budget(y_p, signal=sig_p)
             def _unit():
@@ -535,6 +538,105 @@ class Attacker:
         if self.ac.oracle_scales and idx_d is not None and hasattr(receiver, "process_block"):
             y_p_adv = self._oracle_select(b, y_p, idx_p, y_p_adv, y_d_adv, receiver, framer, idx_d, stats)
         return y_p_adv, y_d_adv, stats
+
+    # ---- v3: white-box attack on LS-based receivers ---------------------------------------------
+    def _lmmse_logp(self, H: torch.Tensor, nv, yq: torch.Tensor) -> torch.Tensor:
+        """Log posteriors (n, U, order) of LMMSE soft detection with channel H (N, U) complex, differentiable."""
+        from ..receivers.conditioning import to_complex
+        Y = to_complex(yq).to(torch.complex128)
+        U = H.shape[1]
+        eye = torch.eye(U, dtype=torch.complex128, device=yq.device)
+        nv_t = torch.as_tensor(nv, dtype=torch.float64, device=yq.device).clamp_min(1e-9)
+        W = torch.linalg.solve(H.conj().T @ H + nv_t * eye, H.conj().T)
+        x = Y @ W.T
+        mu = torch.real(torch.diagonal(W @ H))
+        var = torch.clamp(mu - mu ** 2, min=1e-6)
+        c = torch.as_tensor(self.mod.constellation().astype(complex), dtype=torch.complex128, device=yq.device)
+        d2 = torch.abs(x[:, :, None] - mu[None, :, None] * c[None, None, :]) ** 2
+        return torch.log_softmax(-d2 / var[None, :, None], dim=-1)
+
+    def _ls_attack(self, b, y_p, idx_p, y_d, idx_d, receiver, framer, sig_p, stats, is_complex):
+        """Maximise the detection loss of LMMSE soft decisions made with the LS estimate of the perturbed
+        pilots, on 64 data sub-blocks with their true symbols (+data knowledge; pilots if none). With
+        attack.soft_gate the objective is that loss times a soft acceptance probability: the noise-inflation
+        test against the victim's own noise reference and a soft CRC test against the victim's protected
+        estimate (the anchor H2 of Citadel-LS or the last accepted estimate of a guard; the clean LS estimate
+        otherwise), loss x p + w (p - 1), as the soft-gate attacker on Citadel-Rx."""
+        from ..receivers.conditioning import ls_torch
+        if not is_complex:
+            raise ValueError("attack.type=ls needs a complex modulation")
+        dev = self.device
+        eps = self.budget(y_p, signal=sig_p)
+        reg = 10 ** (-0.1 * self.cfg.channel.snr_db)
+        s_p = self.mod.modulate_indices(idx_p)
+        yf_p = feat(y_p, dev)
+        if idx_d is not None and framer is not None and framer.framer.enabled:
+            L, n_sub = framer.framer.L, framer.n_sub
+            subs = np.sort(self.rng.choice(n_sub, size=min(64, n_sub), replace=False))
+            rows = (subs[:, None] * L + np.arange(L)[None, :]).reshape(-1)
+            yq, iq = feat(y_d[rows], dev), torch.as_tensor(idx_d[rows], dtype=torch.long, device=dev)
+        else:
+            L, yq, iq = 1, yf_p, torch.as_tensor(idx_p, dtype=torch.long, device=dev)
+        n_p = y_p.shape[0]
+        dof = self.cfg.channel.n_ant * max(n_p - self.cfg.channel.n_user, 1)
+        s2_ref = float(getattr(receiver, "s2_ref", None) or (10 ** (-0.1 * self.cfg.channel.snr_db) / 2))
+        from scipy.stats import chi2 as _chi2
+        tau_s = float(_chi2.ppf(getattr(self.cfg.receiver, "guard_quantile", 0.9999), 2 * dof) / (2 * dof))
+        H0, nv0 = ls_torch(yf_p, s_p, reg)
+        anc = getattr(receiver, "H2", None)
+        anc = anc if anc is not None else getattr(receiver, "H_acc", None)
+        H_anc = torch.as_tensor(anc, dtype=torch.complex128, device=dev) if anc is not None else H0.detach()
+        kappa, w = 0.1, self.ac.gate_aware_weight
+        S = torch.as_tensor(np.asarray(s_p, dtype=complex), dtype=torch.complex128, device=dev)
+
+        def soft_pass(logp):
+            lc = logp.gather(-1, iq.unsqueeze(-1)).squeeze(-1)          # (n, U) log P(correct)
+            n_s = lc.shape[0] // L
+            return torch.exp(lc[: n_s * L].reshape(n_s, L, -1).sum(dim=1)).mean()
+
+        with torch.no_grad():
+            Fa = float(soft_pass(self._lmmse_logp(H_anc, s2_ref, yq)))
+        p_ref = 1.0 - min(max(Fa, 1e-9), 1.0) ** (1.0 / max(L, 1))
+        xi = max(self.cfg.citadel.g2_abs_min_slack, self.cfg.citadel.g2_rel_slack * p_ref)
+        tau2 = ((1.0 - min(p_ref + xi, 0.999)) / max(1.0 - p_ref, 1e-9)) ** max(L, 1)
+
+        def objective(E):
+            from ..receivers.conditioning import to_complex
+            yin = yf_p + E
+            H, nv = ls_torch(yin, s_p, reg)
+            logp = self._lmmse_logp(H, nv, yq)
+            ce = -logp.gather(-1, iq.unsqueeze(-1)).squeeze(-1).mean()
+            if not self.ac.soft_gate:
+                return ce
+            Y = to_complex(yin).to(torch.complex128)
+            s2 = torch.sum(torch.abs(Y - S @ H.T) ** 2) / dof
+            v_noise = torch.sigmoid((tau_s - s2 / s2_ref) / (kappa * tau_s))
+            v_crc = torch.sigmoid((soft_pass(logp) / max(Fa, 1e-9) - tau2) / (kappa * tau2))
+            p = torch.minimum(v_noise, v_crc)
+            return ce * p + w * (p - 1.0)
+
+        alpha = self.ac.pgd_alpha * eps
+        best_obj, best_E = -np.inf, torch.zeros_like(yf_p)
+        for ri in range(max(1, self.ac.restarts)):
+            if ri == 0:
+                E = torch.zeros_like(yf_p, requires_grad=True)
+            else:
+                z = torch.randn(yf_p.shape, generator=torch.Generator().manual_seed(7 * b + ri))
+                E = (z / z.norm().clamp_min(1e-12) * eps).to(dev).requires_grad_(True)
+            for _ in range(self.ac.pgd_steps):
+                obj = objective(E)
+                g, = torch.autograd.grad(obj, [E])
+                with torch.no_grad():
+                    if obj.item() > best_obj:
+                        best_obj, best_E = obj.item(), E.detach().clone()
+                    E = self._pgd_step(E, g.to(E.dtype), alpha, eps, is_complex)
+            with torch.no_grad():
+                obj = objective(E)
+                if obj.item() > best_obj:
+                    best_obj, best_E = obj.item(), E.detach().clone()
+        E_np = self._through_true_channel(unfeat(best_E, is_complex))
+        stats.update(eps=eps, obj=float(best_obj), e_norm=float(np.linalg.norm(E_np)), knowledge_used="whitebox")
+        return y_p + E_np, y_d, stats
 
     def _oracle_select(self, b, y_p, idx_p, y_p_adv, y_d_adv, receiver, framer, idx_d, stats) -> np.ndarray:
         """Exact-gate attacker. The optimised pilot perturbation E is scaled by each factor of

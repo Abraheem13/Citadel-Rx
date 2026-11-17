@@ -142,6 +142,14 @@ class BlockFadingChannel:
 
     def state(self, b: int) -> ChannelState:
         G = None
+        ab = getattr(self.cfg, "abrupt_block", -1)
+        if (self.cfg.fading == "complex_gm" and self.cfg.abrupt_type == "redraw" and ab is not None and ab >= 0
+                and b >= ab and self._abrupt_H is None):
+            # complex_gm: a redraw is a new drop of the same family (new line-of-sight phases, new scattering)
+            arng = np.random.default_rng(self.cfg.seed + 5150)
+            self._los = self.H_mean * np.exp(2j * np.pi * arng.random(self.H_mean.shape))
+            self._G = None
+            self._abrupt_H = self._los
         if self.cfg.model == "synthetic":
             H = self._synthetic(b)
         elif self.cfg.model == "umi":
@@ -151,10 +159,11 @@ class BlockFadingChannel:
         else:
             raise ValueError(f"unknown channel model {self.cfg.model}")
         snr = self.cfg.snr_db
-        ab = getattr(self.cfg, "abrupt_block", -1)
         if ab is not None and ab >= 0 and b >= ab:
             # audit D6/B3: an abrupt change the receiver must follow (with no attack present)
-            if self.cfg.abrupt_type == "redraw":
+            if self.cfg.abrupt_type == "redraw" and self.cfg.fading == "complex_gm":
+                pass                                     # drawn above, inside the channel process
+            elif self.cfg.abrupt_type == "redraw":
                 if self._abrupt_H is None:
                     arng = np.random.default_rng(self.cfg.seed + 5150)
                     self._abrupt_H = self.H_mean * (0.5 + arng.random(self.H_mean.shape))

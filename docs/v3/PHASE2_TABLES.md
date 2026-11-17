@@ -99,9 +99,9 @@ Pairs: 124; problems: 0.
 
 ## Regime scan (group 2R, calibration seeds 0-2, clean)
 
-Clean SER over blocks 5-99 / 50-99 (steady state); Citadel-Rx false rejections over blocks 5-99.
+Clean SER over blocks 5+ / the second half (steady state); Citadel-Rx false rejections over blocks 5+.
 
-| regime | online_cc | citadel_cc | frozen_cc | model_lmmse | model_ml | model_kbest | Citadel FRR | ML / best adapting (50-99) |
+| regime | online_cc | citadel_cc | frozen_cc | model_lmmse | model_ml | model_kbest | Citadel FRR | model_ml / best adapting |
 |---|---|---|---|---|---|---|---|---|
 | R1cgm | 0.0484 / 0.0223 | 0.0655 / 0.0251 | 0.1055 / 0.0391 | 0.0916 / 0.0356 | 0.0085 / 0.0054 | 0.0085 / 0.0054 | 0.000 | 0.27 |
 | R2adc3 | 0.0934 / 0.0638 | 0.1190 / 0.0774 | 0.1531 / 0.0931 | 0.1397 / 0.0868 | 0.0344 / 0.0275 | 0.0344 / 0.0275 | 0.000 | 0.44 |

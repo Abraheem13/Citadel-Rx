@@ -1,0 +1,8 @@
+== Phase 0 on ccrcheck3, 2026-11-17 11:14, steps ['repro']
+== 3. reproduction of two stored records (about 15 minutes)
+   started p0_repro_clean (reference results/rev_clean_pool4/clean_0b811be896_s10_33981e132fc1.json)
+   started p0_repro_a1 (reference results/rev2_peruser/h7_citadel__a1_s10_3b97b1b5bb7f.json)
+   clean bit-identical to the stored record: True; identical SER on 100/100 blocks, max |dSER| 0.0, mean SER 0.01498 vs 0.01498
+   a1    bit-identical to the stored record: True; identical SER on 100/100 blocks, max |dSER| 0.0, mean SER 0.02069 vs 0.02069
+== summary: repro OK
+   next: commit and push results/v3/phase0 and logs/v3 (see docs/v3/PHASE0.md)
