@@ -1,0 +1,3 @@
+C:\Users\athawerani\Citadel-Rx\citadel_rx\gates\physics.py:52: RuntimeWarning: overflow encountered in exp
+  return float(1.0 / (1.0 + np.exp(-x / max(kappa * abs(tau), 1e-9))))
+== v3p3D_R4_citadel_cc__spoofredraw seed 26: ser_mean=0.2370 ser_median=0.1633 ser_pre=0.0015 ser_attack=0.4235 ser_post=0.2469
