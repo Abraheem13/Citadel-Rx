@@ -81,7 +81,8 @@ class CitadelRx(DeepSICReceiver):
                       "z": cc.g2_derived_z}
         self.gate = GateController(gates, cc.gate_mode, cc.g1_tau, g2_tau, cc.g3_tau, cc.g3_quantile,
                                    cc.adaptive_thresholds, dof=self.n_ant * self.n_user, kappa=cc.gate_kappa,
-                                   tighten_floor=cc.tighten_floor, g2_relative=g2_rel)
+                                   tighten_floor=cc.tighten_floor, g2_relative=g2_rel,
+                                   forced_warmup=0 if getattr(cc, "gate_warmup", "legacy") == "prior" else 3)
         self.cc = cc
         self.streak = 0
         self.ref_stats = {"pass": None, "pass_var": None, "res": None, "res_var": None}
@@ -200,14 +201,18 @@ class CitadelRx(DeepSICReceiver):
             if (b + 1) % self.C[k + 1] != 0 or not self.buf[k]:
                 continue
             gs = np.array([g for g, _ in self.buf[k]], dtype=float)
-            if self.cc.consol_mean == "normalized" and gs.sum() > 0:
+            if self.cc.consol_mean in ("normalized", "vote") and gs.sum() > 0:
                 denom = float(gs.sum())          # convex combination of the buffered states
             else:
                 denom = max(1.0, float(gs.sum()))  # first version: sub-normalised when sum gamma < 1
             mean_state = {key: sum(g * s[key] for g, s in self.buf[k]) / denom for key in self.A}
             eta_k = self.level_lr[k + 1]
-            # with Σγ < 1 (everything rejected) the update is scaled down accordingly
-            scale = eta_k * min(1.0, float(gs.sum()))
+            if self.cc.consol_mean == "vote":
+                # F1: rejected blocks vote for the current state: the step is the accepted fraction of the period
+                scale = eta_k * float(gs.sum()) / len(gs)
+            else:
+                # with Σγ < 1 (everything rejected) the update is scaled down accordingly
+                scale = eta_k * min(1.0, float(gs.sum()))
             # quantities of the extended retention bound (audit A2), logged for paired analysis
             radius = max(param_dist(st, mean_state, self.A) for _, st in self.buf[k])
             d_mean = param_dist(self.levels[k + 1], mean_state, self.A)
@@ -375,6 +380,7 @@ class CitadelRx(DeepSICReceiver):
         from ..gates.physics import model_residual
         aux = aux or {}
         cc = self.cc
+        self.begin_block(y_p, idx_p)
         framer = aux.get("framer")
         has_crc = framer is not None and framer.framer.enabled
         yf_p, it_p, yf_d = self.to_feat(y_p), self.to_idx(idx_p), self.to_feat(y_d)

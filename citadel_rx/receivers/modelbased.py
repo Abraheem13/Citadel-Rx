@@ -180,13 +180,25 @@ class ModelReceiver(Receiver):
             g_innov = innov / max(self.I_ref or 0.0, expected, 1e-12)
         accept = g_noise <= tau_s and g_innov <= self.cfg.receiver.guard_innov_tau
         rebase = False
+        idx_ls = detect(self.kind, y_d, H_ls, s2, self.mod, self.K)
+        idx_acc = None
+        mode = getattr(self.cfg.receiver, "guard_rebase", "count")
+        framer = aux.get("framer")
         if not accept:
             self.n_rej += 1
-            if self.n_rej >= self.cfg.receiver.guard_refresh or self.H_acc is None:
-                accept, rebase = True, True          # a lasting change, or no accepted estimate yet
+            if self.H_acc is None:
+                accept, rebase = True, True          # no accepted estimate yet
+            elif mode == "count" and self.n_rej >= self.cfg.receiver.guard_refresh:
+                accept, rebase = True, True          # a lasting change (or a lasting attack)
+            elif mode == "crc" and framer is not None and framer.framer.enabled:
+                idx_acc = detect(self.kind, y_d, self.H_acc, self.s2_ref, self.mod, self.K)
+                f_ls = float(framer.framer.check(framer.decided_bits_to_subblocks(idx_ls)).mean())
+                f_acc = float(framer.framer.check(framer.decided_bits_to_subblocks(idx_acc)).mean())
+                stats.update(guard_pass_ls=f_ls, guard_pass_acc=f_acc)
+                if f_ls >= f_acc:                    # verified against the protected estimate
+                    accept, rebase = True, True
         stats.update(guard_noise=g_noise, guard_noise_tau=tau_s, guard_innov=g_innov, gamma=1.0 if accept else 0.0,
                      guard_rebase=rebase)
-        idx_ls = detect(self.kind, y_d, H_ls, s2, self.mod, self.K)
         if accept:
             idx = idx_ls
             if self.H_acc is not None and not rebase:
@@ -198,10 +210,9 @@ class ModelReceiver(Receiver):
             self.n_rej = 0
             cands = [idx_ls]
         else:
-            idx = detect(self.kind, y_d, self.H_acc, self.s2_ref, self.mod, self.K)
+            idx = idx_acc if idx_acc is not None else detect(self.kind, y_d, self.H_acc, self.s2_ref, self.mod, self.K)
             cands = [idx, idx_ls]
             stats["fallback"] = True
-        framer = aux.get("framer")
         if framer is not None and framer.framer.enabled and len(cands) > 1:
             idx = self._crc_select(framer, cands)
         return self._out(idx, stats)

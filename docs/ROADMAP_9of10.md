@@ -208,8 +208,8 @@ that of every adapting baseline.
 | Phase | Code | Runs | Report | Gate |
 |---|---|---|---|---|
 | 0 | done | done (ws5080) | `docs/v3/PHASE0_REPORT.md` | passed |
-| 1 | done (+ regime scan 1R) | – | – | – |
-| 2 | – | – | – | – |
+| 1 | done (+ regime scan 1R) | done (548 runs, ws5080) | `docs/v3/PHASE1_REPORT.md` | passed; 1b hole, 1R → conditioned backbone |
+| 2 | done (pushed) | – | – | – |
 | 3 | – | – | – | – |
 | 4 | – | – | – | – |
 | 5 | – | – | – | – |

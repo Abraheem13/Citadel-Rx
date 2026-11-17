@@ -80,7 +80,8 @@ def g3_prior(innov_norm: float) -> float:
 class GateController:
     def __init__(self, gates: List[str], mode: str, g1_tau: float, g2_tau: float, g3_tau: float,
                  g3_quantile: float, adaptive: bool, dof: int, kappa: float = 0.1, ema: float = 0.9,
-                 tighten_floor: float = 0.7, g2_relative: Optional[Dict[str, float]] = None):
+                 tighten_floor: float = 0.7, g2_relative: Optional[Dict[str, float]] = None,
+                 forced_warmup: int = 3):
         self.gates = [g.lower() for g in gates]
         self.mode = mode
         self.g1_tau, self.g2_tau = g1_tau, g2_tau
@@ -97,6 +98,7 @@ class GateController:
         self.clean_g2_ema: Optional[float] = None
         self.clean_g2_var: Optional[float] = None   # running variance of the normalised G2 statistic (derived slack)
         self.n_accepted = 0
+        self.forced_warmup = forced_warmup   # blocks that seed the references whatever their verdict (legacy: 3)
 
     def thresholds(self, surprise_ratio: float) -> Dict[str, float]:
         """Tighten thresholds when surprise is high relative to its EMA (ratio > 1)."""
@@ -196,7 +198,7 @@ class GateController:
                      pass_mm: Optional[float]) -> bool:
         """Track the clean baselines of the *relative* statistics from accepted blocks (gamma > 0.5);
         the first few blocks are always accepted so the EMAs can initialise. Returns acceptance."""
-        accept = verdict.gamma > 0.5 or self.n_accepted < 3
+        accept = verdict.gamma > 0.5 or self.n_accepted < self.forced_warmup
         if not accept:
             return False
         self.n_accepted += 1
@@ -205,7 +207,7 @@ class GateController:
                 self.ema * self.clean_g1_ema + (1 - self.ema) * g1_stat
         if pass_nn is not None and pass_mm is not None:
             r = g2_crc(pass_nn, pass_mm)
-            if self.clean_g2_ema is not None and self.n_accepted > 3:
+            if self.clean_g2_ema is not None and self.n_accepted > max(self.forced_warmup, 1):
                 dev2 = (r / max(self.clean_g2_ema, 1e-9) - 1.0) ** 2
                 self.clean_g2_var = dev2 if self.clean_g2_var is None else self.ema * self.clean_g2_var + (1 - self.ema) * dev2
             self.clean_g2_ema = r if self.clean_g2_ema is None else self.ema * self.clean_g2_ema + (1 - self.ema) * r

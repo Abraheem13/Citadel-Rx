@@ -31,6 +31,9 @@ def rx(name: str) -> List[str]:
         return ["receiver.type=online_deepsic", "@BASE:online_deepsic", "receiver.epochs=0"]
     if name == "frozen_select":        # the same, with per-sub-block CRC selection against LMMSE (roadmap 1a)
         return ["receiver.type=online_select", "@BASE:online_deepsic", "receiver.epochs=0"]
+    if name.endswith("_cc"):           # v3 channel-conditioned backbone (receivers/conditioning.py)
+        base = {"online_cc": "online_deepsic", "frozen_cc": "frozen_deepsic", "citadel_cc": "citadel"}[name]
+        return rx(base) + ["receiver.cond=lmmse"]
     if name.startswith("model_"):      # model_<detector>[_perfect][_guard]
         parts = name.split("_")[1:]
         det = parts[0] if parts[0] != "mmse" else "mmse_sic"
@@ -53,6 +56,7 @@ class Job:
     ov: List[str]               # dotted overrides on configs/e3_a1_defence.yaml (placeholders @CIT, @BASE:...)
     twin: bool = True           # also run the matched clean twin
     priority: int = 0           # lower runs first
+    stage: str = "all"          # cal: calibration runs; test: needs the settings frozen from the cal stage
     tags: List[str] = field(default_factory=list)
 
 
@@ -116,4 +120,51 @@ REGIMES = {
 }
 
 
-PHASES = {1: phase1}
+REGIMES2 = {**{k: v for k, v in REGIMES.items() if k != "R0sed"},
+            "R6adc2": CGM + ["channel.adc_bits=2"],                                  # 2-bit ADCs
+            "R7sat": CGM + ["channel.pa_sat=0.4"],                                    # hard saturation
+            "R8hw": CGM + ["channel.adc_bits=3", "channel.pa_sat=0.7", "channel.iq_eps=0.15",
+                           "channel.iq_phi_deg=15"]}                                  # combined hardware
+FIXES = {"base": [], "F1": ["citadel.consol_mean=vote"], "F2": ["citadel.gate_warmup=prior"],
+         "F1F2": ["citadel.consol_mean=vote", "citadel.gate_warmup=prior"]}
+T30 = [30, 31, 32, 33, 34]
+
+
+def phase2() -> List[Job]:
+    J: List[Job] = []
+    fixed = lambda s, e: ["attack.start_mode=fixed", f"attack.start_block={s}", f"attack.end_block={e}"]
+    # ---- cal stage (seeds 0-2) ----------------------------------------------------------------
+    # 2R: regime scan with the channel-conditioned backbone (rule in docs/v3/PHASE2.md)
+    for reg, rov in REGIMES2.items():
+        for r in ("online_cc", "citadel_cc", "frozen_cc", "model_lmmse", "model_ml", "model_kbest"):
+            J.append(Job("2R", f"v3p2R_{reg}_{r}__clean", CAL, rx(r) + rov + ["attack.type=none"], twin=False,
+                         priority=0, stage="cal"))
+    # 2F: the cold-start fixes on SED; cells: warm A1 (random window), cold A1 (blocks 0-39), with clean twins
+    for tag, fov in FIXES.items():
+        J.append(Job("2F", f"v3p2F_{tag}_warm__a1_sir0", CAL, rx("citadel") + fov + RND + a1(0), priority=0, stage="cal"))
+        J.append(Job("2F", f"v3p2F_{tag}_cold__a1_sir0", CAL, rx("citadel") + fov + a1(0) + fixed(0, 40), priority=0,
+                     stage="cal"))
+    # ---- test stage ---------------------------------------------------------------------------
+    # 2F test: the fix frozen by scripts/v3/freeze.py against the frozen first-version settings, fresh seeds 30-34
+    for tag, fov in (("base", []), ("fix", ["@FIX"])):
+        J.append(Job("2Ft", f"v3p2Ft_{tag}_warm__a1_sir0", T30, rx("citadel") + fov + RND + a1(0), priority=1, stage="test"))
+        J.append(Job("2Ft", f"v3p2Ft_{tag}_cold__a1_sir0", T30, rx("citadel") + fov + a1(0) + fixed(0, 40), priority=1,
+                     stage="test"))
+    # 2G: stronger model-based guards on SED, test seeds 20-29 (Citadel-Rx's runs are in Phase 1, 1a and 1d)
+    spoof = ["attack.type=deny", "attack.sir_db=0"]
+    for det in ("ml", "lmmse"):
+        for mode in ("never", "crc"):
+            g = rx(f"model_{det}_guard") + [f"receiver.guard_rebase={mode}"]
+            J.append(Job("2G", f"v3p2G_{det}_{mode}__wb_sir0", T20, g + RND + a1(0), priority=2, stage="test"))
+            J.append(Job("2G", f"v3p2G_{det}_{mode}__spoof_sir0", T20, g + RND + spoof, priority=2, stage="test"))
+    # legitimate redraw at block 50, no attack: what each guard costs when the channel really changes
+    red = ["channel.abrupt_block=50", "channel.abrupt_type=redraw", "attack.type=none"]
+    for name, ov in (("citadel", rx("citadel")), ("online_deepsic", rx("online_deepsic")), ("ml", rx("model_ml")),
+                     ("ml_count", rx("model_ml_guard")),
+                     ("ml_never", rx("model_ml_guard") + ["receiver.guard_rebase=never"]),
+                     ("ml_crc", rx("model_ml_guard") + ["receiver.guard_rebase=crc"])):
+        J.append(Job("2G", f"v3p2G_redraw_{name}__clean", T20, ov + red, twin=False, priority=2, stage="test"))
+    return J
+
+
+PHASES = {1: phase1, 2: phase2}

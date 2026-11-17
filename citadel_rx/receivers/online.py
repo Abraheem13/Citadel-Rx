@@ -75,17 +75,48 @@ class DeepSICReceiver(Receiver):
     def __init__(self, cfg: Config, device: torch.device):
         super().__init__(cfg, device)
         rc = cfg.receiver
+        self.cond = getattr(rc, "cond", "none")
+        if self.cond not in ("none", "lmmse"):
+            raise ValueError(f"unknown receiver.cond {self.cond}")
+        if self.cond == "lmmse" and not self.mod.is_complex:
+            raise ValueError("receiver.cond=lmmse needs a complex modulation")
+        extra = 2 * self.n_user if self.cond == "lmmse" else 0
+        self.cond_reg = 10 ** (-0.1 * cfg.channel.snr_db)     # regulariser of the LS estimate (as the LMMSE receiver)
+        self._cond_ctx = None
         if rc.backbone == "joint":
             from .deepsic import JointCore
-            self.core = JointCore(self.n_user, self.n_ant, self.mod.order, self.mod.is_complex, rc.joint_hidden, device)
+            self.core = JointCore(self.n_user, self.n_ant, self.mod.order, self.mod.is_complex, rc.joint_hidden, device,
+                                  extra_feat=extra)
         else:
             self.core = DeepSICCore(self.n_user, self.n_ant, self.mod.order, self.mod.is_complex,
-                                    rc.iterations, rc.hidden_base, device)
+                                    rc.iterations, rc.hidden_base, device, extra_feat=extra)
         g = torch.Generator(device="cpu").manual_seed(cfg.channel.seed)
         self.params: ParamDict = self.core.init_params(generator=g if device.type == "cpu" else None)
         self.lr = rc.lr
         self.epochs = rc.epochs
         self.block_count = 0
+
+    # ---- v3 channel conditioning ------------------------------------------
+    def begin_block(self, y_p: np.ndarray, idx_p: np.ndarray) -> None:
+        """Set the block's LS channel estimate and noise power for the conditioned input (no-op otherwise)."""
+        if self.cond == "lmmse":
+            from .conditioning import ls_np
+            self._cond_ctx = ls_np(y_p, self.mod.modulate_indices(idx_p), self.cond_reg)
+
+    def to_feat(self, y: np.ndarray) -> torch.Tensor:
+        if self.cond != "lmmse":
+            return super().to_feat(y)
+        if self._cond_ctx is None:
+            raise RuntimeError("conditioned input without a channel estimate: call begin_block first")
+        from .conditioning import cond_features_np
+        H, nv = self._cond_ctx
+        return torch.as_tensor(cond_features_np(y, H, nv), dtype=torch.float32, device=self.device)
+
+    def _block_feat(self, y: np.ndarray, idx: np.ndarray) -> torch.Tensor:
+        """Features of a pre-training block, conditioned on the LS estimate from the block itself."""
+        n_p = self.cfg.pilot_symbols if self.cond == "lmmse" else len(y)
+        self.begin_block(y[:n_p], idx[:n_p])   # as in operation: the estimate comes from N_p pilot symbols
+        return self.to_feat(y)
 
     # ---- joint pre-training ----------------------------------------------
     def pretrain(self, blocks: List[Tuple[np.ndarray, np.ndarray]]) -> None:
@@ -94,12 +125,12 @@ class DeepSICReceiver(Receiver):
         train = lambda p, q, X, t: adam_train_stage(self.core, p, q, X, t, self.lr, self.cfg.receiver.pretrain_epochs)
         if getattr(self.cfg.receiver, "pretrain_draws", 0) > 0 and blocks:
             # v3 ensemble: one joint (full-batch) fit on all draws, so no draw is forgotten for the last one
-            yf = torch.cat([self.to_feat(y) for y, _ in blocks])
+            yf = torch.cat([self._block_feat(y, i) for y, i in blocks])
             it = torch.cat([self.to_idx(i) for _, i in blocks])
             self.params = self.core.sequential_adapt(self.params, yf, it, train)
         else:
             for y, idx in blocks:
-                yf, it = self.to_feat(y), self.to_idx(idx)
+                yf, it = self._block_feat(y, idx), self.to_idx(idx)
                 self.params = self.core.sequential_adapt(self.params, yf, it, train)
         self.pretrained_params = clone_params(self.params)
         if self.cfg.receiver.reg == "ewc":
@@ -123,7 +154,7 @@ class DeepSICReceiver(Receiver):
         F = {k: torch.zeros_like(v) for k, v in self.params.items()}
         for y, idx in blocks:
             p = {k: v.detach().clone().requires_grad_(True) for k, v in self.params.items()}
-            loss = self.core.detect_loss(p, self.to_feat(y), self.to_idx(idx))
+            loss = self.core.detect_loss(p, self._block_feat(y, idx), self.to_idx(idx))
             grads = torch.autograd.grad(loss, list(p.values()))
             for k, g in zip(p.keys(), grads):
                 F[k] += g.detach() ** 2 / len(blocks)
@@ -176,6 +207,7 @@ class DeepSICReceiver(Receiver):
     def process_block(self, b, y_p, idx_p, y_d, aux=None) -> BlockOutput:
         aux = aux or {}
         rc = self.cfg.receiver
+        self.begin_block(y_p, idx_p)
         yf_p, it_p, yf_d = self.to_feat(y_p), self.to_idx(idx_p), self.to_feat(y_d)
         stats: Dict[str, Any] = {}
         yf_train, it_train, sample_w = yf_p, it_p, None
@@ -238,7 +270,7 @@ class DeepSICReceiver(Receiver):
     # ---- attacker view ---------------------------------------------------
     def attack_surface(self) -> Dict[str, Any]:
         return {"core": self.core, "params": self.params, "keys": list(self.params.keys()),
-                "lr": self.lr}
+                "lr": self.lr, "cond": self.cond, "cond_reg": self.cond_reg}
 
 
 class OnlineDeepSIC(DeepSICReceiver):

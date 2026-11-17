@@ -36,6 +36,7 @@ from phases import PHASES, Job  # noqa: E402
 BASE_CFG = os.path.join(ROOT, "configs", "e3_a1_defence.yaml")
 FZ_CIT = os.path.join(ROOT, "configs", "revision_frozen_citadel.json")
 FZ_BASE = os.path.join(ROOT, "configs", "revision_frozen_baselines.json")
+FZ_FIX = os.path.join(ROOT, "configs", "v3_frozen_fix.json")       # written by scripts/v3/freeze.py (Phase 2)
 RUN = os.path.join(ROOT, "scripts", "run_experiment.py")
 
 
@@ -47,19 +48,29 @@ def resolve_ov(ov: List[str]) -> List[str]:
             out += fz_cit["citadel_overrides"]
         elif o.startswith("@BASE:"):
             out += fz_base[o[6:]]["overrides"]
+        elif o == "@FIX":
+            if not os.path.exists(FZ_FIX):
+                raise FileNotFoundError("configs/v3_frozen_fix.json is missing: run the cal stage and scripts/v3/freeze.py first")
+            out += json.load(open(FZ_FIX))["overrides"]
         else:
             out.append(o)
     # later entries win (Config.set applies them in order), so an explicit override after @BASE stands
     return out
 
 
-def tasks(phase: int, machine: str, only: Optional[List[str]], seeds: Optional[List[int]]) -> List[dict]:
+def tasks(phase: int, machine: str, only: Optional[List[str]], seeds: Optional[List[int]], stage: str = "all") -> List[dict]:
     """Every (run, seed) of the phase, attacked runs before their twins, ordered by priority; duplicates removed."""
     out, seen = [], set()
     for j in sorted(PHASES[phase](), key=lambda j: j.priority):
         if only and j.group not in only:
             continue
-        ov = resolve_ov(j.ov)
+        if stage != "all" and j.stage not in (stage, "all"):
+            continue
+        try:
+            ov = resolve_ov(j.ov)
+        except FileNotFoundError as e:   # a test-stage job before its settings are frozen
+            print(f"   (skipped {j.name}: {e})")
+            continue
         Config.from_yaml(BASE_CFG, ov)          # raises on an unknown or malformed setting before anything runs
         variants = [(j.name, ov, os.path.join("results", "v3", f"p{phase}"))]
         if j.twin:
@@ -158,6 +169,8 @@ def main() -> int:
     ap.add_argument("--seeds", nargs="*", type=int, default=None, help="only these seeds (of each job's own list)")
     ap.add_argument("--push-every", type=float, default=0.0, help="minutes between automatic commits and pushes (0: never)")
     ap.add_argument("--cache-gb", type=float, default=5.0, help="size cap of the pre-training cache")
+    ap.add_argument("--stage", default="all", choices=["all", "cal", "test"],
+                    help="cal: calibration runs only; test: runs that need the settings frozen after the cal stage")
     ap.add_argument("--dry", action="store_true")
     a = ap.parse_args()
 
@@ -165,7 +178,7 @@ def main() -> int:
     choice = (json.load(open(bench)).get("choice") or {}) if os.path.exists(bench) else {}
     workers = a.workers or choice.get("parallel") or max(1, (os.cpu_count() or 4) - 2)
     device = a.device or choice.get("device") or "cpu"
-    allt = tasks(a.phase, a.machine, a.only, a.seeds)
+    allt = tasks(a.phase, a.machine, a.only, a.seeds, a.stage)
     todo = [t for t in allt if not is_done(t)]
     groups: Dict[str, Tuple[int, int]] = {}
     for t in allt:

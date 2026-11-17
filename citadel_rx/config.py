@@ -89,6 +89,9 @@ class ReceiverConfig:
     # pretrain_draw_bits pilot bits per user, through the same front-end. 0: the legacy pre-training
     # (static channel = block 0 of the SED test channel, one block per SNR, trained in sequence).
     pretrain_draws: int = 0
+    # v3: "lmmse" appends the LMMSE estimate from the block's own LS channel estimate to every input of the
+    # DeepSIC modules (receivers/conditioning.py); "none": the received vector only (the reference DeepSIC)
+    cond: str = "none"
     pretrain_draw_bits: int = 2000
     # meta
     meta_lr: float = 0.01
@@ -119,6 +122,10 @@ class ReceiverConfig:
     guard_quantile: float = 0.9999    # chi-square quantile of the noise-inflation test
     guard_innov_tau: float = 4.0      # innovation energy relative to its running level on accepted blocks
     guard_refresh: int = 10           # consecutive rejections after which the estimate is re-based (legit change)
+    guard_rebase: str = "count"       # count: re-base after guard_refresh rejections (Phase 1: captured by a lasting
+                                      #   attack) | never: keep the last accepted estimate | crc: a block that fails the
+                                      #   tests is still accepted if its decisions pass at least as many CRCs as those
+                                      #   of the last accepted estimate (verification against the protected memory)
 
 
 @dataclass
@@ -164,6 +171,12 @@ class CitadelConfig:
     consol_mean: str = "legacy"       # legacy: gated mean divided by max(1, sum gamma), as in the first version, which
     #                                   pulls a level toward the origin when sum gamma < 1 | normalized: divided by
     #                                   sum gamma, so every consolidation is a convex combination (Lemma 1)
+    # v3 fix F1 (consol_mean = "vote"): beta = eta * sum(gamma) / |B| toward the normalised gated mean, i.e. every
+    # rejected block of the period votes for the current slow state, so one accepted block moves the level by at
+    # most 1/|B| of a full step whatever the other verdicts (Phase 1 report, 1b). Still a convex combination.
+    # v3 fix F2 (gate_warmup = "prior"): the gates' running references are seeded only by blocks they accept,
+    # judged against the neutral prior (no forced acceptance of the first blocks). "legacy": first three blocks.
+    gate_warmup: str = "legacy"
     abstain: bool = False             # reference-degradation abstain state (H3)
     abstain_z: float = 4.0
     # "legacy": pass fraction or residual of the reference against statistics of accepted blocks (the

@@ -56,12 +56,12 @@ def param_dist(a: ParamDict, b: ParamDict, keys: Optional[Iterable[str]] = None)
 
 class DeepSICCore:
     def __init__(self, n_user: int, n_ant: int, order: int, is_complex: bool, iterations: int,
-                 hidden_base: int, device: torch.device):
+                 hidden_base: int, device: torch.device, extra_feat: int = 0):
         self.U = n_user
         self.N = n_ant
         self.order = order
         self.Q = iterations
-        self.F_rx = (2 if is_complex else 1) * n_ant
+        self.F_rx = (2 if is_complex else 1) * n_ant + extra_feat   # extra_feat: v3 channel conditioning
         self.F_in = self.F_rx + (order - 1) * (n_user - 1)
         self.hidden = hidden_base * order
         self.device = device
@@ -231,8 +231,9 @@ class JointCore(DeepSICCore):
     receiver, gate, consolidation rule and attack runs on it unchanged; detect() returns the per-user
     marginal posteriors. Joint symbol index: user 0 is the most significant digit."""
 
-    def __init__(self, n_user: int, n_ant: int, order: int, is_complex: bool, hidden: int, device: torch.device):
-        super().__init__(1, n_ant, order ** n_user, is_complex, 1, 1, device)
+    def __init__(self, n_user: int, n_ant: int, order: int, is_complex: bool, hidden: int, device: torch.device,
+                 extra_feat: int = 0):
+        super().__init__(1, n_ant, order ** n_user, is_complex, 1, 1, device, extra_feat=extra_feat)
         self.U_real, self.M = n_user, order
         self.hidden = hidden
         self.F_in = self.F_rx                       # no other users' posteriors as inputs

@@ -44,3 +44,20 @@ def test_clip_bounds_every_consolidation_increment():
     ev = rx._consolidate(b=rx.C[1] - 1)["consolidations"][0]
     inc = torch.sqrt(sum(((rx.levels[1][k] - before[k]) ** 2).sum() for k in rx.A)).item()
     assert ev["clipped"] and abs(inc - 0.5) < 1e-4
+
+
+def test_vote_consolidation_counts_rejected_blocks_as_votes_for_the_memory():
+    # F1: sum gamma = 0.2 over |B| = 2 buffered states: step 1 * 0.2 / 2 = 0.1 toward the mean 3: 1 + 0.1 * 2 = 1.2
+    rx = _rx("vote")
+    rx._consolidate(b=rx.C[1] - 1)
+    assert all(abs(v - 1.2) < 1e-5 for v in _value(rx, 1))
+
+
+def test_vote_consolidation_bounds_a_single_leak_by_its_share():
+    # one accepted block among eight: the level moves 1/8 of the way toward it (normalized: the whole way)
+    for rule, expect in (("vote", 1 + (3 - 1) / 8), ("normalized", 3.0)):
+        rx = _rx(rule)
+        full = lambda v: {k: torch.full_like(rx.params[k], v) for k in rx.A}
+        rx.buf = [[(1.0, full(3.0))] + [(0.0, full(1.0))] * 7, [], []]
+        rx._consolidate(b=rx.C[1] - 1)
+        assert all(abs(v - expect) < 1e-5 for v in _value(rx, 1)), rule

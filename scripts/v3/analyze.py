@@ -38,6 +38,7 @@ MARGIN = 0.005
 PHASE_RANGES = {
     1: {"v3p1c_citadel_ratchet__sir0": (50, 90), "v3p1c_citadel_burst__sir0": (50, 90)},
 }
+# Phase 2 comparisons; "p1:<name>" refers to a Phase 1 cell (same seeds 20-29, same machine)
 # paired comparisons per phase: (label, cell A, cell B, metric) with metric "excess" or "window"
 PHASE_COMPARE = {
     1: [("Citadel-Rx vs frozen + CRC selection, excess", "v3p1a_citadel__wb_sir0", "v3p1a_frozen_select__wb_sir0", "excess"),
@@ -46,6 +47,12 @@ PHASE_COMPARE = {
         ("Citadel-Rx vs guarded LMMSE, window SER", "v3p1a_citadel__wb_sir0", "v3p1_model_lmmse_guard__wb_sir0", "window"),
         ("Cold vs warm start, excess", "v3p1b_citadel_cold__a1_sir0", "v3p1b_citadel_warm__a1_sir0", "excess"),
         ("Ratchet + burst vs burst, excess in the burst", "v3p1c_citadel_ratchet__sir0", "v3p1c_citadel_burst__sir0", "excess")],
+    2: [("Fix vs base, cold start, excess (seeds 30-34)", "v3p2Ft_fix_cold__a1_sir0", "v3p2Ft_base_cold__a1_sir0", "excess"),
+        ("Fix vs base, warm A1, excess (seeds 30-34)", "v3p2Ft_fix_warm__a1_sir0", "v3p2Ft_base_warm__a1_sir0", "excess"),
+        ("Citadel-Rx vs ML + CRC-verified guard, A1, window SER", "p1:v3p1a_citadel__wb_sir0", "v3p2G_ml_crc__wb_sir0", "window"),
+        ("Citadel-Rx vs ML + guard without re-base, A1, window SER", "p1:v3p1a_citadel__wb_sir0", "v3p2G_ml_never__wb_sir0", "window"),
+        ("Citadel-Rx vs ML + CRC-verified guard, spoof, window SER", "p1:v3p1d_citadel__spoof_sir0", "v3p2G_ml_crc__spoof_sir0", "window"),
+        ("Citadel-Rx vs ML + guard without re-base, spoof, window SER", "p1:v3p1d_citadel__spoof_sir0", "v3p2G_ml_never__spoof_sir0", "window")],
 }
 
 
@@ -193,10 +200,11 @@ def compare(pa: List[Tuple[dict, dict]], pb: List[Tuple[dict, dict]], metric: st
             "equivalent": bool(-MARGIN < lo90 and hi90 < MARGIN)}
 
 
-REGIME_RX = ["online_deepsic", "citadel", "frozen_deepsic", "model_lmmse", "model_ml", "model_kbest"]
+REGIME_RX = {1: ["online_deepsic", "citadel", "frozen_deepsic", "model_lmmse", "model_ml", "model_kbest"],
+             2: ["online_cc", "citadel_cc", "frozen_cc", "model_lmmse", "model_ml", "model_kbest"]}
 
 
-def regime_scan(plain: List[dict]) -> Optional[dict]:
+def regime_scan(plain: List[dict], phase: int = 1) -> Optional[dict]:
     """Group 1R and the pre-registered rule of docs/v3/PHASE1.md: the main regime of Phase 2 is the R1-R5
     regime with the largest ratio r = SER(ML, LS CSI) / min(SER(online DeepSIC), SER(Citadel-Rx)), clean SER
     over blocks 50-99, geometric mean over seeds 0-2; if max r < 1.25, no regime favours the plain DeepSIC
@@ -204,7 +212,7 @@ def regime_scan(plain: List[dict]) -> Optional[dict]:
     import re
     runs: Dict[Tuple[str, str], Dict[int, dict]] = {}
     for r in plain:
-        m = re.match(r"v3p1R_(R\d\w*?)_(.+)__clean$", r["name"])
+        m = re.match(rf"v3p{phase}R_(R\d\w*?)_(.+)__clean$", r["name"])
         if m:
             runs.setdefault((m.group(1), m.group(2)), {})[r["seed"]] = r
     if not runs:
@@ -216,25 +224,31 @@ def regime_scan(plain: List[dict]) -> Optional[dict]:
         row = rows.setdefault(reg, {"_seeds": {}})
         row[rx_] = (float(np.mean(s1)), float(np.exp(np.mean(np.log(s2)))))
         row["_seeds"][rx_] = {s: max(float(np.mean(arr(r)[50:])), 1e-5) for s, r in by_seed.items()}
-        if rx_ == "citadel":
+        if rx_ in ("citadel", "citadel_cc"):
             g = np.concatenate([arr(r, "gamma")[5:] for r in by_seed.values()])
             row["frr"] = float(np.mean(g < 0.5))
     best, best_r = None, -1.0
     for reg, row in rows.items():
         sd = row["_seeds"]
-        if not all(k in sd for k in ("model_ml", "online_deepsic", "citadel")):
+        on, ci = REGIME_RX[phase][0], REGIME_RX[phase][1]
+        if not all(k in sd for k in ("model_ml", on, ci)):
             continue
-        seeds = sorted(set(sd["model_ml"]) & set(sd["online_deepsic"]) & set(sd["citadel"]))
-        lr = [np.log(sd["model_ml"][s] / min(sd["online_deepsic"][s], sd["citadel"][s])) for s in seeds]
+        seeds = sorted(set(sd["model_ml"]) & set(sd[on]) & set(sd[ci]))
+        lr = [np.log(sd["model_ml"][s] / min(sd[on][s], sd[ci][s])) for s in seeds]
         row["ratio"] = float(np.exp(np.mean(lr))) if lr else float("nan")
         if reg != "R0sed" and lr and row["ratio"] > best_r:
             best, best_r = reg, row["ratio"]
     for row in rows.values():
         row.pop("_seeds", None)
-    decision = (f"main regime {best} (r = {best_r:.2f})" if best_r >= 1.25 else
-                f"no regime reaches r >= 1.25 (best {best}, r = {best_r:.2f}): Phase 2 introduces the channel-conditioned"
-                " backbone and repeats the scan with it")
-    return {"receivers": REGIME_RX, "rows": rows, "decision": decision, "best": best, "best_ratio": best_r}
+    if best_r >= 1.25:
+        decision = f"main regime {best} (r = {best_r:.2f})"
+    elif phase == 1:
+        decision = (f"no regime reaches r >= 1.25 (best {best}, r = {best_r:.2f}): Phase 2 introduces the channel-"
+                    "conditioned backbone and repeats the scan with it")
+    else:
+        decision = (f"no regime reaches r >= 1.25 (best {best}, r = {best_r:.2f}): the paper is framed as protecting a "
+                    "test-time learner, and the main regime is the one with the largest r")
+    return {"receivers": REGIME_RX[phase], "rows": rows, "decision": decision, "best": best, "best_ratio": best_r}
 
 
 def fmt(x, nd=4):
@@ -251,9 +265,19 @@ def main() -> int:
     ranges = PHASE_RANGES.get(a.phase, {})
     cells = {name: cell(p, ranges.get(name)) for name, p in sorted(prs.items())}
     comps = {}
+    other: Dict[int, dict] = {}
+
+    def get(name):
+        if name.startswith("p") and ":" in name:
+            ph, nm = int(name[1:name.index(":")]), name[name.index(":") + 1:]
+            if ph not in other:
+                other[ph] = pairs(ph)[0]
+            return other[ph].get(nm)
+        return prs.get(name)
     for label, x, y, metric in PHASE_COMPARE.get(a.phase, []):
-        if x in prs and y in prs:
-            comps[label] = compare(prs[x], prs[y], metric)
+        px, py = get(x), get(y)
+        if px and py:
+            comps[label] = compare(px, py, metric)
     clean_only = {}
     for r in plain:
         clean_only.setdefault(r["name"], []).append(float(np.mean(arr(r)[5:])))
@@ -279,16 +303,16 @@ def main() -> int:
             if c:
                 lines.append(f"| {label} | {c['n']} | {c['diff']:+.4f} | [{c['ci95'][0]:+.4f}, {c['ci95'][1]:+.4f}] | "
                              f"[{c['ci90'][0]:+.4f}, {c['ci90'][1]:+.4f}] | {c['p']:.3g} | {c['equivalent']} |")
-    regime = regime_scan(plain) if a.phase == 1 else None
+    regime = regime_scan(plain, a.phase) if a.phase in REGIME_RX else None
     if regime:
-        lines += ["", "## Regime scan (group 1R, calibration seeds 0-2, clean)", "",
+        lines += ["", f"## Regime scan (group {a.phase}R, calibration seeds 0-2, clean)", "",
                   "Clean SER over blocks 5-99 / 50-99 (steady state); Citadel-Rx false rejections over blocks 5-99.", "",
                   "| regime | " + " | ".join(regime["receivers"]) + " | Citadel FRR | ML / best adapting (50-99) |",
                   "|---|" + "---|" * (len(regime["receivers"]) + 2)]
         for reg, row in regime["rows"].items():
             cells_ = [f"{row[r][0]:.4f} / {row[r][1]:.4f}" if r in row else "–" for r in regime["receivers"]]
             lines.append(f"| {reg} | " + " | ".join(cells_) + f" | {row.get('frr', float('nan')):.3f} | {row.get('ratio', float('nan')):.2f} |")
-        lines += ["", f"Rule (docs/v3/PHASE1.md): {regime['decision']}"]
+        lines += ["", f"Rule (docs/v3/PHASE{a.phase}.md): {regime['decision']}"]
     os.makedirs(os.path.join(ROOT, "docs", "v3"), exist_ok=True)
     md = os.path.join(ROOT, "docs", "v3", f"PHASE{a.phase}_TABLES.md")
     open(md, "w").write("\n".join(lines) + "\n")

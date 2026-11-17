@@ -77,3 +77,21 @@ def test_attack_schedule_segments():
     assert att[1]["segment"] == 0 and att[5]["segment"] == 1
     assert att[1]["eps"] < att[5]["eps"] / 5          # 20 dB weaker budget in the first segment
     assert rec["summary"]["attack_window"] == [1, 7]
+
+
+def test_guard_rebase_modes_against_a_lasting_spoof_and_a_legit_redraw():
+    torch.set_num_threads(1)
+    base = {"receiver.guard": "true", "frame.n_blocks": "24", "attack.start_block": "3", "attack.end_block": "22",
+            "attack.type": "deny", "attack.sir_db": "0"}
+    rej = {}
+    for mode in ("count", "never", "crc"):
+        rec = run_experiment(_tiny(**{**base, "receiver.guard_rebase": mode}), seed=1, save=False, verbose=False)
+        rej[mode] = np.mean([b["gamma"] == 0.0 for b in rec["blocks"] if b.get("attacked")])
+    assert rej["count"] < 0.7 and rej["never"] == 1.0 and rej["crc"] > 0.9
+    # a legitimate abrupt change: the CRC-verified guard follows it, the guard that never re-bases does not
+    red = {"receiver.guard": "true", "frame.n_blocks": "16", "channel.abrupt_block": "4", "channel.abrupt_type": "redraw"}
+    ser = {}
+    for mode in ("never", "crc"):
+        rec = run_experiment(_tiny(**{**red, "receiver.guard_rebase": mode}), seed=1, save=False, verbose=False)
+        ser[mode] = np.mean([b["ser"] for b in rec["blocks"][8:]])
+    assert ser["crc"] < ser["never"]

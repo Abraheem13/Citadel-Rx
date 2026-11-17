@@ -173,6 +173,7 @@ class Attacker:
         if self.ac.surrogate == "citadel" and y_d is not None:
             sur.process_block(b, y_obs, idx_p, self._noisy(y_d), aux={"framer": frames})
         else:
+            sur.begin_block(y_obs, idx_p)
             sur.adapt(b, sur.to_feat(y_obs), sur.to_idx(idx_p))
 
     def feedback(self, b: int, crc_pass: Optional[np.ndarray], attacked: bool) -> None:
@@ -234,18 +235,34 @@ class Attacker:
         e_proj = np.outer(coef, self.h_a)
         return feat(e_proj, E.device)
 
+    # ---- v3 conditioning helpers -----------------------------------------------------------
+    cond = (False, None, 0.0)
+
+    def _ls(self, yf_p: torch.Tensor):
+        from ..receivers.conditioning import ls_torch
+        return ls_torch(yf_p, self.cond[1], self.cond[2])
+
+    def _F(self, raw: torch.Tensor, H, nv) -> torch.Tensor:
+        """Detector input from raw received features: conditioned on (H, nv) when the attacked model is."""
+        if not self.cond[0]:
+            return raw
+        from ..receivers.conditioning import cond_features_torch
+        return cond_features_torch(raw, H, nv)
+
     # ---- objectives ---------------------------------------------------------------------
     def _objective(self, core: DeepSICCore, theta_plus: ParamDict, yf_q: torch.Tensor, it_q: torch.Tensor,
-                   y_d_feat: Optional[torch.Tensor], H: Optional[np.ndarray]) -> torch.Tensor:
+                   y_d_feat: Optional[torch.Tensor], H: Optional[np.ndarray], Hc=None) -> torch.Tensor:
+        """Hc: (H, nv) torch estimate from the perturbed pilots, which conditions the receiver's inputs."""
         t = self.ac.type
-        probs = core.detect(theta_plus, yf_q)
+        probs = core.detect(theta_plus, self._F(yf_q, *Hc) if Hc else yf_q)
         logp = torch.log(probs.clamp_min(1e-12))
         nll = -logp.gather(-1, it_q.unsqueeze(-1)).squeeze(-1)          # (n, U)
         per_user = nll.mean(dim=0)
         if t in ("a1", "adaptive", "a4"):
             obj = per_user.sum()
             if t == "adaptive" and y_d_feat is not None and H is not None:
-                obj = obj - self.ac.gate_aware_weight * self._g1_soft(core, theta_plus, y_d_feat, H)
+                obj = obj - self.ac.gate_aware_weight * self._g1_soft(
+                    core, theta_plus, y_d_feat, H, det_in=self._F(y_d_feat, *Hc) if Hc else None)
             return obj
         if t == "a2":
             u = self.ac.target_user
@@ -276,7 +293,7 @@ class Attacker:
         kappa = gate.kappa
         th = gate.thresholds(1.0)
         if "g2" in gate.gates and ctx.get("idx_d_sub") is not None:
-            probs = core.detect(theta_plus, ctx["yd_sub"])
+            probs = core.detect(theta_plus, ctx.get("yd_in", ctx["yd_sub"]))
             pn = self._soft_pass(probs, ctx["idx_d_sub"], ctx["L"])
             s = pn / max(ctx["pass_ref"], 0.02) / max(gate.clean_g2_ema or 1.0, 1e-9)
             tau = th["g2"]
@@ -289,16 +306,18 @@ class Attacker:
                 tau = float(((1.0 - min(p_ref + delta, 0.999)) / max(1.0 - p_ref, 1e-9)) ** Lc)
             vs.append(torch.sigmoid((s - tau) / max(kappa * tau, 1e-9)))
         if "g1" in gate.gates and ctx.get("H") is not None:
-            r_nn = self._g1_soft(core, theta_plus, ctx["yd_sub"], ctx["H"])
+            r_nn = self._g1_soft(core, theta_plus, ctx["yd_sub"], ctx["H"], det_in=ctx.get("yd_in"))
             s = r_nn / max(ctx["r_ref"], 1e-12) / max(gate.clean_g1_ema or 1.0, 1e-9)
             vs.append(torch.sigmoid((th["g1"] - s) / max(kappa * th["g1"], 1e-9)))
         if not vs:
             return torch.ones((), device=self.device)
         return torch.stack(vs).min()
 
-    def _g1_soft(self, core: DeepSICCore, theta: ParamDict, y_d_feat: torch.Tensor, H: np.ndarray) -> torch.Tensor:
-        """Differentiable G1 residual with posterior-mean soft symbols (attacker's view)."""
-        probs = core.detect(theta, y_d_feat)                            # (n, U, order)
+    def _g1_soft(self, core: DeepSICCore, theta: ParamDict, y_d_feat: torch.Tensor, H: np.ndarray,
+                 det_in: Optional[torch.Tensor] = None) -> torch.Tensor:
+        """Differentiable G1 residual with posterior-mean soft symbols (attacker's view). det_in: the detector's
+        input when it differs from the raw received features (conditioned model)."""
+        probs = core.detect(theta, y_d_feat if det_in is None else det_in)   # (n, U, order)
         c = self.mod.constellation_torch(y_d_feat.device)               # (order, 2|1)
         s_soft = probs @ c                                              # (n, U, 2|1)
         Hr = torch.as_tensor(np.real(H), dtype=torch.float32, device=y_d_feat.device)   # (N, U)
@@ -331,8 +350,11 @@ class Attacker:
         pass_ref = chk(idx_mm)
         if hasattr(victim, "_anchor") and getattr(victim, "K", 1) > 1:
             p_sl = dict(victim.params); p_sl.update(victim._anchor())
+            yd_in = feat(y_d, self.device)
+            if self.cond[0]:   # the unattacked block's conditioning
+                yd_in = self._F(yd_in, *self._ls(feat(y_p, self.device)))
             with torch.no_grad():
-                idx_sl = victim.hard(core.detect(p_sl, feat(y_d, self.device)))
+                idx_sl = victim.hard(core.detect(p_sl, yd_in))
             pass_ref = max(pass_ref, chk(idx_sl))
         return {"L": L, "rows": rows, "yd_sub": feat(y_d[rows], self.device),
                 "idx_d_sub": torch.as_tensor(idx_d[rows], dtype=torch.long, device=self.device),
@@ -422,6 +444,7 @@ class Attacker:
         if self.ac.knowledge == "transfer" or not surf:
             sur = self._ensure_surrogate()
             if self.ac.knowledge != "transfer":  # surrogate must still learn from the clean pilots
+                sur.begin_block(y_p, idx_p)
                 sur.adapt(b, sur.to_feat(y_p), sur.to_idx(idx_p))
             if self.ac.knowledge == "transfer" and self.ac.surrogate == "citadel":
                 ssurf = sur.attack_surface()   # grey-box (B6): defence known, weights unknown
@@ -435,6 +458,11 @@ class Attacker:
             gate = surf.get("gate")
             stats["knowledge_used"] = "whitebox"
         theta = clone_params(theta)
+        # v3 channel conditioning of the attacked model (receivers/conditioning.py): the pilots also set the LS
+        # estimate that conditions every input, and the attacker differentiates through it
+        model = receiver if stats["knowledge_used"] == "whitebox" else self.surrogate
+        self.cond = (getattr(model, "cond", "none") == "lmmse", self.mod.modulate_indices(idx_p),
+                     getattr(model, "cond_reg", 10 ** (-0.1 * self.cfg.channel.snr_db)))
 
         eps = self.budget(y_p, small=(t in ("a3", "a3star")), signal=sig_p)
         if t == "a4":   # reference degradation (B2): sqrt(alpha) of the budget goes on the pilots
@@ -445,6 +473,8 @@ class Attacker:
         want_H = t in ("adaptive", "a3", "a3star", "a4") or self.ac.soft_gate
         H = ls_channel_estimate(y_p, self.mod.modulate_indices(idx_p), noise_var) if want_H else None
 
+        if self.cond[0] and y_d_feat is not None:
+            y_d_feat = feat(y_d, self.device)
         if t in ("a3", "a3star") and self.theta_bad is None:
             # spoofed channel: rotate / scale the user gains so the bad basin is well separated
             H_bad = H * (1.0 + 0.5 * self.rng.standard_normal(H.shape))
@@ -452,8 +482,11 @@ class Attacker:
             y_bad = s_p @ H_bad.T
             y_bad = y_bad + np.sqrt(noise_var / 2) * (self.rng.standard_normal(y_bad.shape) + 1j * self.rng.standard_normal(y_bad.shape)) \
                 if is_complex else y_bad + np.sqrt(noise_var) * self.rng.standard_normal(y_bad.shape)
+            yb = feat(y_bad, self.device)
+            if self.cond[0]:
+                yb = self._F(yb, *self._ls(yb))
             with torch.enable_grad():
-                tb = core.functional_adapt(theta, feat(y_bad, self.device), it_p, lr=lr, steps=self.ac.unroll_steps * 5,
+                tb = core.functional_adapt(theta, yb, it_p, lr=lr, steps=self.ac.unroll_steps * 5,
                                            keys=keys, create_graph=False)
             self.theta_bad = {k: tb[k].detach() for k in keys}
 
@@ -548,20 +581,22 @@ class Attacker:
             if self.ac.eot > 1:
                 gg = torch.Generator().manual_seed(10007 * b + k)
                 yin = yin + (np.sqrt(noise_var / 2) * torch.randn(yin.shape, generator=gg)).to(yin.device)
-            theta_plus = core.functional_adapt(theta, yin, it_p, lr=self.ac.unroll_lr,
+            Hc = self._ls(yin) if self.cond[0] else None
+            theta_plus = core.functional_adapt(theta, self._F(yin, *Hc) if Hc else yin, it_p, lr=self.ac.unroll_lr,
                                                 steps=self.ac.unroll_steps, keys=list(theta.keys()), create_graph=True)
             if ctx is not None:   # output-level objective behind the soft gates
-                total = total + self._soft_objective(core, theta_plus, ctx, Ed, gate)
+                total = total + self._soft_objective(core, theta_plus, ctx, Ed, gate, Hc)
             else:
-                total = total + self._objective(core, theta_plus, yf_p, it_p, y_d_feat, H)
+                total = total + self._objective(core, theta_plus, yf_p, it_p, y_d_feat, H, Hc)
         return total / max(1, self.ac.eot)
 
-    def _soft_objective(self, core, theta_plus, ctx, Ed, gate) -> torch.Tensor:
+    def _soft_objective(self, core, theta_plus, ctx, Ed, gate, Hc=None) -> torch.Tensor:
         """Error rate of the emitted decisions times the soft probability the block is accepted."""
         yd = ctx["yd_sub"] if Ed is None else ctx["yd_sub"] + Ed
-        probs = core.detect(theta_plus, yd)
+        yd_in = self._F(yd, *Hc) if Hc else yd
+        probs = core.detect(theta_plus, yd_in)
         nll = -torch.log(probs.gather(-1, ctx["idx_d_sub"].unsqueeze(-1)).squeeze(-1).clamp_min(1e-12)).mean()
-        p_acc = self._soft_gamma(core, theta_plus, gate, {**ctx, "yd_sub": yd})
+        p_acc = self._soft_gamma(core, theta_plus, gate, {**ctx, "yd_sub": yd, "yd_in": yd_in})
         return nll * p_acc + self.ac.gate_aware_weight * (p_acc - 1.0)
 
 

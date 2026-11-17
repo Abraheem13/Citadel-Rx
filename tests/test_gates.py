@@ -39,3 +39,12 @@ def test_g3_innovation_flags_implausible_jump():
         normals.append(out["innov_norm"])
     jump = tr.fuse(H0 * 1.8, noise_var=0.1, n_p=100)["innov_norm"]
     assert jump > 5 * max(normals[1:])
+
+
+def test_prior_warmup_does_not_seed_references_from_rejected_blocks():
+    for forced, expect_seeded in ((3, True), (0, False)):
+        gc = GateController(["g2"], "min", 1.25, 0.72, 4.0, 0.999, adaptive=False, dof=16, forced_warmup=forced)
+        v = gc.evaluate(None, 0.05, 0.6, None)          # a poisoned first block: far below the reference
+        assert v.gamma < 0.5
+        gc.update_clean(v, None, 0.05, 0.6)
+        assert (gc.clean_g2_ema is not None) == expect_seeded

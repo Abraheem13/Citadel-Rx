@@ -87,6 +87,7 @@ citadel:
   g3_tau: 4.0
   gate_kappa: 0.1
   gate_mode: min
+  gate_warmup: legacy
   gates:
   - g1
   - g2
@@ -127,6 +128,7 @@ frame:
   pilot_bits: 200
 receiver:
   backbone: deepsic
+  cond: none
   crc_select: false
   csi: ls
   dd_max_symbols: 400
@@ -139,6 +141,7 @@ receiver:
   guard: false
   guard_innov_tau: 4.0
   guard_quantile: 0.9999
+  guard_rebase: count
   guard_refresh: 10
   hidden_base: 64
   iterations: 3
