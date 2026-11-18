@@ -210,7 +210,7 @@ that of every adapting baseline.
 | 0 | done | done (ws5080) | `docs/v3/PHASE0_REPORT.md` | passed |
 | 1 | done (+ regime scan 1R) | done (548 runs, ws5080) | `docs/v3/PHASE1_REPORT.md` | passed; 1b hole, 1R → conditioned backbone |
 | 2 | done | done (385 runs, ws5080) | `docs/v3/PHASE2_REPORT.md` | done; r < 1.25 everywhere; fix not adopted; capture–lock dichotomy |
-| 3 | done (pushed) | – | – | – |
+| 3 | done | done (1128 runs) | `docs/v3/PHASE3_REPORT.md` | escape not met; 2 bugs found; 3L: R8 QPSK 8x32 r = 1.75 |
 | 4 | – | – | – | – |
 | 5 | – | – | – | – |
 | 6 | – | – | – | – |
