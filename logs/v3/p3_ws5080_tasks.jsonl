@@ -909,3 +909,4 @@
 {"time": "2026-11-18T04:33:42.001922", "group": "3D", "name": "clean_89f771741c", "seed": 24, "ok": true, "minutes": 16.2, "machine": "ws5080"}
 {"time": "2026-11-18T04:34:03.681689", "group": "3D", "name": "v3p3D_R7_citadel_cc__ls", "seed": 24, "ok": true, "minutes": 16.99, "machine": "ws5080"}
 {"time": "2026-11-18T04:39:41.445214", "group": "3D", "name": "v3p3D_R7_citadel_cc__spoof", "seed": 24, "ok": true, "minutes": 6.69, "machine": "ws5080"}
+{"time": "2026-11-18T11:44:11.342456", "group": "3D", "name": "v3p3D_R7_citadel_cc__spoof", "seed": 20, "ok": true, "minutes": 7.63, "machine": "ws5080"}
