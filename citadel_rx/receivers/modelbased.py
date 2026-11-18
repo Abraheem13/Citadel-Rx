@@ -173,6 +173,15 @@ class ModelReceiver(Receiver):
         d = self.n_ant * max(n_p - self.n_user, 1) * (2 if self.mod.is_complex else 1)
         return float(chi2.ppf(self.cfg.receiver.guard_quantile, d) / d)
 
+    def _noise_ok(self, g_noise: float, n_p: int) -> bool:
+        """Noise test: the residual is not inflated and, with guard_two_sided, not implausibly small either."""
+        if g_noise > self._thresholds(n_p):
+            return False
+        if getattr(self.cfg.receiver, "guard_two_sided", False):
+            d = self.n_ant * max(n_p - self.n_user, 1) * (2 if self.mod.is_complex else 1)
+            return g_noise >= float(chi2.ppf(1.0 - self.cfg.receiver.guard_quantile, d) / d)
+        return True
+
     def process_block(self, b, y_p, idx_p, y_d, aux=None) -> BlockOutput:
         aux = aux or {}
         s_p = self.mod.modulate_indices(idx_p)
@@ -202,7 +211,7 @@ class ModelReceiver(Receiver):
         else:
             innov = float(np.sum(np.abs(H_ls - self.H_acc) ** 2))
             g_innov = innov / max(self.I_ref or 0.0, expected, 1e-12)
-        accept = g_noise <= tau_s and g_innov <= self.cfg.receiver.guard_innov_tau
+        accept = self._noise_ok(g_noise, n_p) and g_innov <= self.cfg.receiver.guard_innov_tau
         rebase = False
         idx_ls = detect(self.kind, y_d, H_ls, s2, self.mod, self.K)
         idx_acc = None
@@ -326,7 +335,7 @@ class CitadelLS(ModelReceiver):
         if self.s2_ref is None:
             self.s2_ref = self._initial_s2_ref()
         g_noise = s2 / max(self.s2_ref, 1e-12)
-        noise_ok = g_noise <= self._thresholds(n_p)
+        noise_ok = self._noise_ok(g_noise, n_p)
         H_a = self.H2 if self.H2 is not None else self.H_last
         idx_f = detect(self.kind, y_d, H_f, s2, self.mod, self.K)
         stats: Dict[str, Any] = {"noise_hat": s2, "guard_noise": g_noise}
@@ -356,6 +365,9 @@ class CitadelLS(ModelReceiver):
             accept = noise_ok and crc_ok
         gamma = 1.0 if accept else 0.0
         stats["gamma"] = gamma
+        # the estimate this block is detected with (used by the verified conditioning of a deep receiver)
+        self.used_accept = bool(accept)
+        self.used_H, self.used_nv = (H_f, s2) if (accept or H_a is None) else (H_a, self.s2_ref)
         cands = [idx_f] + ([idx_a] if idx_a is not None else [])
         if not accept and idx_a is not None:
             cands = [idx_a, idx_f]

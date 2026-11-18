@@ -37,6 +37,12 @@ def rx(name: str) -> List[str]:
         det, mode = name.split("_")   # Phase 3: the same offline noise calibration as Citadel-LS (fairness)
         return (rx(f"model_{det}_guard") + ([] if mode == "count" else [f"receiver.guard_rebase={mode}"])
                 + ["receiver.guard_noise_ref=calibrated"])
+    if name == "citadel_ccv":          # Phase 4: conditioned on the verified channel estimate
+        return rx("citadel_cc") + ["receiver.cond_source=verified"]
+    if name in ("kbest_never", "kbest_crc", "kbest_count"):   # K-best guards (8 x 32)
+        mode = name.split("_")[1]
+        return (["receiver.type=model", "receiver.detector=kbest", "receiver.guard=true", "receiver.guard_noise_ref=calibrated"]
+                + ([] if mode == "count" else [f"receiver.guard_rebase={mode}"]))
     if name.endswith("_cc"):           # v3 channel-conditioned backbone (receivers/conditioning.py)
         base = {"online_cc": "online_deepsic", "frozen_cc": "frozen_deepsic", "citadel_cc": "citadel"}[name]
         return rx(base) + ["receiver.cond=lmmse"]
@@ -221,4 +227,45 @@ def phase3() -> List[Job]:
     return J
 
 
-PHASES = {1: phase1, 2: phase2, 3: phase3}
+FIX4 = ["citadel.gamma_floor=1e-6", "frame.crc_scramble=true"]   # Phase 4 fixes, in every Phase 4 run
+BIG = ["channel.n_user=8", "channel.n_ant=32", "channel.sed_stretch=true", "receiver.pretrain_draws=16",
+       "receiver.pretrain_epochs=100", "receiver.kbest_k=32"]
+UMI = ["channel.model=umi", "frame.coding=ldpc", "frame.ldpc_scramble=true", "attack.type=a1", "attack.attacker_antennas=1",
+       "attack.sir_from_geometry=true", "attack.budget_ref=signal"]
+T10_14 = [10, 11, 12, 13, 14]     # the UMi drops in resources/umi (seeds 10-14)
+
+
+def phase4() -> List[Job]:
+    """Rules: docs/v3/PHASE4.md."""
+    J: List[Job] = []
+    # 4X: the 47 Phase 3 runs hit by the two bugs, re-run with the fixes (new clean twins: the framing changed)
+    for reg in ("R4iq", "R7sat"):
+        for c, cov in (("a1", RND + a1(0)), ("ls", RND + LS)):
+            J.append(Job("4X", f"v3p4X_{reg[:2]}_citadel_cc__{c}", T20, rx("citadel_cc") + REGIMES2[reg] + cov + FIX4, priority=1))
+    J.append(Job("4X", "v3p4X_SED_citadel__ls", T20, rx("citadel") + RND + LS + FIX4, priority=1))
+    # 4U: the coded 5G scene of the second campaign (UMi drops, NR LDPC with scrambling, rank-1 attacker at 35/75/150 m):
+    # Citadel-Rx with the fix (its records were all hit by bug 1), and the verified-conditioned receiver (tests the
+    # paper's phase-rotation explanation: the conditioning gives the network the block's channel)
+    for d in (35, 75, 150):
+        for r in ("citadel", "citadel_ccv", "online_cc"):
+            J.append(Job("4U", f"v3p4U_{r}_d{d}__phys", T10_14, rx(r) + UMI + [f"attack.att_dist={d}", "citadel.gamma_floor=1e-6"],
+                         priority=0))
+    # 4V: the capture-lock grid in the main large-scale setting (R8 combined hardware, QPSK, 8 x 32), test seeds 20-29
+    R8 = REGIMES2["R8hw"]
+    for r in ("citadel_ccv", "citadel_cc", "online_cc", "cls_kbest", "kbest", "kbest_crc", "kbest_never"):
+        deep = r.endswith("_cc") or r.endswith("_ccv")
+        cells = {"ls": RND + LS, "spoof": RND + SPOOF, "spoofredraw": SPOOF_REDRAW}
+        if deep:
+            cells["a1"] = RND + a1(0)
+        if r in ("cls_kbest", "kbest_crc", "kbest_never"):
+            cells["lssg"] = RND + LS_SG
+        for c, cov in cells.items():
+            J.append(Job("4V", f"v3p4V_{r}__{c}", T20, rx(r) + R8 + BIG + cov + FIX4, priority=2 if deep else 0))
+    # 4T: two-sided noise test in R4 against the gate-aware LS attack (Phase 3 observation 4)
+    for r in ("cls_ml", "ml_crc"):
+        for tag, tov in (("one", []), ("two", ["receiver.guard_two_sided=true"])):
+            J.append(Job("4T", f"v3p4T_{r}_{tag}__lssg", T20, rx(r) + REGIMES2["R4iq"] + RND + LS_SG + tov + FIX4, priority=0))
+    return J
+
+
+PHASES = {1: phase1, 2: phase2, 3: phase3, 4: phase4}

@@ -66,6 +66,9 @@ class FrameConfig:
     # RNTI per user). Without it the all-zero codeword, whose CRC-24A is zero, passes the check, so a
     # detector that outputs one constant symbol "decodes"; the first coded-scene runs had this flaw.
     ldpc_scramble: bool = False
+    # v3 Phase 4: per-user scrambling of the CRC-8 sub-block framing (the NR Gold sequence, c_init = n_RNTI 2^15 + 1,
+    # n_RNTI = u + 1). Without it an all-zero (constant) decision passes every check (Phase 3 report, bug 2).
+    crc_scramble: bool = False
 
 
 @dataclass
@@ -92,6 +95,10 @@ class ReceiverConfig:
     # v3: "lmmse" appends the LMMSE estimate from the block's own LS channel estimate to every input of the
     # DeepSIC modules (receivers/conditioning.py); "none": the received vector only (the reference DeepSIC)
     cond: str = "none"
+    # v3 Phase 4: "verified" conditions the network on a verified channel estimate (an internal Citadel-LS with LMMSE
+    # decisions: the block's LS estimate if it verifies against the protected memory, else the anchor), and the
+    # network does not train on pilots the verifier rejects. "raw": the block's own LS estimate (Phase 2/3).
+    cond_source: str = "raw"
     pretrain_draw_bits: int = 2000
     # meta
     meta_lr: float = 0.01
@@ -126,6 +133,8 @@ class ReceiverConfig:
                                       # calibrated (the receiver's clean LS residual level measured offline on its
                                       # pre-training draws at the configured SNR: model mismatch of the front-end
                                       # such as IQ imbalance or saturation is then part of the reference)
+    guard_two_sided: bool = False     # v3 Phase 4: also reject pilots that fit the model too well (residual below the
+                                      # lower chi-square quantile): an attacker that cancels front-end distortion
     guard_rebase: str = "count"       # count: re-base after guard_refresh rejections (Phase 1: captured by a lasting
                                       #   attack) | never: keep the last accepted estimate | crc: a block that fails the
                                       #   tests is still accepted if its decisions pass at least as many CRCs as those
@@ -181,6 +190,9 @@ class CitadelConfig:
     # v3 fix F2 (gate_warmup = "prior"): the gates' running references are seeded only by blocks they accept,
     # judged against the neutral prior (no forced acceptance of the first blocks). "legacy": first three blocks.
     gate_warmup: str = "legacy"
+    # v3 Phase 4: verdicts below this floor count as exact rejections in the consolidation (0: legacy). Soft verdicts
+    # underflow (1e-272 under the LS attack) and, in float32, made the gated mean 0/0 = NaN (Phase 3 report, bug 1).
+    gamma_floor: float = 0.0
     # v3 Citadel-LS (receivers/modelbased.py): clip of every consolidation step of the channel-estimate memory,
     # as a fraction of the level's norm (design bound); 0 disables
     ls_clip_frac: float = 0.5

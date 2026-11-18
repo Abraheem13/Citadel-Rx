@@ -85,6 +85,7 @@ citadel:
   g2_tau: null
   g3_quantile: 0.999
   g3_tau: 4.0
+  gamma_floor: 0.0
   gate_kappa: 0.1
   gate_mode: min
   gate_warmup: legacy
@@ -119,6 +120,7 @@ citadel:
 frame:
   coding: crc
   crc_bits: 8
+  crc_scramble: false
   crc_subblock_symbols: 32
   data_bits: 50000
   ldpc_k: 520
@@ -130,6 +132,7 @@ frame:
 receiver:
   backbone: deepsic
   cond: none
+  cond_source: raw
   crc_select: false
   csi: ls
   dd_max_symbols: 400
@@ -141,9 +144,11 @@ receiver:
   epochs: 300
   guard: false
   guard_innov_tau: 4.0
+  guard_noise_ref: nominal
   guard_quantile: 0.9999
   guard_rebase: count
   guard_refresh: 10
+  guard_two_sided: false
   hidden_base: 64
   iterations: 3
   joint_hidden: 512

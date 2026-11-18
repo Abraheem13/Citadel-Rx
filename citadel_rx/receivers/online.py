@@ -83,6 +83,15 @@ class DeepSICReceiver(Receiver):
         extra = 2 * self.n_user if self.cond == "lmmse" else 0
         self.cond_reg = 10 ** (-0.1 * cfg.channel.snr_db)     # regulariser of the LS estimate (as the LMMSE receiver)
         self._cond_ctx = None
+        self._verifier, self._verifier_reject = None, False
+        if self.cond == "lmmse" and getattr(rc, "cond_source", "raw") == "verified":
+            # Phase 4: an internal Citadel-LS (LMMSE decisions) verifies each block's channel estimate against its
+            # protected memory; the network is conditioned on the verified estimate and skips rejected pilots
+            import copy
+            from .modelbased import CitadelLS
+            vc = copy.deepcopy(cfg)
+            vc.receiver.type, vc.receiver.detector, vc.receiver.guard_noise_ref = "citadel_ls", "lmmse", "calibrated"
+            self._verifier = CitadelLS(vc, device)
         if rc.backbone == "joint":
             from .deepsic import JointCore
             self.core = JointCore(self.n_user, self.n_ant, self.mod.order, self.mod.is_complex, rc.joint_hidden, device,
@@ -112,6 +121,17 @@ class DeepSICReceiver(Receiver):
         H, nv = self._cond_ctx
         return torch.as_tensor(cond_features_np(y, H, nv), dtype=torch.float32, device=self.device)
 
+    def begin_block_full(self, b: int, y_p: np.ndarray, idx_p: np.ndarray, y_d: np.ndarray, aux) -> None:
+        """begin_block, through the verifier when the conditioning is verified (cond_source = verified)."""
+        if self._verifier is None:
+            self.begin_block(y_p, idx_p)
+            self._verifier_reject = False
+            return
+        out = self._verifier.process_block(b, y_p, idx_p, y_d, aux)
+        self._cond_ctx = (self._verifier.used_H, float(self._verifier.used_nv))
+        self._verifier_reject = not self._verifier.used_accept
+        self._verifier_stats = {"verifier_gamma": out.stats.get("gamma"), "verifier_noise": out.stats.get("guard_noise")}
+
     def _block_feat(self, y: np.ndarray, idx: np.ndarray) -> torch.Tensor:
         """Features of a pre-training block, conditioned on the LS estimate from the block itself."""
         n_p = self.cfg.pilot_symbols if self.cond == "lmmse" else len(y)
@@ -133,6 +153,8 @@ class DeepSICReceiver(Receiver):
                 yf, it = self._block_feat(y, idx), self.to_idx(idx)
                 self.params = self.core.sequential_adapt(self.params, yf, it, train)
         self.pretrained_params = clone_params(self.params)
+        if self._verifier is not None:
+            self._verifier.pretrain(blocks)      # its offline noise calibration
         if self.cfg.receiver.reg == "ewc":
             self._compute_fisher(blocks)
 
@@ -207,7 +229,7 @@ class DeepSICReceiver(Receiver):
     def process_block(self, b, y_p, idx_p, y_d, aux=None) -> BlockOutput:
         aux = aux or {}
         rc = self.cfg.receiver
-        self.begin_block(y_p, idx_p)
+        self.begin_block_full(b, y_p, idx_p, y_d, aux)
         yf_p, it_p, yf_d = self.to_feat(y_p), self.to_idx(idx_p), self.to_feat(y_d)
         stats: Dict[str, Any] = {}
         yf_train, it_train, sample_w = yf_p, it_p, None
@@ -222,7 +244,10 @@ class DeepSICReceiver(Receiver):
                 sample_w = torch.cat([torch.full((n_p,), 1.0 / n_p), torch.full((n_v,), rc.dd_weight / n_v)]).to(yf_p.device)
                 stats["dd_symbols"] = int(n_v)
         before = clone_params(self.params)
-        stats.update(self.adapt(b, yf_train, it_train, sample_w) if sample_w is not None else (self.adapt(b, yf_train, it_train) or {}))
+        if self._verifier_reject:   # verified conditioning: no training on pilots the verifier rejects
+            stats.update(verifier_skip=True, **getattr(self, "_verifier_stats", {}))
+        else:
+            stats.update(self.adapt(b, yf_train, it_train, sample_w) if sample_w is not None else (self.adapt(b, yf_train, it_train) or {}))
         if rc.entropy_filter > 0:   # EATA-style sample (block) filtering on the data predictions
             with torch.no_grad():
                 pr = self.core.detect(self.params, yf_d)

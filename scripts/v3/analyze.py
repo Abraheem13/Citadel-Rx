@@ -72,6 +72,18 @@ PHASE_COMPARE = {
         ("Citadel-Rx vs ML + CRC-verified guard, spoof, window SER", "p1:v3p1d_citadel__spoof_sir0", "v3p2G_ml_crc__spoof_sir0", "window"),
         ("Citadel-Rx vs ML + guard without re-base, spoof, window SER", "p1:v3p1d_citadel__spoof_sir0", "v3p2G_ml_never__spoof_sir0", "window")],
     3: _phase3_compare(),
+    4: [("4V clean: verified Citadel-Rx vs K-best (clean twins, A1 cell)", "v3p4V_citadel_ccv__a1", "v3p4V_kbest__ls", "twin"),
+        ("4V LS attack: verified Citadel-Rx vs K-best CRC guard, window", "v3p4V_citadel_ccv__ls", "v3p4V_kbest_crc__ls", "window"),
+        ("4V spoof: verified Citadel-Rx vs K-best CRC guard, window", "v3p4V_citadel_ccv__spoof", "v3p4V_kbest_crc__spoof", "window"),
+        ("4V spoof during redraw: verified Citadel-Rx vs K-best CRC guard, window", "v3p4V_citadel_ccv__spoofredraw", "v3p4V_kbest_crc__spoofredraw", "window"),
+        ("4V A1: verified Citadel-Rx vs K-best CRC guard (LS attack cell), window", "v3p4V_citadel_ccv__a1", "v3p4V_kbest_crc__ls", "window"),
+        ("4V spoof: verified vs raw conditioning (Citadel-Rx), window", "v3p4V_citadel_ccv__spoof", "v3p4V_citadel_cc__spoof", "window"),
+        ("4V A1: verified vs raw conditioning (Citadel-Rx), window", "v3p4V_citadel_ccv__a1", "v3p4V_citadel_cc__a1", "window"),
+        ("4V gate-aware LS: Citadel-LS (K-best) vs K-best CRC guard, window", "v3p4V_cls_kbest__lssg", "v3p4V_kbest_crc__lssg", "window"),
+        ("4T Citadel-LS: two-sided vs one-sided, gate-aware LS, window", "v3p4T_cls_ml_two__lssg", "v3p4T_cls_ml_one__lssg", "window"),
+        ("4T ML CRC guard: two-sided vs one-sided, gate-aware LS, window", "v3p4T_ml_crc_two__lssg", "v3p4T_ml_crc_one__lssg", "window")]
+        + [(f"4U clean BLER: verified Citadel-Rx vs Citadel-Rx, {d} m (twins)", f"v3p4U_citadel_ccv_d{d}__phys", f"v3p4U_citadel_d{d}__phys", "twin_bler")
+           for d in (35, 75, 150)],
 }
 
 
@@ -197,6 +209,8 @@ def compare(pa: List[Tuple[dict, dict]], pb: List[Tuple[dict, dict]], metric: st
         v0, v1 = scored(a2, None)
         if metric == "twin":       # the clean twins only (e.g. SER after a legitimate redraw: the lock cost)
             x1, x2 = arr(c1)[w0:w1], arr(c2)[v0:v1]
+        elif metric == "twin_bler":   # coded scene: clean-twin BLER over the whole run after block 5
+            x1, x2 = arr(c1, "bler")[5:], arr(c2, "bler")[5:]
         else:
             x1 = arr(a1)[w0:w1] - (arr(c1)[w0:w1] if metric == "excess" else 0)
             x2 = arr(a2)[v0:v1] - (arr(c2)[v0:v1] if metric == "excess" else 0)

@@ -201,11 +201,28 @@ class CitadelRx(DeepSICReceiver):
             if (b + 1) % self.C[k + 1] != 0 or not self.buf[k]:
                 continue
             gs = np.array([g for g, _ in self.buf[k]], dtype=float)
+            floor = float(getattr(self.cc, "gamma_floor", 0.0))
+            if floor > 0:
+                gs = np.where(gs < floor, 0.0, gs)
+                if gs.sum() <= 0:   # every block of the period rejected: the level keeps its state
+                    self.buf[k + 1].append((0.0, clone_params(self.levels[k + 1])))
+                    self.buf[k] = []
+                    events.append({"level": k + 2, "block": b, "mean_gamma": 0.0, "sum_gamma": 0.0, "skipped": True})
+                    continue
             if self.cc.consol_mean in ("normalized", "vote") and gs.sum() > 0:
                 denom = float(gs.sum())          # convex combination of the buffered states
             else:
                 denom = max(1.0, float(gs.sum()))  # first version: sub-normalised when sum gamma < 1
-            mean_state = {key: sum(g * s[key] for g, s in self.buf[k]) / denom for key in self.A}
+            if floor > 0:   # normalised weights in float64 first: no float32 underflow of g * state
+                mean_state = {key: sum(float(g / denom) * s[key] for g, (_, s) in zip(gs, self.buf[k])) for key in self.A}
+            else:
+                mean_state = {key: sum(g * s[key] for g, s in self.buf[k]) / denom for key in self.A}
+            if not all(bool(torch.isfinite(v).all()) for v in mean_state.values()):
+                # numerical failure (legacy arithmetic with underflowing verdicts): never write it into the memory
+                self.buf[k + 1].append((0.0, clone_params(self.levels[k + 1])))
+                self.buf[k] = []
+                events.append({"level": k + 2, "block": b, "mean_gamma": float(gs.mean()), "non_finite": True})
+                continue
             eta_k = self.level_lr[k + 1]
             if self.cc.consol_mean == "vote":
                 # F1: rejected blocks vote for the current state: the step is the accepted fraction of the period
@@ -380,7 +397,7 @@ class CitadelRx(DeepSICReceiver):
         from ..gates.physics import model_residual
         aux = aux or {}
         cc = self.cc
-        self.begin_block(y_p, idx_p)
+        self.begin_block_full(b, y_p, idx_p, y_d, aux)
         framer = aux.get("framer")
         has_crc = framer is not None and framer.framer.enabled
         yf_p, it_p, yf_d = self.to_feat(y_p), self.to_idx(idx_p), self.to_feat(y_d)
@@ -404,6 +421,8 @@ class CitadelRx(DeepSICReceiver):
             s_p = self.mod.modulate_indices(idx_p)
             H_ls = ls_channel_estimate(y_p, s_p, self.noise_var)
             nv = estimate_noise_var(y_p, s_p, H_ls)
+            if self._verifier is not None:   # verified conditioning: the references use the verified estimate too
+                H_ls, nv = self._cond_ctx
             fused = self.tracker.fuse(H_ls, nv, y_p.shape[0], accept=False)
             H = fused["H"]
             idx_mm = hard_from_probs(lmmse_soft_symbols(y_d, H, nv, self.mod))
@@ -427,7 +446,10 @@ class CitadelRx(DeepSICReceiver):
                 yf_tr, it_tr = torch.cat([yf_p, yv]), torch.cat([it_p, iv])
                 sw = torch.cat([torch.full((n_p,), 1.0 / n_p), torch.full((n_v,), self.cfg.receiver.dd_weight / n_v)]).to(yf_p.device)
                 stats["dd_symbols"] = int(n_v)
-        self.params = self._fast_update(yf_tr, it_tr, eta, sample_w=sw)
+        if self._verifier_reject:   # verified conditioning: no fast update on pilots the verifier rejects
+            stats.update(verifier_skip=True, **getattr(self, "_verifier_stats", {}))
+        else:
+            self.params = self._fast_update(yf_tr, it_tr, eta, sample_w=sw)
         stats["fast_step_norm"] = param_dist(self.params, before, self.A)
         with torch.no_grad():
             stats["pilot_loss_post"] = float(self.core.detect_loss(self.params, yf_p, it_p).item())

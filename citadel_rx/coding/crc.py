@@ -71,10 +71,25 @@ class CRC:
         return np.all(self.compute(payload) == crc, axis=-1)
 
 
+def nr_gold_sequence(length: int, c_init: int) -> np.ndarray:
+    """Pseudo-random sequence c(n) of TS 38.211 Sec. 5.2.1 (length-31 Gold sequence, N_c = 1600)."""
+    nc = 1600
+    n = length + nc + 31
+    x1 = np.zeros(n, dtype=np.int8)
+    x2 = np.zeros(n, dtype=np.int8)
+    x1[0] = 1
+    for i in range(31):
+        x2[i] = (c_init >> i) & 1
+    for i in range(n - 31):
+        x1[i + 31] = (x1[i + 3] + x1[i]) & 1
+        x2[i + 31] = (x2[i + 3] + x2[i + 2] + x2[i + 1] + x2[i]) & 1
+    return ((x1[nc:nc + length] + x2[nc:nc + length]) & 1).astype(np.int64)
+
+
 class CRCFramer:
     """Insert CRCs into a per-user data bit stream and verify decisions."""
 
-    def __init__(self, crc_bits: int, subblock_symbols: int, bits_per_symbol: int):
+    def __init__(self, crc_bits: int, subblock_symbols: int, bits_per_symbol: int, scramble: bool = False):
         self.enabled = crc_bits > 0
         self.r = crc_bits
         self.L = subblock_symbols
@@ -85,6 +100,18 @@ class CRCFramer:
                 raise ValueError("CRC longer than sub-block")
             self.crc = CRC(crc_bits)
         self.payload_bits = self.sub_bits - (self.r if self.enabled else 0)
+        self.scrambled = scramble
+        self._scr = {}
+
+    def scramble(self, bits: np.ndarray) -> np.ndarray:
+        """bits (n_user, n_bits) in transmission order -> XOR with user u's NR Gold sequence (c_init = (u + 1) 2^15 + 1).
+        Its own inverse; the identity when scrambling is off (the legacy framing)."""
+        if not self.scrambled:
+            return bits
+        key = bits.shape
+        if key not in self._scr:
+            self._scr[key] = np.stack([nr_gold_sequence(bits.shape[1], ((u + 1) << 15) + 1) for u in range(bits.shape[0])])
+        return np.bitwise_xor(np.asarray(bits, dtype=np.int64), self._scr[key])
 
     def frame(self, payload: np.ndarray) -> np.ndarray:
         """payload: (n_sub, n_user, payload_bits) -> (n_sub, n_user, sub_bits)."""

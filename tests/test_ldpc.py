@@ -39,4 +39,4 @@ def test_reencoded_codewords_are_the_sent_symbols():
 def test_crc_framing_unchanged():
     cfg = Config.from_yaml("configs/e3_a1_defence.yaml", ["frame.data_bits=4000"])
     fr = FrameGenerator(cfg)
-    assert not hasattr(fr.framer, "scramble")
+    assert not fr.framer.scrambled and fr.framer.scramble(np.ones((2, 8), dtype=np.int64)).sum() == 16   # identity when off
