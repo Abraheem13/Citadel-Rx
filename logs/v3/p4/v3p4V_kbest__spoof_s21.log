@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\athawerani\Citadel-Rx\scripts\run_experiment.py", line 149, in <module>
+    main()
+  File "C:\Users\athawerani\Citadel-Rx\scripts\run_experiment.py", line 142, in main
+    rec = run_experiment(cfg, seed=s, save=not args.no_save, verbose=not args.quiet)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\eval\runner.py", line 150, in run_experiment
+    receiver = make_receiver(cfg, device)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\receivers\__init__.py", line 88, in make_receiver
+    raise ValueError(f"unknown receiver type {t}")
+ValueError: unknown receiver type kbest
