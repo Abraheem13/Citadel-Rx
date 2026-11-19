@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\Users\athawerani\Citadel-Rx\scripts\run_experiment.py", line 149, in <module>
+    main()
+  File "C:\Users\athawerani\Citadel-Rx\scripts\run_experiment.py", line 142, in main
+    rec = run_experiment(cfg, seed=s, save=not args.no_save, verbose=not args.quiet)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\eval\runner.py", line 158, in run_experiment
+    receiver, pretrain_cached = _pretrain(cfg, receiver, frames)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\eval\runner.py", line 91, in _pretrain
+    receiver.pretrain(pretraining_blocks(cfg, frames))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\eval\runner.py", line 132, in pretraining_blocks
+    st = ch.state(blk)
+         ^^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\channels\base.py", line 156, in state
+    H, G = self._umi(b)
+           ^^^^^^^^^^^^
+  File "C:\Users\athawerani\Citadel-Rx\citadel_rx\channels\base.py", line 118, in _umi
+    raise FileNotFoundError(f"{fn}: run scripts/make_umi_channels.py first")
+FileNotFoundError: C:\Users\athawerani\Citadel-Rx\resources\umi\umi_N4_U4_s13.npz: run scripts/make_umi_channels.py first
